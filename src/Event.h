@@ -43,7 +43,7 @@ class LogEvent : public Event
 {
 public:
 	LogEvent(std::string message) : m_Message(message) { }
-	virtual std::string ToString() const override { return m_Message;	}
+	virtual std::string ToString() const override { return m_Message; }
 	
 	EVENT_CLASS_TYPE(LogEvent)
 
