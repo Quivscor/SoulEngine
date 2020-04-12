@@ -1,5 +1,7 @@
 #include "Window.h"
 
+std::shared_ptr<Window> Window::m_Instance = 0;
+
 Window::Window()
 {
 	SetEventCallback(BIND_EVENT_FN(Window::OnEvent));
@@ -36,4 +38,14 @@ bool Window::DebugEvent(LogEvent& e)
 {
 	std::cout << "EVENT :: Logged Window event. Message: " + e.ToString();
 	return true;
+}
+
+std::shared_ptr<Window> Window::GetInstance()
+{
+	if (Window::m_Instance == NULL)
+	{
+		Window::m_Instance = std::make_shared<Window>();
+	}
+
+	return Window::m_Instance;
 }

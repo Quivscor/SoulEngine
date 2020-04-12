@@ -9,7 +9,7 @@ Game::~Game()
 
 void Game::Init()
 {
-	m_Window = std::make_unique<Window>();
+	m_Window = m_Window->GetInstance();
 	m_Window->Init("SoulEater", 640, 480);
 
 	LogEvent e("Hello events!");
