@@ -11,6 +11,8 @@ public:
 	void Init(std::string name, int width, int height);
 	static std::shared_ptr<Window> GetInstance();
 
+	GLFWwindow* GetMWindow();
+
 private:
 	static std::shared_ptr<Window> m_Instance;
 
