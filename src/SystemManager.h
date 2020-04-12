@@ -9,5 +9,5 @@ public:
 	~SystemManager();
 
 private:
-	std::unordered_set<System> m_Systems;
+	//std::unordered_set<System> m_Systems;
 };
