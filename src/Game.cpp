@@ -39,8 +39,7 @@ void Game::Run()
 	{
 		renderer->Update();
 		renderer->DrawSquare();
+
 		renderer->LateUpdate();
-		//it should be in Renderer - to change 
-		glfwSwapBuffers(m_Window->GetMWindow());
 	}
 }

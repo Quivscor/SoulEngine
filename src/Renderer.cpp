@@ -18,7 +18,7 @@ void Renderer::Update() const
 
 void Renderer::LateUpdate() const
 {
-	//glfwSwapBuffers(m_Window.m_Instance->GetMWindow());
+	glfwSwapBuffers(Window::GetInstance()->GetMWindow());
 }
 
 void Renderer::DrawSquare()
