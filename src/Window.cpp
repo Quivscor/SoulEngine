@@ -23,6 +23,13 @@ void Window::Init(std::string name, int width, int height)
 		std::cout << "ERROR :: Window was not created.";
 	}
 	glfwMakeContextCurrent(m_Window);
+
+	// glad: load all OpenGL function pointers
+	// ---------------------------------------
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "ERROR :: Failed to initialize GLAD" << std::endl;
+	}
 }
 
 void Window::OnEvent(Event& e)
@@ -36,4 +43,9 @@ bool Window::DebugEvent(LogEvent& e)
 {
 	std::cout << "EVENT :: Logged Window event. Message: " + e.ToString();
 	return true;
+}
+
+GLFWwindow* Window::GetMWindow()
+{
+	return m_Window;
 }

@@ -12,6 +12,8 @@ public:
 
 	void Init(std::string name, int width, int height);
 
+	GLFWwindow* GetMWindow();
+
 private:
 	int m_Width;
 	int m_Height;

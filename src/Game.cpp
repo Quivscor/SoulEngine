@@ -1,5 +1,9 @@
 #include "Game.h"
 
+//TO DELETE:
+#include "Material.h"
+#include "Renderer.h"
+
 Game::Game() {}
 
 Game::~Game() 
@@ -18,8 +22,25 @@ void Game::Init()
 
 void Game::Run()
 {
+	//-----------------------------Tests zone------------------------------------------
+	//TO DELETE:
+	//Creating simple shader
+	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
+
+	//Creating simple material
+	Material* material = new Material(shader);
+
+	//Creating renderer
+	Renderer* renderer = new Renderer(1, shader);
+
+	//---------------------------------------------------------------------------------
+
 	while (true)
 	{
-		
+		renderer->Update();
+		renderer->DrawSquare();
+		renderer->LateUpdate();
+		//it should be in Renderer - to change 
+		glfwSwapBuffers(m_Window->GetMWindow());
 	}
 }
