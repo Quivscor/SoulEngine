@@ -8,6 +8,7 @@ class Physics : System
 public:
 	Physics(int ID);
 	~Physics();
+	void Init() const;
 	virtual void Update() const;
 	virtual void LateUpdate() const;
 

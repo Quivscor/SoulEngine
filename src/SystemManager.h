@@ -2,12 +2,27 @@
 #include "Core.h"
 #include "System.h"
 
+class System;
+struct SystemHash;
+
 class SystemManager
 {
 public:
 	SystemManager();
 	~SystemManager();
 
+	//Method for creating system instances, regardless of what arguments the particular system constructor needs.
+	template <typename T, typename... Args>
+	void AddSystem(Args&&... args)
+	{
+		std::shared_ptr<T> pointer = std::make_shared<T>(std::forward<Args>(args)...);
+
+		m_Systems.emplace_back(std::dynamic_pointer_cast<System>(pointer));
+	}
+
+	void UpdateAll();
+	void LateUpdateAll();
+
 private:
-	//std::unordered_set<System> m_Systems;
+	std::vector<std::shared_ptr<System>> m_Systems;
 };

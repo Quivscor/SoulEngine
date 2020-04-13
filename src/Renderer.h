@@ -6,11 +6,12 @@
 #include "Transform.h"
 #include "Material.h"
 
-class Renderer : System
+class Renderer : public System
 {
 public:
 	Renderer(int ID, Shader* defaultShader);
 	~Renderer();
+	void Init() const;
 	virtual void Update() const;
 	virtual void LateUpdate() const;
 	void DrawCube(Transform* transform, Material* material);

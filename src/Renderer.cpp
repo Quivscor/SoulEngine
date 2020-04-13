@@ -10,6 +10,11 @@ Renderer::~Renderer()
 
 }
 
+void Renderer::Init() const
+{
+
+}
+
 void Renderer::Update() const
 {
 	glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
