@@ -41,17 +41,20 @@ void Game::Run()
 	//Creating systems
 	Renderer* renderer = new Renderer(1, shader);
 	Physics* physics = new Physics(2);
+
+	//setting values (it should be exectuted by using events)
 	physics->transform = transform;
 
 	//---------------------------------------------------------------------------------
 
 	while (true)
 	{
-		transform->rotation = glm::vec3(0.0f, 0.0f, (GLfloat)glfwGetTime() * 10.0f);
+		material->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
+		transform->rotation = glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f);
 
 		physics->Update();
 		renderer->Update();
-		renderer->DrawSquare(transform);
+		renderer->DrawCube(transform, material);
 
 		physics->LateUpdate();
 		renderer->LateUpdate();
