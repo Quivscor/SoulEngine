@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "EntityManager.h"
 #include "ComponentManager.h"
+#include "AssetManager.h"
 
 class Game
 {
