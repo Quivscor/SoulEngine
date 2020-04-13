@@ -3,6 +3,7 @@
 //TO DELETE:
 #include "Material.h"
 #include "Renderer.h"
+#include "Physics.h"
 
 Game::Game() {}
 
@@ -30,15 +31,29 @@ void Game::Run()
 	//Creating simple material
 	Material* material = new Material(shader);
 
-	//Creating renderer
-	//Renderer* renderer = new Renderer(1, shader);
+	//Creating simple transform
+	Transform* transform = new Transform();
 
-	m_SystemManager.AddSystem<Renderer>(1, shader);
+	transform->position = glm::vec3(0.33f, 0.22f, 0.0f);
+	transform->rotation = glm::vec3(0.0f, 0.0f, 45.0f);
+	transform->scale = glm::vec3(0.5f, 0.75f, 1.0f);
+
+	//Creating systems
+	Renderer* renderer = new Renderer(1, shader);
+	Physics* physics = new Physics(2);
+	physics->transform = transform;
+
 	//---------------------------------------------------------------------------------
 
 	while (true)
 	{
-		m_SystemManager.UpdateAll();
-		m_SystemManager.LateUpdateAll();
+		transform->rotation = glm::vec3(0.0f, 0.0f, (GLfloat)glfwGetTime() * 10.0f);
+
+		physics->Update();
+		renderer->Update();
+		renderer->DrawSquare(transform);
+
+		physics->LateUpdate();
+		renderer->LateUpdate();
 	}
 }
