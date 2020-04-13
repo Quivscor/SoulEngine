@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-Renderer::Renderer(int ID, Shader* defaultShader) : defaultShader(defaultShader), System(ID)
+Renderer::Renderer(Shader* defaultShader) : defaultShader(defaultShader)
 {
 
 }

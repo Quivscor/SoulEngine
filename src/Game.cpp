@@ -39,8 +39,8 @@ void Game::Run()
 	transform->scale = glm::vec3(0.5f, 0.75f, 1.0f);
 
 	//Creating systems
-	Renderer* renderer = new Renderer(1, shader);
-	Physics* physics = new Physics(2);
+	Renderer* renderer = new Renderer(shader);
+	Physics* physics = new Physics();
 	physics->transform = transform;
 
 	//---------------------------------------------------------------------------------

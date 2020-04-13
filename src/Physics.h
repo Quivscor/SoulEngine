@@ -6,7 +6,7 @@
 class Physics : System
 {
 public:
-	Physics(int ID);
+	Physics();
 	~Physics();
 	void Init() const;
 	virtual void Update() const;

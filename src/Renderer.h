@@ -8,7 +8,7 @@
 class Renderer : public System
 {
 public:
-	Renderer(int ID, Shader* defaultShader);
+	Renderer(Shader* defaultShader);
 	~Renderer();
 	void Init() const;
 	void Update() const;

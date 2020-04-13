@@ -16,6 +16,7 @@ public:
 	void AddSystem(Args&&... args)
 	{
 		std::shared_ptr<T> pointer = std::make_shared<T>(std::forward<Args>(args)...);
+		(*pointer)->SetSystemID(m_NextSystemIndex++);
 
 		m_Systems.emplace_back(std::dynamic_pointer_cast<System>(pointer));
 	}
@@ -24,5 +25,6 @@ public:
 	void LateUpdateAll();
 
 private:
+	int m_NextSystemIndex = 0;
 	std::vector<std::shared_ptr<System>> m_Systems;
 };

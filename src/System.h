@@ -9,7 +9,7 @@ class System
 public:
 	friend class SystemManager;
 
-	System(int ID);
+	System();
 	~System();
 
 	virtual void Init() const = 0;
@@ -26,6 +26,8 @@ private:
 	int m_SystemID;
 	std::shared_ptr<SystemManager> m_SystemManagerInstance;
 	std::vector<std::shared_ptr<Component>> m_Components;
+
+	void SetSystemID(int ID);
 };
 
 struct SystemHash

@@ -1,6 +1,6 @@
 #include "Physics.h"
 
-Physics::Physics(int ID) : System(ID)
+Physics::Physics()
 {
 
 }
