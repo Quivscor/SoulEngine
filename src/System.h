@@ -1,5 +1,8 @@
 #pragma once
 #include "SystemManager.h"
+#include "Component.h"
+
+class SystemManager;
 
 class System
 {
@@ -9,39 +12,26 @@ public:
 	System(int ID);
 	~System();
 
+	virtual void Init() const = 0;
 	virtual void Update() const = 0;
 	virtual void LateUpdate() const = 0;
 	virtual int GetSystemID() const { return m_SystemID; }
 
 	bool operator==(const System& obj) const
 	{
-		if (m_SystemID == obj.m_SystemID)
-			return true;
-		else
-			return false;
-	}
-
-	bool operator!=(const System& obj) const
-	{
-		if (m_SystemID != obj.m_SystemID)
-			return true;
-		else
-			return false;
+		return (this->m_SystemID == obj.m_SystemID);
 	}
 
 private:
 	int m_SystemID;
-	SystemManager* m_SystemManagerInstance;
+	std::shared_ptr<SystemManager> m_SystemManagerInstance;
+	std::vector<std::shared_ptr<Component>> m_Components;
 };
 
-namespace std
+struct SystemHash
 {
-	template<>
-	struct hash<System>
-	{
-		size_t operator()(const System & obj) const
-		{
-			return hash<int>()(obj.GetSystemID());
-		}
-	};
-}
+public:
+	size_t operator()(const System& t) const {
+		return t.GetSystemID();
+	}
+};

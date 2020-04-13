@@ -4,13 +4,14 @@
 #include "Shader.h"
 #include "Window.h"
 
-class Renderer : System
+class Renderer : public System
 {
 public:
 	Renderer(int ID, Shader* defaultShader);
 	~Renderer();
-	virtual void Update() const;
-	virtual void LateUpdate() const;
+	void Init() const;
+	void Update() const;
+	void LateUpdate() const;
 	void DrawSquare();
 
 private:

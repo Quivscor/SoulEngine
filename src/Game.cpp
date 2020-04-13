@@ -31,15 +31,14 @@ void Game::Run()
 	Material* material = new Material(shader);
 
 	//Creating renderer
-	Renderer* renderer = new Renderer(1, shader);
+	//Renderer* renderer = new Renderer(1, shader);
 
+	m_SystemManager.AddSystem<Renderer>(1, shader);
 	//---------------------------------------------------------------------------------
 
 	while (true)
 	{
-		renderer->Update();
-		renderer->DrawSquare();
-
-		renderer->LateUpdate();
+		m_SystemManager.UpdateAll();
+		m_SystemManager.LateUpdateAll();
 	}
 }
