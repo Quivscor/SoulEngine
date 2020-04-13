@@ -1,10 +1,13 @@
 #pragma once
 #include "Core.h"
 #include "IEventListener.h"
+#include "Camera.h"
 
 class Window : public IEventListener
 {
 public:
+	friend class Camera;
+
 	Window();
 	~Window();
 

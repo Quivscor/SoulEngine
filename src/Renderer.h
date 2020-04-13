@@ -17,7 +17,14 @@ public:
 	void DrawCube(Transform* transform, Material* material);
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
 
+	//Debug
+	void DebugSetProjectionView(Transform* projection, Camera* view);
+
 private:
 	//list of meshes?
 	Shader* defaultShader;
+
+	//Debug
+	Camera* camProjection;
+	Transform* camView;
 };

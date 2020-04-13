@@ -38,12 +38,20 @@ void Game::Run()
 	transform->rotation = glm::vec3(0.0f, 0.0f, 45.0f);
 	transform->scale = glm::vec3(0.5f, 0.75f, 1.0f);
 
+	Camera* camera = new Camera();
+
+	Transform* cameraTransform = new Transform();
+	cameraTransform->position = glm::vec3(0.0f, 0.0f, -3.0f);
+
 	//Creating systems
 	Renderer* renderer = new Renderer(shader);
 	Physics* physics = new Physics();
+	Physics* camPhysics = new Physics();
 
 	//setting values (it should be exectuted by using events)
+	renderer->DebugSetProjectionView(cameraTransform, camera);
 	physics->transform = transform;
+	camPhysics->transform = cameraTransform;
 
 	//---------------------------------------------------------------------------------
 
@@ -53,6 +61,7 @@ void Game::Run()
 		transform->rotation = glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f);
 
 		physics->Update();
+		camPhysics->Update();
 		renderer->Update();
 		renderer->DrawCube(transform, material);
 
