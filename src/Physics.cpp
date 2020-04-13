@@ -10,6 +10,9 @@ Physics::~Physics()
 
 }
 
+void Physics::Init() const
+{ }
+
 void Physics::Update() const
 {
 	transform->matrix = glm::mat4(1.0f);
