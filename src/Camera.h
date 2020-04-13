@@ -18,6 +18,8 @@ public:
 	glm::mat4 GetProjection();
 
 private:
+	void UpdateProjection();
+
 	glm::mat4 projection;
 
 	float nearClippingPlane = 0.1f;
