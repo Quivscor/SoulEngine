@@ -15,6 +15,7 @@ public:
 	virtual void Update() const;
 	virtual void LateUpdate() const;
 	void DrawCube(Transform* transform, Material* material);
+	SystemType GetSystemType() const override { return SystemType::Renderer; }
 
 private:
 	//list of meshes?

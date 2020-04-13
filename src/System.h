@@ -4,6 +4,12 @@
 
 class SystemManager;
 
+enum class SystemType
+{
+	None = 0,
+	Renderer, Physics
+};
+
 class System
 {
 public:
@@ -16,6 +22,7 @@ public:
 	virtual void Update() const = 0;
 	virtual void LateUpdate() const = 0;
 	virtual int GetSystemID() const { return m_SystemID; }
+	virtual SystemType GetSystemType() const = 0;
 
 	bool operator==(const System& obj) const
 	{
@@ -28,12 +35,4 @@ private:
 	std::vector<std::shared_ptr<Component>> m_Components;
 
 	void SetSystemID(int ID);
-};
-
-struct SystemHash
-{
-public:
-	size_t operator()(const System& t) const {
-		return t.GetSystemID();
-	}
 };
