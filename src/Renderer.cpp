@@ -92,8 +92,10 @@ void Renderer::DrawCube(Transform* transform, Material* material)
 
 	defaultShader->use();
 
+	glm::mat4 mvp = camProjection->GetProjection() * camView->matrix * transform->matrix;
+
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform->matrix));
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
 	glUniform3fv(colorLoc, 1, glm::value_ptr(material->GetColor()));
@@ -102,4 +104,10 @@ void Renderer::DrawCube(Transform* transform, Material* material)
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+}
+
+void Renderer::DebugSetProjectionView(Transform* view, Camera* projection)
+{
+	camProjection = projection;
+	camView = view;
 }
