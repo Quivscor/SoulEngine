@@ -21,7 +21,7 @@ void Renderer::LateUpdate() const
 	glfwSwapBuffers(Window::GetInstance()->GetMWindow());
 }
 
-void Renderer::DrawSquare()
+void Renderer::DrawSquare(Transform* transform)
 {
 	float vertices[] = {
 	 0.5f,  0.5f, 0.0f,  // top right
@@ -51,6 +51,9 @@ void Renderer::DrawSquare()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	defaultShader->use();
+
+	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform->matrix));
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

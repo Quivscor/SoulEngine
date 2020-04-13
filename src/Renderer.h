@@ -3,6 +3,7 @@
 #include "System.h"
 #include "Shader.h"
 #include "Window.h"
+#include "Transform.h"
 
 class Renderer : System
 {
@@ -11,7 +12,7 @@ public:
 	~Renderer();
 	virtual void Update() const;
 	virtual void LateUpdate() const;
-	void DrawSquare();
+	void DrawSquare(Transform* transform);
 
 private:
 	//list of meshes?

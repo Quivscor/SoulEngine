@@ -27,3 +27,8 @@
 #include <string>
 #include <functional>
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL definitions
+
+// OpenGL math
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
