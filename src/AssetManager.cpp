@@ -147,7 +147,7 @@ std::vector<Texture> AssetManager::LoadMaterialTextures(aiMaterial *mat, aiTextu
 		if (!skip)
 		{   // jeœli tekstura nie zosta³a jeszcze za³adowana, za³aduj j¹
 			Texture texture;
-			texture.id = TextureFromFile(str.C_Str(), directory);
+			texture.id = TextureFromFile(str.C_Str(), this->directory);
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);
