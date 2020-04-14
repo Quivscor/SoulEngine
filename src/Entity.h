@@ -10,7 +10,7 @@ public:
 	~Entity();
 	int GetEntityID();
 
-private:
+protected:
 	int m_EntityID;
 	bool m_IsActive = true;
 	ComponentManager* m_ComponentManagerInstance;

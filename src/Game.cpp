@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "Renderer.h"
 #include "Physics.h"
+#include "Player.h"
 
 Game::Game() {}
 
@@ -58,6 +59,9 @@ void Game::Run()
 	camPhysics->transform = cameraTransform;
 
 	//---------------------------------------------------------------------------------
+
+	std::shared_ptr<Player> player = m_EntityManager.CreateEntity<Player>(&m_ComponentManager);
+	(*player).m_Transform = m_ComponentManager.AddComponent<Transform>((*player).GetEntityID());
 
 	while (true)
 	{

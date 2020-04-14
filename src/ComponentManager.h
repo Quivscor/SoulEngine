@@ -11,9 +11,10 @@ public:
 	template <typename T, typename... Args>
 	std::shared_ptr<T> AddComponent(int ownerID, Args&& ...)
 	{
-		std::shared_ptr<T> component = std::make_shared<T>(std::forward(Args&& ...));
-		(*component)->SetComponentID(m_NextComponentID++);
-		m_Components.insert((*component)->GetComponentType(), component);
+		std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(args)...);
+		(*component).SetComponentID(m_NextComponentID++);
+		(*component).SetOwnerID(ownerID);
+		//m_Components.insert((*component).GetComponentType(), std::dynamic_pointer_cast<Component>(component));
 
 		return component;
 	}
@@ -26,5 +27,5 @@ public:
 
 private:
 	int m_NextComponentID = 0;
-	std::unordered_map<ComponentType, std::shared_ptr<Component>> m_Components;
+	std::unordered_map<ComponentType, std::shared_ptr<Component>, std::hash<int>> m_Components;
 };

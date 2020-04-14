@@ -30,7 +30,7 @@ public:
 		return (this->m_SystemID == obj.m_SystemID);
 	}
 
-private:
+protected:
 	int m_SystemID;
 	std::shared_ptr<SystemManager> m_SystemManagerInstance;
 
