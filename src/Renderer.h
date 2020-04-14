@@ -4,18 +4,20 @@
 #include "Shader.h"
 #include "Window.h"
 #include "Transform.h"
-#include "Material.h"
 #include "Mesh.h"
+
+class Mesh;
 
 class Renderer : public System
 {
 public:
-	Renderer(Shader* defaultShader);
+	Renderer(Shader* shader);
 	~Renderer();
 	void Init() const;
 	virtual void Update() const;
 	virtual void LateUpdate() const;
 	void DrawCube(Transform* transform, Material* material);
+	static Shader* GetDefualtShader();
 
 	//Debug
 	void DebugSetProjectionView(Transform* projection, Camera* view);
@@ -24,7 +26,7 @@ public:
 private:
 	//list of meshes?
 	void DrawMeshes() const;
-	Shader* defaultShader;
+	static Shader* defaultShader;
 
 	//Debug
 	Camera* camProjection;

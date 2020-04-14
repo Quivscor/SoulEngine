@@ -24,3 +24,13 @@ void Material::SetColor(glm::vec3 color)
 {
 	this->color = color;
 }
+
+std::vector<Texture> Material::GetTextures()
+{
+	return textures;
+}
+
+void Material::SetTextures(std::vector<Texture> textures)
+{
+	this->textures = textures;
+}
