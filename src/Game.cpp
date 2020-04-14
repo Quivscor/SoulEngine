@@ -34,7 +34,7 @@ void Game::Run()
 	//Creating simple transform
 	Transform* transform = new Transform();
 
-	transform->position = glm::vec3(0.33f, 0.22f, 0.0f);
+	transform->position = glm::vec3(0.33f, -1.0f, 0.0f);
 	transform->rotation = glm::vec3(0.0f, 0.0f, 45.0f);
 	transform->scale = glm::vec3(0.5f, 0.75f, 1.0f);
 
@@ -44,12 +44,16 @@ void Game::Run()
 	cameraTransform->position = glm::vec3(0.0f, 0.0f, -3.0f);
 
 	//Creating systems
+	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
 	Physics* physics = new Physics();
 	Physics* camPhysics = new Physics();
 
+	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
+
 	//setting values (it should be exectuted by using events)
 	renderer->DebugSetProjectionView(cameraTransform, camera);
+	renderer->meshes = testModel->GetMeshes();
 	physics->transform = transform;
 	camPhysics->transform = cameraTransform;
 

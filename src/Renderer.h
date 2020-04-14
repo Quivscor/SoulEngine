@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Transform.h"
 #include "Material.h"
+#include "Mesh.h"
 
 class Renderer : public System
 {
@@ -19,9 +20,11 @@ public:
 
 	//Debug
 	void DebugSetProjectionView(Transform* projection, Camera* view);
+	std::vector<Mesh> meshes;
 
 private:
 	//list of meshes?
+	void DrawMeshes() const;
 	Shader* defaultShader;
 
 	//Debug
