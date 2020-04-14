@@ -5,8 +5,7 @@ class Transform;
 enum class EventType {
 	None = 0,
 	LogEvent,
-	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-	BindTransform,
+	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved
 };
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
@@ -52,18 +51,4 @@ public:
 
 private:
 	std::string m_Message;
-};
-
-class BindTransform : public Event
-{
-public:
-	BindTransform(std::shared_ptr<Transform> transform) : m_Component(transform) { }
-	virtual std::string ToString() const override { return "Transform pointer."; }
-
-	EVENT_CLASS_TYPE(BindTransform)
-
-	std::shared_ptr<Transform> GetTransformComponent() { return m_Component; }
-
-private:
-	std::shared_ptr<Transform> m_Component;
 };

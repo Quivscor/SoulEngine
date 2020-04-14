@@ -7,7 +7,7 @@
 
 class System;
 
-class SystemManager : IEventListener
+class SystemManager
 {
 public:
 	SystemManager();
@@ -23,13 +23,10 @@ public:
 		m_Systems.emplace_back(std::dynamic_pointer_cast<System>(pointer));
 	}
 
-	void OnEvent(Event& e);
 	void UpdateAll();
 	void LateUpdateAll();
 
 private:
 	int m_NextSystemIndex = 0;
 	std::vector<std::shared_ptr<System>> m_Systems;
-
-	bool BindTransformComponent(BindTransform& e);
 };

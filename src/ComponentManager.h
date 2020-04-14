@@ -9,10 +9,11 @@ public:
 	~ComponentManager();
 
 	template <typename T, typename... Args>
-	std::unique_ptr<T> AddComponent(int ownerID, Args&& ...)
+	std::shared_ptr<T> AddComponent(int ownerID, Args&& ...)
 	{
-		std::unique_ptr<T> component = std::make_unique<T>(std::forward(Args&& ...));
+		std::shared_ptr<T> component = std::make_shared<T>(std::forward(Args&& ...));
 		(*component)->SetComponentID(m_NextComponentID++);
+		m_Components.insert((*component)->GetComponentType(), component);
 
 		return component;
 	}
@@ -25,4 +26,5 @@ public:
 
 private:
 	int m_NextComponentID = 0;
+	std::unordered_map<ComponentType, std::shared_ptr<Component>> m_Components;
 };

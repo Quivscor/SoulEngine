@@ -14,6 +14,7 @@ class System
 {
 public:
 	friend class SystemManager;
+	friend class ComponentManager;
 
 	System();
 	~System();
@@ -32,7 +33,6 @@ public:
 private:
 	int m_SystemID;
 	std::shared_ptr<SystemManager> m_SystemManagerInstance;
-	std::vector<std::shared_ptr<Component>> m_Components;
 
 	void SetSystemID(int ID);
 };
