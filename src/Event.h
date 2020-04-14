@@ -1,5 +1,7 @@
 #pragma once
 
+class Transform;
+
 enum class EventType {
 	None = 0,
 	LogEvent,

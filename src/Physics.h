@@ -11,6 +11,7 @@ public:
 	void Init() const;
 	virtual void Update() const;
 	virtual void LateUpdate() const;
+	SystemType GetSystemType() const override { return SystemType::Physics; }
 
 	Transform* transform;
 	Transform* view;

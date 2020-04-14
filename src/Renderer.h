@@ -17,7 +17,11 @@ public:
 	virtual void Update() const;
 	virtual void LateUpdate() const;
 	void DrawCube(Transform* transform, Material* material);
+	
 	static Shader* GetDefualtShader();
+
+	SystemType GetSystemType() const override { return SystemType::Renderer; }
+
 
 	//Debug
 	void DebugSetProjectionView(Transform* projection, Camera* view);

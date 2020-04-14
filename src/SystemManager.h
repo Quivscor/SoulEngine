@@ -1,9 +1,11 @@
 #pragma once
 #include "Core.h"
 #include "System.h"
+#include "IEventListener.h"
+#include "Event.h"
+#include "Component.h"
 
 class System;
-struct SystemHash;
 
 class SystemManager
 {
