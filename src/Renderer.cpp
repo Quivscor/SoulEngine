@@ -33,23 +33,24 @@ void Renderer::DrawMeshes() const
 {
 	for (int i = 0; i < meshes.size(); i++)
 	{
-
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
-		for (unsigned int i = 0; i < meshes[i].textures.size(); i++)
+
+		for (unsigned int j = 0; j < meshes[i].textures.size(); j++)
 		{
-			defaultShader->setInt("material.diffuse", i);
-			glActiveTexture(GL_TEXTURE0 + i); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
+			//defaultShader->setInt("material.diffuse", i);
+			glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
 
 			std::string number;
-			std::string name = meshes[i].textures[i].type;
+			std::string name = meshes[i].textures[j].type;
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
 			else if (name == "texture_specular")
 				number = std::to_string(specularNr++);
 
-			defaultShader->setFloat(("material." + name + number).c_str(), i);
-			glBindTexture(GL_TEXTURE_2D, meshes[i].textures[i].id);
+			//defaultShader->setFloat(("material." + name + number).c_str(), i);
+			glUniform1i(glGetUniformLocation(defaultShader->ID, (name + number).c_str()), j);
+			glBindTexture(GL_TEXTURE_2D, meshes[i].textures[j].id);
 		}
 
 		defaultShader->use();
@@ -65,12 +66,16 @@ void Renderer::DrawMeshes() const
 		unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
 		glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
 
+		unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
+		glUniform1i(hasTexture, 1);
+
 		// draw mesh
 		glBindVertexArray(meshes[i].GetVAO());
 		glDrawElements(GL_TRIANGLES, meshes[i].indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
-		glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
+		glActiveTexture(GL_TEXTURE0);
+		//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
 	}
 }
 
@@ -147,6 +152,9 @@ void Renderer::DrawCube(Transform* transform, Material* material)
 
 	unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
 	glUniform3fv(colorLoc, 1, glm::value_ptr(material->GetColor()));
+
+	unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
+	glUniform1i(hasTexture, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
