@@ -1,6 +1,8 @@
 #pragma once
 #include "Core.h"
 #include "Shader.h"
+#include "Material.h"
+#include "Renderer.h"
 
 struct Vertex {
 	glm::vec3 Position;
@@ -8,13 +10,7 @@ struct Vertex {
 	glm::vec2 TexCoords;
 };
 
-struct Texture {
-	unsigned int id;
-	std::string type;
-	std::string path;
-};
-
-class Mesh
+class Mesh : Component
 {
 public:
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
@@ -22,9 +18,8 @@ public:
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<Texture> textures;
+	Material* material;
 
-	void Draw(Shader shader);
 	unsigned int GetVAO() const;
 	unsigned int GetVBO();
 	unsigned int GetEBO();

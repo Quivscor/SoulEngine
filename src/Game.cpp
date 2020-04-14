@@ -29,9 +29,6 @@ void Game::Run()
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 
-	//Creating simple material
-	Material* material = new Material(shader);
-
 	//Creating simple transform
 	Transform* transform = new Transform();
 
@@ -57,6 +54,9 @@ void Game::Run()
 	renderer->meshes = testModel->GetMeshes();
 	physics->transform = transform;
 	camPhysics->transform = cameraTransform;
+
+	//Creating simple material
+	Material* material = new Material(shader);
 
 	//---------------------------------------------------------------------------------
 

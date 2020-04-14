@@ -4,7 +4,10 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 {
 	this->vertices = vertices;
 	this->indices = indices;
-	this->textures = textures;
+	//this->textures = textures;
+
+	material = new Material(Renderer::GetDefualtShader());
+	material->SetTextures(textures);
 
 	setupMesh();
 }
@@ -42,41 +45,6 @@ void Mesh::setupMesh()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
 	glBindVertexArray(0);
-}
-
-void Mesh::Draw(Shader shader)
-{
-	//UseColor(shader);
-
-	unsigned int diffuseNr = 1;
-	unsigned int specularNr = 1;
-	for (unsigned int i = 0; i < textures.size(); i++)
-	{
-		shader.setInt("material.diffuse", i);
-		glActiveTexture(GL_TEXTURE0 + i); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
-
-		std::string number;
-		std::string name = textures[i].type;
-		if (name == "texture_diffuse")
-			number = std::to_string(diffuseNr++);
-		else if (name == "texture_specular")
-			number = std::to_string(specularNr++);
-
-		shader.setFloat(("material." + name + number).c_str(), i);
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-	}
-	//glActiveTexture(GL_TEXTURE0);
-
-	// draw mesh
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-
-	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-
-	//glDeleteVertexArrays(1, &VAO);
-	//glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
 }
 
 unsigned int Mesh::GetVAO() const

@@ -1,8 +1,10 @@
 #include "Renderer.h"
 
-Renderer::Renderer(Shader* defaultShader) : defaultShader(defaultShader)
-{
+Shader* Renderer::defaultShader = nullptr;
 
+Renderer::Renderer(Shader* shader)
+{
+	defaultShader = shader;
 }
 
 Renderer::~Renderer()
@@ -35,14 +37,16 @@ void Renderer::DrawMeshes() const
 	{
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
+		int anyTexture = 0;
 
-		for (unsigned int j = 0; j < meshes[i].textures.size(); j++)
+		for (unsigned int j = 0; j < meshes[i].material->GetTextures().size(); j++)
 		{
+			anyTexture = 1;
 			//defaultShader->setInt("material.diffuse", i);
 			glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
 
 			std::string number;
-			std::string name = meshes[i].textures[j].type;
+			std::string name = meshes[i].material->GetTextures()[j].type;
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
 			else if (name == "texture_specular")
@@ -50,7 +54,7 @@ void Renderer::DrawMeshes() const
 
 			//defaultShader->setFloat(("material." + name + number).c_str(), i);
 			glUniform1i(glGetUniformLocation(defaultShader->ID, (name + number).c_str()), j);
-			glBindTexture(GL_TEXTURE_2D, meshes[i].textures[j].id);
+			glBindTexture(GL_TEXTURE_2D, meshes[i].material->GetTextures()[j].id);
 		}
 
 		defaultShader->use();
@@ -64,10 +68,10 @@ void Renderer::DrawMeshes() const
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 		unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
-		glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
+		glUniform3fv(colorLoc, 1, glm::value_ptr(meshes[i].material->GetColor()));
 
 		unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
-		glUniform1i(hasTexture, 1);
+		glUniform1i(hasTexture, anyTexture);
 
 		// draw mesh
 		glBindVertexArray(meshes[i].GetVAO());
@@ -160,6 +164,11 @@ void Renderer::DrawCube(Transform* transform, Material* material)
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+}
+
+Shader* Renderer::GetDefualtShader()
+{
+	return Renderer::defaultShader;
 }
 
 void Renderer::DebugSetProjectionView(Transform* view, Camera* projection)
