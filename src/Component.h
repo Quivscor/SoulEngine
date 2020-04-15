@@ -1,9 +1,9 @@
 #pragma once
 
-enum class ComponentType
+enum ComponentType
 {
 	None = 0,
-	TransformComponent
+	TransformComponent = 1
 };
 
 class Component

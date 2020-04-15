@@ -14,7 +14,7 @@ public:
 	std::shared_ptr<T> CreateEntity(Args&&... args)
 	{
 		std::shared_ptr<T> pointer = std::make_shared<T>(std::forward<Args>(args)...);
-		(*pointer).SetEntityID(m_NextEntityIndex++);
+		pointer->SetEntityID(m_NextEntityIndex++);
 
 		m_Entities.emplace_back(std::dynamic_pointer_cast<Entity>(pointer));
 

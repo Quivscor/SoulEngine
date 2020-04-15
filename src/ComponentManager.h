@@ -12,9 +12,10 @@ public:
 	std::shared_ptr<T> AddComponent(int ownerID, Args&& ...)
 	{
 		std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(args)...);
-		(*component).SetComponentID(m_NextComponentID++);
-		(*component).SetOwnerID(ownerID);
-		//m_Components.insert((*component).GetComponentType(), std::dynamic_pointer_cast<Component>(component));
+		component->SetComponentID(m_NextComponentID++);
+		component->SetOwnerID(ownerID);
+		ComponentType type = component->GetComponentType();
+		m_Components.insert({ type, std::dynamic_pointer_cast<Component>(component) });
 
 		return component;
 	}
