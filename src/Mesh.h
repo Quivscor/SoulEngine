@@ -10,9 +10,10 @@ struct Vertex {
 	glm::vec2 TexCoords;
 };
 
-class Mesh : Component
+class Mesh : public Component
 {
 public:
+	Mesh();
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 	~Mesh();
 
@@ -24,8 +25,10 @@ public:
 	unsigned int GetVBO();
 	unsigned int GetEBO();
 
-private:
+	virtual ComponentType GetComponentType() const override { return ComponentType::MeshComponent; }
+
 	void setupMesh();
 
+private:
 	unsigned int VAO, VBO, EBO;
 };

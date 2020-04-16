@@ -36,15 +36,25 @@ void Game::Run()
 
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
 
-	//std::shared_ptr<Player> player = m_EntityManager.CreateEntity<Player>(&m_ComponentManager);
-	//player->m_Transform = player->AddComponent<Transform>();
+	//Object with model
+	std::shared_ptr<Entity> character = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	character->AddComponent<Transform>();
+	character->GetComponent<Transform>()->scale = glm::vec3(0.1f, 0.1f, 0.1f);
+	character->AddComponent<Mesh>();
+
+	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
+	character->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
+	character->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+	character->GetComponent<Mesh>()->setupMesh();
+
+	physics->RegisterEntity(character);
+	renderer->RegisterEntity(character);
 
 	//Camera object
 	std::shared_ptr<Entity> camera = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	
 	camera->AddComponent<Transform>();
 	physics->RegisterEntity(camera);
-	renderer->RegisterEntity(camera);
 	camera->AddComponent<Camera>();
 
 	//Object for cube
@@ -71,6 +81,10 @@ void Game::Run()
 		//cube object 
 		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
 		cube->GetComponent<Transform>()->rotation = glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f);
+
+		//character object
+		character->GetComponent<Mesh>()->material->SetColor(glm::vec3(1.0f, sin((GLfloat)glfwGetTime()), sin((GLfloat)glfwGetTime())));
+		character->GetComponent<Transform>()->rotation = glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f);
 
 		physics->Update();
 		renderer->Update();

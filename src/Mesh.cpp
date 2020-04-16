@@ -13,6 +13,11 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	setupMesh();
 }
 
+Mesh::Mesh()
+{
+
+}
+
 Mesh::~Mesh()
 {
 

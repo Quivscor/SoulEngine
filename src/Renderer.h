@@ -26,7 +26,7 @@ public:
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
 	//void DebugSetProjectionView(Transform* projection, Camera* view);
-	std::vector<Mesh> meshes;
+	//std::vector<Mesh> meshes;
 
 private:
 	//list of meshes?

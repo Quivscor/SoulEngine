@@ -33,20 +33,23 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawMeshes() const
 {
-	for (int i = 0; i < meshes.size(); i++)
+	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
 		int anyTexture = 0;
 
-		for (unsigned int j = 0; j < meshes[i].material->GetTextures().size(); j++)
+		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
+		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
+
+		for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
 		{
 			anyTexture = 1;
 			//defaultShader->setInt("material.diffuse", i);
 			glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
 
 			std::string number;
-			std::string name = meshes[i].material->GetTextures()[j].type;
+			std::string name = mesh->material->GetTextures()[j].type;
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
 			else if (name == "texture_specular")
@@ -54,28 +57,24 @@ void Renderer::DrawMeshes() const
 
 			//defaultShader->setFloat(("material." + name + number).c_str(), i);
 			glUniform1i(glGetUniformLocation(defaultShader->ID, (name + number).c_str()), j);
-			glBindTexture(GL_TEXTURE_2D, meshes[i].material->GetTextures()[j].id);
+			glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
 		}
 
 		defaultShader->use();
 
-		glm::mat4 localTransform = glm::mat4(1);
-		localTransform = glm::scale(localTransform, glm::vec3(0.1f, 0.1f, 0.1f));
-
-		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * localTransform;
+		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * trns->matrix;
 
 		unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 		unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
-		glUniform3fv(colorLoc, 1, glm::value_ptr(meshes[i].material->GetColor()));
+		glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
 
 		unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
 		glUniform1i(hasTexture, anyTexture);
-
 		// draw mesh
-		glBindVertexArray(meshes[i].GetVAO());
-		glDrawElements(GL_TRIANGLES, meshes[i].indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(mesh->GetVAO());
+		glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		glActiveTexture(GL_TEXTURE0);

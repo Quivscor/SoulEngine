@@ -5,7 +5,8 @@ enum ComponentType
 	None = 0,
 	TransformComponent = 1,
 	CameraComponent = 2,
-	MaterialComponent = 3
+	MaterialComponent = 3,
+	MeshComponent = 4
 };
 
 class Component
