@@ -61,7 +61,7 @@ void Game::Run()
 	//---------------------------------------------------------------------------------
 
 	std::shared_ptr<Player> player = m_EntityManager.CreateEntity<Player>(&m_ComponentManager);
-	(*player).m_Transform = m_ComponentManager.AddComponent<Transform>((*player).GetEntityID());
+	player->m_Transform = player->AddComponent<Transform>();
 
 	while (true)
 	{

@@ -1,6 +1,15 @@
 #pragma once
 #include "Core.h"
 #include "Component.h"
+#include "Transform.h"
+
+struct PairHash
+{
+	size_t operator() (std::pair<int, ComponentType> pair) const
+	{
+		return pair.first ^ pair.second;
+	}
+};
 
 class ComponentManager
 {
@@ -15,7 +24,7 @@ public:
 		component->SetComponentID(m_NextComponentID++);
 		component->SetOwnerID(ownerID);
 		ComponentType type = component->GetComponentType();
-		m_Components.insert({ type, std::dynamic_pointer_cast<Component>(component) });
+		m_Components.insert({ {ownerID, type}, std::dynamic_pointer_cast<Component>(component) });
 
 		return component;
 	}
@@ -26,7 +35,16 @@ public:
 
 	}
 
+	template <typename T>
+	std::shared_ptr<T> GetComponent(int ownerID)
+	{
+		T temp();
+		ComponentType type = temp.GetComponentType();
+		auto it = m_Components.find({ ownerID, type });
+		return std::dynamic_pointer_cast<T>(it->second);
+	}
+
 private:
 	int m_NextComponentID = 0;
-	std::unordered_map<ComponentType, std::shared_ptr<Component>, std::hash<int>> m_Components;
+	std::unordered_map<std::pair<int, ComponentType>, std::shared_ptr<Component>, PairHash> m_Components;
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include "SystemManager.h"
-#include "Component.h"
+#include "Entity.h"
 
 class SystemManager;
 
@@ -30,8 +30,11 @@ public:
 		return (this->m_SystemID == obj.m_SystemID);
 	}
 
+	void RegisterEntity(std::shared_ptr<Entity> entity);
+
 protected:
 	int m_SystemID;
+	std::vector<std::shared_ptr<Entity>> m_Entities;
 	std::shared_ptr<SystemManager> m_SystemManagerInstance;
 
 	void SetSystemID(int ID);
