@@ -16,7 +16,7 @@ public:
 	void Init() const;
 	virtual void Update() const;
 	virtual void LateUpdate() const;
-	void DrawCube(Transform* transform, Material* material);
+	void DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material);
 	
 	static Shader* GetDefualtShader();
 
@@ -24,7 +24,8 @@ public:
 
 
 	//Debug
-	void DebugSetProjectionView(Transform* projection, Camera* view);
+	void SetCamera(std::shared_ptr<Entity> camera);
+	//void DebugSetProjectionView(Transform* projection, Camera* view);
 	std::vector<Mesh> meshes;
 
 private:
@@ -33,6 +34,7 @@ private:
 	static Shader* defaultShader;
 
 	//Debug
-	Camera* camProjection;
-	Transform* camView;
+	std::shared_ptr<Entity> mainCamera;
+	//glm::mat4 camProjection;
+	//glm::mat4 camView;
 };

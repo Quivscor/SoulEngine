@@ -38,7 +38,7 @@ public:
 	template <typename T>
 	std::shared_ptr<T> GetComponent(int ownerID)
 	{
-		T temp();
+		T temp;
 		ComponentType type = temp.GetComponentType();
 		auto it = m_Components.find({ ownerID, type });
 		return std::dynamic_pointer_cast<T>(it->second);

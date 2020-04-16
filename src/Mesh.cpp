@@ -6,7 +6,8 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	this->indices = indices;
 	//this->textures = textures;
 
-	material = new Material(Renderer::GetDefualtShader());
+	material = new Material();
+	material->SetShader(Renderer::GetDefualtShader());
 	material->SetTextures(textures);
 
 	setupMesh();

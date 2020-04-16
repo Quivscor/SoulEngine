@@ -29,49 +29,52 @@ void Game::Run()
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 
-	//Creating simple transform
-	Transform* transform = new Transform();
-
-	transform->position = glm::vec3(0.33f, -1.0f, 0.0f);
-	transform->rotation = glm::vec3(0.0f, 0.0f, 45.0f);
-	transform->scale = glm::vec3(0.5f, 0.75f, 1.0f);
-
-	Camera* camera = new Camera();
-
-	Transform* cameraTransform = new Transform();
-	cameraTransform->position = glm::vec3(0.0f, 0.0f, -3.0f);
-
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
 	Physics* physics = new Physics();
-	Physics* camPhysics = new Physics();
 
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
 
-	//setting values (it should be exectuted by using events)
-	renderer->DebugSetProjectionView(cameraTransform, camera);
-	renderer->meshes = testModel->GetMeshes();
-	physics->transform = transform;
-	camPhysics->transform = cameraTransform;
+	//std::shared_ptr<Player> player = m_EntityManager.CreateEntity<Player>(&m_ComponentManager);
+	//player->m_Transform = player->AddComponent<Transform>();
 
-	//Creating simple material
-	Material* material = new Material(shader);
+	//Camera object
+	std::shared_ptr<Entity> camera = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	
+	camera->AddComponent<Transform>();
+	physics->RegisterEntity(camera);
+	renderer->RegisterEntity(camera);
+	camera->AddComponent<Camera>();
+
+	//Object for cube
+	std::shared_ptr<Entity> cube = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	cube->AddComponent<Transform>();
+	cube->AddComponent<Material>();
+	cube->GetComponent<Material>()->SetShader(shader);
+
+	cube->GetComponent<Transform>()->position = glm::vec3(0.33f, -1.0f, 0.0f);
+	cube->GetComponent<Transform>()->rotation = glm::vec3(0.0f, 0.0f, 45.0f);
+	cube->GetComponent<Transform>()->scale = glm::vec3(0.5f, 0.75f, 1.0f);
+
+	physics->RegisterEntity(cube);
+
+	//set camera position
+	camera->GetComponent<Transform>()->position = glm::vec3(0.0f, 0.0f, -3.0f);
+
+	renderer->SetCamera(camera);
 
 	//---------------------------------------------------------------------------------
 
-	std::shared_ptr<Player> player = m_EntityManager.CreateEntity<Player>(&m_ComponentManager);
-	player->m_Transform = player->AddComponent<Transform>();
-
 	while (true)
 	{
-		material->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
-		transform->rotation = glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f);
+		//cube object 
+		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
+		cube->GetComponent<Transform>()->rotation = glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f);
 
 		physics->Update();
-		camPhysics->Update();
 		renderer->Update();
-		renderer->DrawCube(transform, material);
+		renderer->DrawCube(cube->GetComponent<Transform>(), cube->GetComponent<Material>());
 
 		physics->LateUpdate();
 		renderer->LateUpdate();

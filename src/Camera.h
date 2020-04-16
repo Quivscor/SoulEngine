@@ -3,7 +3,7 @@
 #include "Component.h"
 #include "Window.h"
 
-class Camera : Component
+class Camera : public Component
 {
 public:
 	friend class Renderer;
@@ -14,6 +14,8 @@ public:
 	void SetNearClippingPlane(float value);
 	void SetFarClippingPlane(float value);
 	void SetFieldOfView(float value);
+
+	virtual ComponentType GetComponentType() const override { return ComponentType::CameraComponent; }
 
 	glm::mat4 GetProjection();
 

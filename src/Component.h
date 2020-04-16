@@ -3,7 +3,9 @@
 enum ComponentType
 {
 	None = 0,
-	TransformComponent = 1
+	TransformComponent = 1,
+	CameraComponent = 2,
+	MaterialComponent = 3
 };
 
 class Component

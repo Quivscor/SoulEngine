@@ -62,7 +62,7 @@ void Renderer::DrawMeshes() const
 		glm::mat4 localTransform = glm::mat4(1);
 		localTransform = glm::scale(localTransform, glm::vec3(0.1f, 0.1f, 0.1f));
 
-		glm::mat4 mvp = camProjection->GetProjection() * camView->matrix * localTransform;
+		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * localTransform;
 
 		unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -83,7 +83,7 @@ void Renderer::DrawMeshes() const
 	}
 }
 
-void Renderer::DrawCube(Transform* transform, Material* material)
+void Renderer::DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material)
 {
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,
@@ -149,7 +149,7 @@ void Renderer::DrawCube(Transform* transform, Material* material)
 
 	defaultShader->use();
 
-	glm::mat4 mvp = camProjection->GetProjection() * camView->matrix * transform->matrix;
+	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * transform->matrix;
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -171,8 +171,15 @@ Shader* Renderer::GetDefualtShader()
 	return Renderer::defaultShader;
 }
 
-void Renderer::DebugSetProjectionView(Transform* view, Camera* projection)
+void Renderer::SetCamera(std::shared_ptr<Entity> camera)
+{
+	mainCamera = camera;
+	//camProjection = camera->GetComponent<Camera>()->GetProjection();
+	//camView = camera->GetComponent<Transform>()->matrix;
+}
+
+/*void Renderer::DebugSetProjectionView(Transform* view, Camera* projection)
 {
 	camProjection = projection;
 	camView = view;
-}
+}*/

@@ -3,7 +3,7 @@
 #include "System.h"
 #include "Transform.h"
 
-class Physics : System
+class Physics : public System
 {
 public:
 	Physics();
@@ -13,7 +13,7 @@ public:
 	virtual void LateUpdate() const;
 	SystemType GetSystemType() const override { return SystemType::Physics; }
 
-	Transform* transform;
+	//std::shared_ptr<Transform> transform;
 	Transform* view;
 	Transform* projection;
 

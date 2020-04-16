@@ -8,10 +8,10 @@ struct Texture {
 	std::string path;
 };
 
-class Material : Component
+class Material : public Component
 {
 public:
-	Material(Shader* shader);
+	Material();
 	~Material();
 
 	Shader* GetShader();
@@ -20,6 +20,8 @@ public:
 	void SetTextures(std::vector<Texture> textures);
 	glm::vec3 GetColor();
 	void SetColor(glm::vec3 color);
+
+	virtual ComponentType GetComponentType() const override { return ComponentType::MaterialComponent; }
 
 private:
 	Shader* shader;

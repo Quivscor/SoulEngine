@@ -1,8 +1,13 @@
 #include "Material.h"
 
-Material::Material(Shader* shader) : shader(shader)
+Material::Material()
 {
 	color = glm::vec3(1.0f);
+}
+
+Material::~Material()
+{
+
 }
 
 Shader* Material::GetShader()
