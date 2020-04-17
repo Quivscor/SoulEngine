@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "Physics.h"
 #include "Player.h"
+#include "Time.h"
 
 Game::Game() {}
 
@@ -23,7 +24,7 @@ void Game::Init()
 }
 
 void Game::Run()
-{
+{	
 	//-----------------------------Tests zone------------------------------------------
 	//TO DELETE:
 	//Creating simple shader
@@ -78,6 +79,8 @@ void Game::Run()
 
 	while (true)
 	{
+		Time::RunTimer();
+
 		//cube object 
 		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
 		cube->GetComponent<Transform>()->rotation = glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f);
