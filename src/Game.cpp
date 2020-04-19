@@ -40,7 +40,7 @@ void Game::Run()
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	character->AddComponent<Transform>();
-	character->GetComponent<Transform>()->scale = glm::vec3(0.1f, 0.1f, 0.1f);
+	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 	character->AddComponent<Mesh>();
 
 	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
@@ -64,14 +64,14 @@ void Game::Run()
 	cube->AddComponent<Material>();
 	cube->GetComponent<Material>()->SetShader(shader);
 
-	cube->GetComponent<Transform>()->position = glm::vec3(0.33f, -1.0f, 0.0f);
-	cube->GetComponent<Transform>()->rotation = glm::vec3(0.0f, 0.0f, 45.0f);
-	cube->GetComponent<Transform>()->scale = glm::vec3(0.5f, 0.75f, 1.0f);
+	cube->GetComponent<Transform>()->SetPosition(glm::vec3(0.33f, -1.0f, 0.0f));
+	cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, 0.0f, 45.0f));
+	cube->GetComponent<Transform>()->SetScale(glm::vec3(0.5f, 0.75f, 1.0f));
 
 	physics->RegisterEntity(cube);
 
 	//set camera position
-	camera->GetComponent<Transform>()->position = glm::vec3(0.0f, 0.0f, -3.0f);
+	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, -3.0f));
 
 	renderer->SetCamera(camera);
 
@@ -79,15 +79,21 @@ void Game::Run()
 
 	while (true)
 	{
+		physics->FixedUpdate();
 		Time::RunTimer();
 
 		//cube object 
 		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
-		cube->GetComponent<Transform>()->rotation = glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f);
+		cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f));
 
 		//character object
 		character->GetComponent<Mesh>()->material->SetColor(glm::vec3(1.0f, sin((GLfloat)glfwGetTime()), sin((GLfloat)glfwGetTime())));
-		character->GetComponent<Transform>()->rotation = glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f);
+		//character->GetComponent<Transform>()->SetRotation(glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f));
+
+		//scene graph required!!!
+		character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime());
+
+		character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime());
 
 		physics->Update();
 		renderer->Update();
