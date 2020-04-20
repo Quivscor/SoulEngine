@@ -1,0 +1,90 @@
+# Blender MTL File: 'None'
+# Material Count: 7
+
+newmtl Arm
+Ns 96.078443
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\arm_showroom_ddn.png
+map_Kd D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\arm_dif.png
+map_Ks D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\arm_showroom_spec.png
+
+newmtl Body
+Ns 96.078443
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\body_showroom_ddn.png
+map_Kd D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\body_dif.png
+map_Ks D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\body_showroom_spec.png
+
+newmtl Glass
+Ns 96.078443
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\glass_ddn.png
+map_Kd D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\glass_dif.png
+
+newmtl Hand
+Ns 96.078443
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\hand_showroom_ddn.png
+map_Kd D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\hand_dif.png
+map_Ks D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\hand_showroom_spec.png
+
+newmtl Helmet
+Ns 96.078443
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\helmet_showroom_ddn.png
+map_Kd D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\helmet_diff.png
+map_Ks D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\helmet_showroom_spec.png
+
+newmtl Leg
+Ns 96.078443
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\leg_showroom_ddn.png
+map_Kd D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\leg_dif.png
+map_Ks D:\\SoulEngine\\SoulEngine\\res\\models\\nanosuit\\leg_showroom_spec.png
+
+newmtl Material
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd tex.png

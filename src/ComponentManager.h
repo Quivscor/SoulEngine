@@ -41,6 +41,12 @@ public:
 		T temp;
 		ComponentType type = temp.GetComponentType();
 		auto it = m_Components.find({ ownerID, type });
+
+		if (it == m_Components.end())
+		{
+			return nullptr;
+		}
+
 		return std::dynamic_pointer_cast<T>(it->second);
 	}
 

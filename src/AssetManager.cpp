@@ -12,6 +12,9 @@ AssetManager::~AssetManager()
 
 Model* AssetManager::LoadModel(std::string path)
 {
+	meshes.clear();
+	textures_loaded.clear();
+
 	Assimp::Importer import;
 
 	const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -27,6 +30,36 @@ Model* AssetManager::LoadModel(std::string path)
 	ProcessNode(scene->mRootNode, scene);
 
 	return new Model(meshes);
+}
+
+
+ColliderMesh* AssetManager::LoadCollider(std::string path)
+{
+	meshes.clear();
+	textures_loaded.clear();
+
+	Assimp::Importer import;
+
+	const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+		return nullptr;
+	}
+
+	directory = path.substr(0, path.find_last_of('/'));
+
+	ProcessNode(scene->mRootNode, scene);
+
+	std::vector<glm::vec3> colVer;
+
+	for (int i = 0; i < meshes[0].vertices.size(); i++)
+	{
+		colVer.push_back(meshes[0].vertices[i].Position);
+	}
+
+	return new ColliderMesh(colVer, meshes[0].indices);
 }
 
 void AssetManager::ProcessNode(aiNode *node, const aiScene *scene)

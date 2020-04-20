@@ -3,6 +3,8 @@
 #include "System.h"
 #include "Transform.h"
 #include "CollisionDetector.h"
+#include "ColliderElipse.h"
+#include "ColliderMesh.h"
 
 class CollisionDetector;
 

@@ -103,6 +103,8 @@ bool CollisionDetector::DetectCollision()
 		//collision with surface
 		//collisition position = planeIntersectionPointE
 		//collision distance
+		//std::cout << "Collision point: " << std::endl;
+		//std::cout << planeIntersectionPointE.x << " " << planeIntersectionPointE.y << " " << planeIntersectionPointE.z << std::endl;
 		return true;
 	}
 	else
@@ -204,6 +206,9 @@ bool CollisionDetector::DetectCollision()
 
 		if (smallestSolutionVertex != 10005) 
 		{
+			//std::cout << "Collision point: " << std::endl;
+			//std::cout << collisionPoint.x << " " << collisionPoint.y << " " << collisionPoint.z << std::endl;
+
 			float vertexDistance = smallestSolutionVertex * velocityE.length();
 
 			vertexCollision = true;
@@ -337,8 +342,13 @@ bool CollisionDetector::DetectCollision()
 
 		if (smallestSolutionEdge != 10005)
 		{
+
+
 			edgeIntersectionPoint = fromEdgePoint + edge * glm::vec3(smallestF, smallestF, smallestF);
 			intersectionDistance = smallestSolutionEdge * velocityE.length();
+
+			//std::cout << "Collision point: " << std::endl;
+			//std::cout << edgeIntersectionPoint.x << " " << edgeIntersectionPoint.y << " " << edgeIntersectionPoint.z << std::endl;
 
 			vertexCollision = true;
 		}

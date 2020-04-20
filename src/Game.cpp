@@ -6,6 +6,8 @@
 #include "Physics.h"
 #include "Player.h"
 #include "Time.h"
+#include "ColliderMesh.h"
+#include "ColliderElipse.h"
 
 Game::Game() {}
 
@@ -40,9 +42,15 @@ void Game::Run()
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	character->AddComponent<Transform>();
+	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
 	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	character->AddComponent<Mesh>();
 
+	character->AddComponent<ColliderElipse>();
+
+	//y value works like shit. If its less than 0.9f collisions don't work wtf
+	character->GetComponent<ColliderElipse>()->radius = glm::vec3(0.15f, 1.0f, 0.15f);
+
+	character->AddComponent<Mesh>();
 	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
 	character->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
 	character->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
@@ -50,6 +58,28 @@ void Game::Run()
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
+
+	//nanosuit 2
+	ColliderMesh* testCollider = assetManager->LoadCollider("./res/models/nanosuit/nanoSuitCollider.obj");
+	std::shared_ptr<Entity> character2 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	character2->AddComponent<Transform>();
+	character2->GetComponent<Transform>()->SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
+	character2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	character2->AddComponent<Mesh>();
+	character2->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
+	character2->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
+	character2->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+	character2->GetComponent<Mesh>()->setupMesh();
+
+	character2->AddComponent<ColliderMesh>();
+	character2->GetComponent<ColliderMesh>()->originVertices = testCollider->originVertices;
+	character2->GetComponent<ColliderMesh>()->vertices = std::vector<glm::vec3>(testCollider->originVertices);
+	character2->GetComponent<ColliderMesh>()->indices = testCollider->indices;
+
+	physics->RegisterEntity(character2);
+	renderer->RegisterEntity(character2);
+
 
 	//Camera object
 	std::shared_ptr<Entity> camera = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
@@ -71,7 +101,7 @@ void Game::Run()
 	physics->RegisterEntity(cube);
 
 	//set camera position
-	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, -3.0f));
+	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, -6.0f));
 
 	renderer->SetCamera(camera);
 
@@ -91,7 +121,7 @@ void Game::Run()
 		//character->GetComponent<Transform>()->SetRotation(glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f));
 
 		//scene graph required!!!
-		character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);
+		//character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);
 
 		character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 2.0f);
 

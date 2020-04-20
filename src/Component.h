@@ -6,7 +6,9 @@ enum ComponentType
 	TransformComponent = 1,
 	CameraComponent = 2,
 	MaterialComponent = 3,
-	MeshComponent = 4
+	MeshComponent = 4,
+	ColliderMeshComponent = 5,
+	ColliderElipseComponent = 6
 };
 
 class Component
