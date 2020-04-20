@@ -11,6 +11,7 @@ public:
 	Transform();
 	~Transform();
 	glm::vec3 GetPosition();
+	glm::vec3 GetPositionFromMatrix();
 	glm::vec3 GetRotation();
 	glm::vec3 GetScale();
 	void SetPosition(glm::vec3 vector);

@@ -64,7 +64,7 @@ void Game::Run()
 	cube->AddComponent<Material>();
 	cube->GetComponent<Material>()->SetShader(shader);
 
-	cube->GetComponent<Transform>()->SetPosition(glm::vec3(0.33f, -1.0f, 0.0f));
+	cube->GetComponent<Transform>()->SetPosition(glm::vec3(1.0f, -1.0f, -2.0f));
 	cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, 0.0f, 45.0f));
 	cube->GetComponent<Transform>()->SetScale(glm::vec3(0.5f, 0.75f, 1.0f));
 
@@ -91,9 +91,9 @@ void Game::Run()
 		//character->GetComponent<Transform>()->SetRotation(glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f));
 
 		//scene graph required!!!
-		character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime());
+		character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);
 
-		character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime());
+		character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 2.0f);
 
 		physics->Update();
 		renderer->Update();

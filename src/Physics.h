@@ -2,6 +2,9 @@
 #include "Core.h"
 #include "System.h"
 #include "Transform.h"
+#include "CollisionDetector.h"
+
+class CollisionDetector;
 
 class Physics : public System
 {
@@ -19,5 +22,5 @@ public:
 	Transform* projection;
 
 private:
-
+	CollisionDetector* collisionDetector = nullptr;
 };

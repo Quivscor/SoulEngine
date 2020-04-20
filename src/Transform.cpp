@@ -27,6 +27,11 @@ glm::vec3 Transform::GetPosition()
 	return position;
 }
 
+glm::vec3 Transform::GetPositionFromMatrix()
+{
+	return glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]);
+}
+
 glm::vec3 Transform::GetRotation()
 {
 	return rotation;
