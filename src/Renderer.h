@@ -5,6 +5,8 @@
 #include "Window.h"
 #include "Transform.h"
 #include "Mesh.h"
+#include "ColliderElipse.h"
+#include "ColliderMesh.h"
 
 class Mesh;
 
@@ -25,12 +27,15 @@ public:
 
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
+	bool debugMode = false;
 	//void DebugSetProjectionView(Transform* projection, Camera* view);
 	//std::vector<Mesh> meshes;
 
 private:
 	//list of meshes?
 	void DrawMeshes() const;
+	void DrawDebugModeColliderMesh(std::shared_ptr<ColliderMesh> cm, std::shared_ptr<Transform> trns, glm::mat4 mvp) const;
+	void DrawDebugModeColliderElipse(std::shared_ptr<ColliderElipse> ce, std::shared_ptr<Transform> trns, glm::mat4 mvp) const;
 	static Shader* defaultShader;
 
 	//Debug

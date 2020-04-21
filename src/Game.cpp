@@ -48,7 +48,7 @@ void Game::Run()
 	character->AddComponent<ColliderElipse>();
 
 	//y value works like shit. If its less than 0.9f collisions don't work wtf
-	character->GetComponent<ColliderElipse>()->radius = glm::vec3(0.15f, 1.0f, 0.15f);
+	character->GetComponent<ColliderElipse>()->radius = glm::vec3(0.15f, 0.9f, 0.15f);
 
 	character->AddComponent<Mesh>();
 	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
@@ -60,7 +60,7 @@ void Game::Run()
 	renderer->RegisterEntity(character);
 
 	//nanosuit 2
-	ColliderMesh* testCollider = assetManager->LoadCollider("./res/models/nanosuit/nanoSuitCollider.obj");
+	ColliderMesh* testCollider = assetManager->LoadCollider("./res/models/nanosuit/nanosuitCollider2.obj");
 	std::shared_ptr<Entity> character2 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	character2->AddComponent<Transform>();
 	character2->GetComponent<Transform>()->SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
@@ -74,7 +74,7 @@ void Game::Run()
 
 	character2->AddComponent<ColliderMesh>();
 	character2->GetComponent<ColliderMesh>()->originVertices = testCollider->originVertices;
-	character2->GetComponent<ColliderMesh>()->vertices = std::vector<glm::vec3>(testCollider->originVertices);
+	character2->GetComponent<ColliderMesh>()->vertices = std::vector<ColliderVertex>(testCollider->originVertices);
 	character2->GetComponent<ColliderMesh>()->indices = testCollider->indices;
 
 	physics->RegisterEntity(character2);
@@ -101,9 +101,10 @@ void Game::Run()
 	physics->RegisterEntity(cube);
 
 	//set camera position
-	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, -6.0f));
+	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, -3.0f));
 
 	renderer->SetCamera(camera);
+	renderer->debugMode = true;
 
 	//---------------------------------------------------------------------------------
 
@@ -121,7 +122,7 @@ void Game::Run()
 		//character->GetComponent<Transform>()->SetRotation(glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f));
 
 		//scene graph required!!!
-		//character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);
+		//character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 0.5f);
 
 		character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 2.0f);
 

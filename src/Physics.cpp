@@ -40,10 +40,12 @@ void Physics::Update() const
 
 				for (int i = 0; i < colliderMesh->originVertices.size(); i++)
 				{
-					point = transform->matrix *  glm::vec4(colliderMesh->originVertices[i], 1.0f);
+					point = transform->matrix *  glm::vec4(colliderMesh->originVertices[i].Position, 1.0f);
 
-					colliderMesh->vertices[i] = glm::vec3(point.x, point.y, point.z);
+					colliderMesh->vertices[i].Position = glm::vec3(point.x, point.y, point.z);
 				}
+
+				colliderMesh->setupMesh();
 			}
 			transform->dirtyFlag = false;
 		}
@@ -106,9 +108,9 @@ void Physics::FixedUpdate() const
 				{
 					collisionDetector->Initialize(trns->GetPositionFromMatrix(),
 						trns->moveVector,
-						colliderMeshes[j]->vertices[colliderMeshes[j]->indices[k]],
-						colliderMeshes[j]->vertices[colliderMeshes[j]->indices[k + 1]],
-						colliderMeshes[j]->vertices[colliderMeshes[j]->indices[k + 2]],
+						colliderMeshes[j]->vertices[colliderMeshes[j]->indices[k]].Position,
+						colliderMeshes[j]->vertices[colliderMeshes[j]->indices[k + 1]].Position,
+						colliderMeshes[j]->vertices[colliderMeshes[j]->indices[k + 2]].Position,
 						ce->radius.x,
 						ce->radius.y,
 						ce->radius.z);

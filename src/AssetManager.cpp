@@ -52,11 +52,14 @@ ColliderMesh* AssetManager::LoadCollider(std::string path)
 
 	ProcessNode(scene->mRootNode, scene);
 
-	std::vector<glm::vec3> colVer;
+	ColliderVertex cv;
+	std::vector<ColliderVertex> colVer;
 
 	for (int i = 0; i < meshes[0].vertices.size(); i++)
 	{
-		colVer.push_back(meshes[0].vertices[i].Position);
+		cv.Position = meshes[0].vertices[i].Position;
+		cv.Normal = meshes[0].vertices[i].Normal;
+		colVer.push_back(cv);
 	}
 
 	return new ColliderMesh(colVer, meshes[0].indices);
