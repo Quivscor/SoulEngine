@@ -2,11 +2,8 @@
 #include "Core.h"
 #include "System.h"
 #include "Transform.h"
-#include "CollisionDetector.h"
-#include "ColliderElipse.h"
-#include "ColliderMesh.h"
-
-class CollisionDetector;
+#include "Collider.h"
+#include <algorithm>
 
 class Physics : public System
 {
@@ -24,5 +21,6 @@ public:
 	Transform* projection;
 
 private:
-	CollisionDetector* collisionDetector = nullptr;
+	void MoveCollider(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
+	bool CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Collider> col2, std::shared_ptr<Transform> trns1, std::shared_ptr<Transform> trns2) const;
 };

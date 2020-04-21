@@ -5,8 +5,10 @@
 #include "Window.h"
 #include "Transform.h"
 #include "Mesh.h"
+#include "Collider.h"
 
 class Mesh;
+class Collider;
 
 class Renderer : public System
 {
@@ -15,6 +17,7 @@ public:
 	~Renderer();
 	void Init() const;
 	virtual void Update() const;
+	void DebugUpdate();
 	virtual void LateUpdate() const;
 	void DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material);
 	
@@ -25,12 +28,14 @@ public:
 
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
+	bool debugMode = false;
 	//void DebugSetProjectionView(Transform* projection, Camera* view);
 	//std::vector<Mesh> meshes;
 
 private:
 	//list of meshes?
 	void DrawMeshes() const;
+	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
 
 	//Debug
