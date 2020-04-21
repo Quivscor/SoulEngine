@@ -28,12 +28,6 @@ void Physics::Update() const
 		transform = m_Entities[i]->GetComponent<Transform>();
 		collider = m_Entities[i]->GetComponent<Collider>();
 
-		if (collider != nullptr)
-		{
-			colliders.push_back(collider);
-			collidersTransforms.push_back(transform);
-		}
-
 		if (transform->dirtyFlag == true)
 		{
 			transform->matrix = glm::mat4(1.0f);
@@ -62,6 +56,12 @@ void Physics::Update() const
 				}
 			}
 			transform->dirtyFlag = false;
+		}
+
+		if (collider != nullptr)
+		{
+			colliders.push_back(collider);
+			collidersTransforms.push_back(transform);
 		}
 	}
 
@@ -94,8 +94,7 @@ void Physics::Update() const
 	{
 		for (int j = i + 1; j < colliders.size(); j++)
 		{
-			if (CheckCollisions(colliders[i], colliders[j], collidersTransforms[i], collidersTransforms[j]))
-				std::cout << "Kolizja" << std::endl;
+			CheckCollisions(colliders[i], colliders[j], collidersTransforms[i], collidersTransforms[j]);			
 		}
 	}
 }
@@ -150,7 +149,7 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		}
 	}
 
-	glm::vec2 d = { trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x, trns2->GetPositionFromMatrix().y - trns1->GetPositionFromMatrix().y };
+	glm::vec2 d = { trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z, trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x };
 	float s = sqrtf(d.x * d.x + d.y * d.y);
 
 	trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1) * (overlap * d.x / s), 0.0f, (-1) * (overlap * d.y / s)));
