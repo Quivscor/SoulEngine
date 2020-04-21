@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "Component.h"
 #include "Transform.h"
+#include "InputHandler.h"
 
 struct PairHash
 {

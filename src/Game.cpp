@@ -8,6 +8,9 @@
 #include "Time.h"
 #include "ColliderMesh.h"
 #include "ColliderElipse.h"
+#include "InputHandler.h"
+#include "InputSystem.h"
+
 
 Game::Game() {}
 
@@ -36,6 +39,7 @@ void Game::Run()
 	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
 	Physics* physics = new Physics();
+	InputSystem* inputSystem = new InputSystem();
 
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
 
@@ -88,6 +92,11 @@ void Game::Run()
 	physics->RegisterEntity(camera);
 	camera->AddComponent<Camera>();
 
+	//Input register test
+	std::shared_ptr<Entity> inputHandler = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	inputHandler->AddComponent<InputHandler>();
+	inputSystem->RegisterEntity(inputHandler);
+
 	//Object for cube
 	std::shared_ptr<Entity> cube = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	cube->AddComponent<Transform>();
@@ -111,6 +120,23 @@ void Game::Run()
 	{
 		physics->FixedUpdate();
 		Time::RunTimer();
+		glfwPollEvents();
+
+		//input must be early to read from it
+		inputSystem->Update();
+
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_D))
+		{
+			std::cout << "LOG :: Pressed D\n";
+		}
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyUp(GLFW_KEY_D))
+		{
+			std::cout << "LOG :: Released D\n";
+		}
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_D))
+		{
+			std::cout << "LOG :: Hold D\n";
+		}
 
 		//cube object 
 		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
@@ -131,5 +157,6 @@ void Game::Run()
 
 		physics->LateUpdate();
 		renderer->LateUpdate();
+		inputSystem->LateUpdate();
 	}
 }

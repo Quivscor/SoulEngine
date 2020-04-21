@@ -7,7 +7,7 @@ class SystemManager;
 enum class SystemType
 {
 	None = 0,
-	Renderer, Physics
+	Renderer, Physics, Input
 };
 
 class System
