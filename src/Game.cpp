@@ -182,13 +182,13 @@ void Game::Run()
 		{
 			//std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 500.0f);
+			camera->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_L))
 		{
 			//std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * (-500.0f));
+			camera->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_I))
 		{
