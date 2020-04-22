@@ -3,10 +3,15 @@
 #include "System.h"
 #include "Entity.h"
 
-struct InputHolder
+struct ControllerInput
 {
 public: 
-	std::unordered_set<std::pair<int,int>> keycodes;
+	ControllerInput() {}
+
+	float axis1;
+	float axis2;
+	float axis3;
+	float axis4;
 };
 
 class InputSystem : public System
@@ -25,5 +30,6 @@ public:
 	SystemType GetSystemType() const override { return SystemType::Input; }
 
 	static std::set<std::pair<int, int>> m_KeyboardInputQueue;
+	static ControllerInput m_ControllerInputQueue;
 };
 

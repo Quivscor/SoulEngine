@@ -2,6 +2,7 @@
 #include "Window.h"
 
 std::set<std::pair<int, int>> InputSystem::m_KeyboardInputQueue{ { 0,0 } };
+ControllerInput InputSystem::m_ControllerInputQueue;
 
 void RegisterKeys(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
