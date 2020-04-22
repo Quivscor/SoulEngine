@@ -177,6 +177,30 @@ void Game::Run()
 			character->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 300.0f);
 		}
 
+		//camera movement
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_J))
+		{
+			//std::cout << "LOG :: Hold D\n";
+			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
+			camera->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 500.0f);
+		}
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_L))
+		{
+			//std::cout << "LOG :: Hold D\n";
+			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
+			camera->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * (-500.0f));
+		}
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_I))
+		{
+			//std::cout << "LOG :: Hold D\n";
+			camera->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 300.0f);
+		}
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_K))
+		{
+			//std::cout << "LOG :: Hold D\n";
+			camera->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 300.0f);
+		}
+
 		//cube object 
 		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
 		cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f));
