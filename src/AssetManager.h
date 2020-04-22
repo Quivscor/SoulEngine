@@ -11,7 +11,6 @@
 #include "Mesh.h"
 #include "Model.h"
 #include "stb_image.h"
-#include "ColliderMesh.h"
 
 class AssetManager
 {
@@ -19,7 +18,6 @@ public:
 	AssetManager();
 	~AssetManager();
 	Model* LoadModel(std::string path);
-	ColliderMesh* LoadCollider(std::string path);
 
 private:
 	std::vector<Texture> textures_loaded;

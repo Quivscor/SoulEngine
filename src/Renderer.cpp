@@ -33,15 +33,18 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawMeshes() const
 {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
 		int anyTexture = 0;
-
+		defaultShader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 
+		
 		for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
 		{
 			anyTexture = 1;
@@ -79,11 +82,91 @@ void Renderer::DrawMeshes() const
 
 		glActiveTexture(GL_TEXTURE0);
 		//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
+
+		if (debugMode)
+		{
+			std::shared_ptr<Collider> collider = m_Entities[i]->GetComponent<Collider>();
+
+			if (collider != nullptr)
+			{
+				DrawColliders(collider, trns);
+			}
+		}
 	}
+}
+
+void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	int pointsCount = (col->polygon.points.size() + 1) * 3;
+	
+	float* vertices = new float[pointsCount];
+
+	for (int i = 0; i < col->polygon.points.size(); i++)
+	{
+		vertices[i * 3] = col->polygon.points[i].x;
+		vertices[i * 3 + 1] = 0.0f;
+		vertices[i * 3 + 2] = col->polygon.points[i].y;
+
+		//std::cout << vertices[i * 3] << " " << vertices[i * 3 + 1] << " " << vertices[i * 3 + 2] << " " << std::endl;
+	}
+
+	vertices[pointsCount - 3] = col->polygon.points[0].x;
+	vertices[pointsCount - 2] = 0.0f;
+	vertices[pointsCount - 1] = col->polygon.points[0].y;
+
+	//std::cout << vertices[pointsCount - 3] << " " << vertices[pointsCount - 2] << " " << vertices[pointsCount - 1] << " " << std::endl;
+	//std::cout << "Break" << std::endl;
+
+	/*float vertices[] = {
+		 -5.0,  0.0f, -5.0,
+		-5.0, 0.0f, 5.0,
+		 5.0, 0.0f, 5.0,
+		 5.0,  0.0f, -5.0,
+		 -5.0,  0.0f, -5.0
+	};*/
+
+
+	unsigned int VBO, VAO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, pointsCount * sizeof(float), vertices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// texture coord attribute
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	defaultShader->use();
+
+	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix;// *trns->matrix;
+
+	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+	unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
+	glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0, 0.5f, 0.0f)));
+
+	unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
+	glUniform1i(hasTexture, 0);
+
+	glDrawArrays(GL_LINE_STRIP, 0, col->polygon.shape.size() + 1);
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
 }
 
 void Renderer::DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material)
 {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f, -0.5f,
