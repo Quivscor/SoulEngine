@@ -65,7 +65,8 @@ void Game::Run()
 	character->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
 	character->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
 	character->GetComponent<Mesh>()->setupMesh();
-
+	/*character->AddComponent<Material>();
+	character->GetComponent<Material>()->SetShader(shader);*/
 	character->AddComponent<Collider>();
 	character->GetComponent<Collider>()->SetShape(colliderShape);
 
@@ -83,7 +84,8 @@ void Game::Run()
 	character2->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
 	character2->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
 	character2->GetComponent<Mesh>()->setupMesh();
-
+	character2->AddComponent<Material>();
+	character2->GetComponent<Material>()->SetShader(shader);
 	colliderShape.clear();
 	colliderShape.push_back({ -5.0f, -3.0f });
 	colliderShape.push_back({ -3.0f, -5.0f });

@@ -40,10 +40,11 @@ void Renderer::DrawMeshes() const
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
 		int anyTexture = 0;
-
+		defaultShader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 
+		
 		for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
 		{
 			anyTexture = 1;
