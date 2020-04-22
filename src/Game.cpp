@@ -49,10 +49,19 @@ void Game::Run()
 		colliderShape.push_back({ 30.0f * glm::cos(fTheta * i), 30.0f * glm::sin(fTheta * i) });
 	}*/
 
-	colliderShape.push_back({ -5.0f, -5.0f });
+	/*colliderShape.push_back({ -5.0f, -5.0f });
 	colliderShape.push_back({ -5.0f, 5.0f });
 	colliderShape.push_back({ 5.0f, 5.0f });
-	colliderShape.push_back({ 5.0f, -5.0f });
+	colliderShape.push_back({ 5.0f, -5.0f });*/
+	colliderShape.clear();
+	colliderShape.push_back({ -5.0f, -3.0f });
+	colliderShape.push_back({ -3.0f, -5.0f });
+	colliderShape.push_back({ 3.0f, -5.0f });
+	colliderShape.push_back({ 5.0f, -3.0f });
+	colliderShape.push_back({ 5.0f, 3.0f });
+	colliderShape.push_back({ 3.0f,  5.0f });
+	colliderShape.push_back({ -3.0f, 5.0f });
+	colliderShape.push_back({ -5.0f, 3.0f });
 
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
@@ -99,6 +108,23 @@ void Game::Run()
 
 	physics->RegisterEntity(character2);
 	renderer->RegisterEntity(character2);
+
+	//wall
+	std::shared_ptr<Entity> wall = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	wall->AddComponent<Transform>();
+	wall->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+
+	colliderShape.clear();
+	colliderShape.push_back({ -10.0f, -1.5f });
+	colliderShape.push_back({ -10.0f, 1.5f });
+	colliderShape.push_back({ 10.0f, 1.5f });
+	colliderShape.push_back({ 10.0f, -1.5f });
+
+	wall->AddComponent<Collider>();
+	wall->GetComponent<Collider>()->SetShape(colliderShape);
+
+	physics->RegisterEntity(wall);
+	renderer->RegisterEntity(wall);
 
 
 	//Camera object

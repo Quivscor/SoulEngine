@@ -42,45 +42,49 @@ void Renderer::DrawMeshes() const
 		int anyTexture = 0;
 
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
+
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 
-		for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
+		if (mesh != nullptr)
 		{
-			anyTexture = 1;
-			//defaultShader->setInt("material.diffuse", i);
-			glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
+			for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
+			{
+				anyTexture = 1;
+				//defaultShader->setInt("material.diffuse", i);
+				glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
 
-			std::string number;
-			std::string name = mesh->material->GetTextures()[j].type;
-			if (name == "texture_diffuse")
-				number = std::to_string(diffuseNr++);
-			else if (name == "texture_specular")
-				number = std::to_string(specularNr++);
+				std::string number;
+				std::string name = mesh->material->GetTextures()[j].type;
+				if (name == "texture_diffuse")
+					number = std::to_string(diffuseNr++);
+				else if (name == "texture_specular")
+					number = std::to_string(specularNr++);
 
-			//defaultShader->setFloat(("material." + name + number).c_str(), i);
-			glUniform1i(glGetUniformLocation(defaultShader->ID, (name + number).c_str()), j);
-			glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
+				//defaultShader->setFloat(("material." + name + number).c_str(), i);
+				glUniform1i(glGetUniformLocation(defaultShader->ID, (name + number).c_str()), j);
+				glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
+			}
+
+			defaultShader->use();
+
+			glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * trns->matrix;
+
+			unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
+			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+			unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
+			glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
+
+			unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
+			glUniform1i(hasTexture, anyTexture);
+			// draw mesh
+			glBindVertexArray(mesh->GetVAO());
+			glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+
+			glActiveTexture(GL_TEXTURE0);
+			//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
 		}
-
-		defaultShader->use();
-
-		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * trns->matrix;
-
-		unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
-
-		unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
-		glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
-
-		unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
-		glUniform1i(hasTexture, anyTexture);
-		// draw mesh
-		glBindVertexArray(mesh->GetVAO());
-		glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-
-		glActiveTexture(GL_TEXTURE0);
-		//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
 
 		if (debugMode)
 		{

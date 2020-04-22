@@ -149,10 +149,18 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		}
 	}
 
-	glm::vec2 d = { trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z, trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x };
+	//response
+	glm::vec2 d = { trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x, trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z };
 	float s = sqrtf(d.x * d.x + d.y * d.y);
 
-	trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1) * (overlap * d.x / s), 0.0f, (-1) * (overlap * d.y / s)));
+	std::cout << "Przed modyfikacj¹: " << trns1->GetPositionFromMatrix().x << " " << trns1->GetPositionFromMatrix().y << " " << trns1->GetPositionFromMatrix().z << " " << std::endl;
+	std::cout << " O wartoœci x: " << (-1) * (overlap * d.x / s) << " z: " << (-1) * (overlap * d.y / s) << std::endl;
+	float xv = (-1) * (overlap * d.x / s);
+	float zv = (-1) * (overlap * d.y / s);
+	trns1->matrix = glm::translate(trns1->matrix, glm::vec3(xv, 0.0f, zv));
+
+	std::cout << "Po modyfikacji: " << trns1->GetPositionFromMatrix().x << " " << trns1->GetPositionFromMatrix().y << " " << trns1->GetPositionFromMatrix().z << " " << std::endl;
+
 
 	glm::vec4 point;
 
@@ -161,6 +169,66 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		point = trns1->matrix * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
 		col1->polygon.points[i] = glm::vec2(point.x, point.z);
 	}
+
+	return false;
+
+	/*for (int shape = 0; shape < 2; shape++)
+	{
+		if (shape == 1)
+		{
+			col1ref = col2.get();
+			col2ref = col1.get();
+		}
+
+		for (int p = 0; p < col1ref->polygon.points.size(); p++)
+		{
+			glm::vec2 line_r1s;
+
+			if (shape == 0)
+			{
+				line_r1s = { trns1->GetPositionFromMatrix().x, trns1->GetPositionFromMatrix().z };
+			}
+			else
+			{
+				line_r1s = { trns2->GetPositionFromMatrix().x, trns2->GetPositionFromMatrix().z };
+			}
+
+			glm::vec2 line_r1e = col1ref->polygon.points[p];
+
+			glm::vec2 displacement = { 0,0 };
+
+			for (int q = 0; q < col2ref->polygon.points.size(); q++)
+			{
+				glm::vec2 line_r2s = col2ref->polygon.points[q];
+				glm::vec2 line_r2e = col2ref->polygon.points[(q + 1) % col2ref->polygon.points.size()];
+
+				float h = (line_r2e.x - line_r2s.x) * (line_r1s.y - line_r1e.y) - (line_r1s.x - line_r1e.x) * (line_r2e.y - line_r2s.y);
+				float t1 = ((line_r2s.y - line_r2e.y) * (line_r1s.x - line_r2s.x) + (line_r2e.x - line_r2s.x) * (line_r1s.y - line_r2s.y)) / h;
+				float t2 = ((line_r1s.y - line_r1e.y) * (line_r1s.x - line_r2s.x) + (line_r1e.x - line_r1s.x) * (line_r1s.y - line_r2s.y)) / h;
+
+				if (t1 >= 0.0f && t1 < 1.0f && t2 >= 0.0f && t2 < 1.0f)
+				{
+					displacement.x += (1.0f - t1) * (line_r1e.x - line_r1s.x);
+					displacement.y += (1.0f - t1) * (line_r1e.y - line_r1s.y);
+				}
+			}
+
+			//std::cout << displacement.x * (shape == 0 ? -1 : +1) << " " << displacement.y * (shape == 0 ? -1 : +1) << std::endl;
+			trns1->matrix = glm::translate(trns1->matrix, glm::vec3(displacement.x * (shape == 0 ? -1 : +1), 0.0f, displacement.y * (shape == 0 ? -1 : +1)));
+
+			glm::vec4 point;
+
+			for (int i = 0; i < col1->polygon.shape.size(); i++)
+			{
+				point = trns1->matrix * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
+				col1->polygon.points[i] = glm::vec2(point.x, point.z);
+			}
+
+
+			//r1.pos.x += displacement.x * (shape == 0 ? -1 : +1);
+			//r1.pos.y += displacement.y * (shape == 0 ? -1 : +1);
+		}
+	}*/
 
 	return false;
 }
