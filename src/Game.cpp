@@ -102,6 +102,35 @@ void Game::Run()
 	physics->RegisterEntity(character2);
 	renderer->RegisterEntity(character2);
 
+	//nanosuit 2
+	std::shared_ptr<Entity> character3 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	character3->AddComponent<Transform>();
+	character3->GetComponent<Transform>()->SetPosition(glm::vec3(-1.5f, 0.0f, -1.0f));
+	character3->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	character3->AddComponent<Mesh>();
+	character3->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
+	character3->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
+	character3->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+	character3->GetComponent<Mesh>()->setupMesh();
+	character3->AddComponent<Material>();
+	character3->GetComponent<Material>()->SetShader(shader);
+	colliderShape.clear();
+	colliderShape.push_back({ -5.0f, -3.0f });
+	colliderShape.push_back({ -3.0f, -5.0f });
+	colliderShape.push_back({ 3.0f, -5.0f });
+	colliderShape.push_back({ 5.0f, -3.0f });
+	colliderShape.push_back({ 5.0f, 3.0f });
+	colliderShape.push_back({ 3.0f,  5.0f });
+	colliderShape.push_back({ -3.0f, 5.0f });
+	colliderShape.push_back({ -5.0f, 3.0f });
+
+	character3->AddComponent<Collider>();
+	character3->GetComponent<Collider>()->SetShape(colliderShape);
+
+	physics->RegisterEntity(character3);
+	renderer->RegisterEntity(character3);
+
 
 	//Camera object
 	std::shared_ptr<Entity> camera = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
@@ -158,23 +187,23 @@ void Game::Run()
 		{
 			//std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 500.0f);
+			character->GetComponent<Transform>()->Rotate(Transform::Up());
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
 		{
 			//std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * (-500.0f));
+			character->GetComponent<Transform>()->Rotate(Transform::Up() * -1.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
 		{
 			//std::cout << "LOG :: Hold D\n";
-			character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 300.0f);
+			character->GetComponent<Transform>()->Move(Transform::Forward());
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
 		{
 			//std::cout << "LOG :: Hold D\n";
-			character->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 300.0f);
+			character->GetComponent<Transform>()->Move(Transform::Back());
 		}
 
 		//camera movement
