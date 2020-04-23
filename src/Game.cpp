@@ -177,7 +177,7 @@ void Game::Run()
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_A))
 		{
 			std::cout << "LOG :: Pressed A\n";
-			character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 50.0f);
+			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 50.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyUp(GLFW_KEY_A))
 		{
@@ -187,23 +187,23 @@ void Game::Run()
 		{
 			std::cout << "LOG :: Hold A\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up());
+			character->GetComponent<Transform>()->Rotate(Transform::Up() * 0.2f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
 		{
 			std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * -1.0f);
+			character->GetComponent<Transform>()->Rotate(Transform::Up() * -1.0f * 0.2f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
 		{
 			std::cout << "LOG :: Hold W\n";
-			character->GetComponent<Transform>()->Move(Transform::Forward());
+			character->GetComponent<Transform>()->Move(Transform::Forward() * 0.2f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
 		{
 			std::cout << "LOG :: Hold S\n";
-			character->GetComponent<Transform>()->Move(Transform::Back());
+			character->GetComponent<Transform>()->Move(Transform::Back() * 0.2f);
 		}
 
 		//camera movement
