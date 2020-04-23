@@ -46,7 +46,7 @@ void Game::Run()
 
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
 	
-	LoadMap(3,3, renderer, assetManager, physics);
+	LoadMap(5,5, renderer, assetManager, physics);
 
 	//float fTheta = glm::pi<float>() * 2.0f / 5.0f;
 	std::vector<glm::vec2> colliderShape;
@@ -156,7 +156,7 @@ void Game::Run()
 	cube->AddComponent<Material>();
 	cube->GetComponent<Material>()->SetShader(shader);
 
-	cube->GetComponent<Transform>()->SetPosition(glm::vec3(1.0f, -1.0f, -2.0f));
+	cube->GetComponent<Transform>()->SetPosition(glm::vec3(1.0f, 0.0f, -5.0f));
 	cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, 0.0f, 45.0f));
 	cube->GetComponent<Transform>()->SetScale(glm::vec3(0.5f, 0.75f, 1.0f));
 
@@ -251,7 +251,7 @@ void Game::Run()
 void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* assetManager, Physics* physics)
 {
 	std::vector<std::shared_ptr<Entity>> map;
-	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
+	Model* testModel = assetManager->LoadModel("./res/models/chunk.obj");
 	for (int x = 0; x < sizeX; x++)
 	{
 		for (int j = 0; j < sizeY; j++)
@@ -272,13 +272,13 @@ void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* asset
 
 			std::shared_ptr<Entity> chunk = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 			chunk->AddComponent<Transform>();
-			chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0] + x, temps[1], temps[2] + j));
+			chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
 			chunk->GetComponent<Transform>()->SetScale(glm::vec3(temps[3], temps[4], temps[5]));
 
 			chunk->AddComponent<Mesh>();
-			chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
-			chunk->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
-			chunk->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+			chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
+			chunk->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
+			chunk->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
 			chunk->GetComponent<Mesh>()->setupMesh();
 
 			map.push_back(chunk);
