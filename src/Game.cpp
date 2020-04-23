@@ -46,7 +46,7 @@ void Game::Run()
 
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
 	
-	LoadMap(2,2, renderer, assetManager, physics);
+	LoadMap(3,3, renderer, assetManager, physics);
 
 	//float fTheta = glm::pi<float>() * 2.0f / 5.0f;
 	std::vector<glm::vec2> colliderShape;
@@ -254,45 +254,38 @@ void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* asset
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
 	for (int x = 0; x < sizeX; x++)
 	{
+		for (int j = 0; j < sizeY; j++)
 		{
-			for (int j = 0; j < sizeY; j++)
+			std::ifstream file;
+			file.open("./res/maps/Map1.txt");
+			if (!file)
 			{
-				std::ifstream file;
-				file.open("./res/maps/Map1.txt");
-				if (!file)
-				{
-					std::cout << "Unable to open file txt";
-				}
-				float x;
-				std::vector<float> temps;
-				while (file >> x)
-				{
-					temps.push_back(x);
-					
-				}
-				
-				std::shared_ptr<Entity> chunk = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
-				chunk->AddComponent<Transform>();
-				chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0]+x, temps[1], temps[2]+j));
-				std::cout << temps[0] << " " << temps[1] << " " << temps[2];
-				chunk->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-
-				chunk->AddComponent<Mesh>();
-				chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
-				chunk->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
-				chunk->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
-				chunk->GetComponent<Mesh>()->setupMesh();
-
-				map.push_back(chunk);
-				renderer->RegisterEntity(chunk);
-				physics->RegisterEntity(chunk);
-				temps.clear();
+				std::cout << "Unable to open file txt";
+			}
+			float var;
+			std::vector<float> temps;
+			while (file >> var)
+			{
+				temps.push_back(var);
 
 			}
+
+			std::shared_ptr<Entity> chunk = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+			chunk->AddComponent<Transform>();
+			chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0] + x, temps[1], temps[2] + j));
+			chunk->GetComponent<Transform>()->SetScale(glm::vec3(temps[3], temps[4], temps[5]));
+
+			chunk->AddComponent<Mesh>();
+			chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
+			chunk->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
+			chunk->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+			chunk->GetComponent<Mesh>()->setupMesh();
+
+			map.push_back(chunk);
+			renderer->RegisterEntity(chunk);
+			physics->RegisterEntity(chunk);
+			temps.clear();
+
 		}
-	}
-	for (int i = 0; i < map.size(); i++)
-	{
-		std::cout << map[i]->GetEntityID() << std::endl;
 	}
 }
