@@ -19,6 +19,16 @@ bool InputHandler::CheckKey(int key, int action)
 		return true;
 }
 
+bool InputHandler::CheckLastFrameKey(int key, int action)
+{
+	auto it = m_KeyboardLastFrame.find({ key, action });
+
+	if (it == m_KeyboardLastFrame.end())
+		return false;
+	else
+		return true;
+}
+
 bool InputHandler::GetKeyUp(int key)
 {
 	return InputHandler::CheckKey(key, GLFW_RELEASE );
@@ -31,5 +41,5 @@ bool InputHandler::GetKeyDown(int key)
 
 bool InputHandler::GetKeyRepeat(int key)
 {
-	return InputHandler::CheckKey(key, GLFW_REPEAT);
+	return (InputHandler::CheckKey(key, GLFW_PRESS) && InputHandler::CheckLastFrameKey(key, GLFW_PRESS));
 }

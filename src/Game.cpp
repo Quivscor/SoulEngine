@@ -176,57 +176,57 @@ void Game::Run()
 
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_A))
 		{
-			//std::cout << "LOG :: Pressed D\n";
+			std::cout << "LOG :: Pressed A\n";
 			character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 50.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyUp(GLFW_KEY_A))
 		{
-			//std::cout << "LOG :: Released D\n";
+			std::cout << "LOG :: Released A\n";
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_A))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold A\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
 			character->GetComponent<Transform>()->Rotate(Transform::Up());
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
 			character->GetComponent<Transform>()->Rotate(Transform::Up() * -1.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold W\n";
 			character->GetComponent<Transform>()->Move(Transform::Forward());
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold S\n";
 			character->GetComponent<Transform>()->Move(Transform::Back());
 		}
 
 		//camera movement
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_J))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold J\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
 			camera->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_L))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold L\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
 			camera->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_I))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold I\n";
 			camera->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 300.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_K))
 		{
-			//std::cout << "LOG :: Hold D\n";
+			std::cout << "LOG :: Hold K\n";
 			camera->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 300.0f);
 		}
 

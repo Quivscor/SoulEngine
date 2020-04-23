@@ -13,7 +13,9 @@ public:
 	bool GetKeyRepeat(int key);
 
 	std::set<std::pair<int, int>> m_Keyboard;
+	std::set<std::pair<int, int>> m_KeyboardLastFrame;
 private:
 	bool CheckKey(int key, int action);
+	bool CheckLastFrameKey(int key, int action);
 };
 
