@@ -9,7 +9,10 @@
 #include "InputHandler.h"
 #include "InputSystem.h"
 #include "Collider.h"
+#include "MapLoader.h"
 
+#include <fstream>
+#include <iostream>
 
 Game::Game() {}
 
@@ -40,7 +43,10 @@ void Game::Run()
 	Physics* physics = new Physics();
 	InputSystem* inputSystem = new InputSystem();
 
+
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
+	
+	LoadMap(2,2, renderer, assetManager, physics);
 
 	//float fTheta = glm::pi<float>() * 2.0f / 5.0f;
 	std::vector<glm::vec2> colliderShape;
@@ -174,36 +180,28 @@ void Game::Run()
 		//input must be early to read from it
 		inputSystem->Update();
 
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_A))
-		{
-			std::cout << "LOG :: Pressed A\n";
-			character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 50.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyUp(GLFW_KEY_A))
-		{
-			std::cout << "LOG :: Released A\n";
-		}
+		
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_A))
 		{
 			std::cout << "LOG :: Hold A\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up());
+			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 50.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
 		{
 			std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * -1.0f);
+			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * -50.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
 		{
 			std::cout << "LOG :: Hold W\n";
-			character->GetComponent<Transform>()->Move(Transform::Forward());
+			character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 25.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
 		{
 			std::cout << "LOG :: Hold S\n";
-			character->GetComponent<Transform>()->Move(Transform::Back());
+			character->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 25.0f);
 		}
 
 		//camera movement
@@ -211,23 +209,23 @@ void Game::Run()
 		{
 			std::cout << "LOG :: Hold J\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
+			camera->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_L))
 		{
 			std::cout << "LOG :: Hold L\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
+			camera->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_I))
 		{
 			std::cout << "LOG :: Hold I\n";
-			camera->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 300.0f);
+			camera->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_K))
 		{
 			std::cout << "LOG :: Hold K\n";
-			camera->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 300.0f);
+			camera->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 
 		//cube object 
@@ -248,5 +246,53 @@ void Game::Run()
 		physics->LateUpdate();
 		renderer->LateUpdate();
 		inputSystem->LateUpdate();
+	}
+}
+void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* assetManager, Physics* physics)
+{
+	std::vector<std::shared_ptr<Entity>> map;
+	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
+	for (int x = 0; x < sizeX; x++)
+	{
+		{
+			for (int j = 0; j < sizeY; j++)
+			{
+				std::ifstream file;
+				file.open("./res/maps/Map1.txt");
+				if (!file)
+				{
+					std::cout << "Unable to open file txt";
+				}
+				float x;
+				std::vector<float> temps;
+				while (file >> x)
+				{
+					temps.push_back(x);
+					
+				}
+				
+				std::shared_ptr<Entity> chunk = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+				chunk->AddComponent<Transform>();
+				chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0]+x, temps[1], temps[2]+j));
+				std::cout << temps[0] << " " << temps[1] << " " << temps[2];
+				chunk->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+				chunk->AddComponent<Mesh>();
+				chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
+				chunk->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
+				chunk->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+				chunk->GetComponent<Mesh>()->setupMesh();
+
+				map.push_back(chunk);
+				renderer->RegisterEntity(chunk);
+				physics->RegisterEntity(chunk);
+				temps.clear();
+
+			}
+		}
+	}
+	for (int i = 0; i < map.size(); i++)
+	{
+		std::cout << map[i]->GetEntityID() << std::endl;
 	}
 }
