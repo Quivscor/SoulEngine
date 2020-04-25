@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "Entity.h"
+#include "Transform.h"
 
 class Entity;
 
@@ -11,11 +12,12 @@ public:
 	~EntityManager();
 
 	template <typename T, typename... Args>
-	std::shared_ptr<T> CreateEntity(Args&&... args)
+	std::shared_ptr<T> CreateEntity(ComponentManager* componentManagerInstance, Args&&... args)
 	{
-		std::shared_ptr<T> pointer = std::make_shared<T>(std::forward<Args>(args)...);
+		std::shared_ptr<T> pointer = std::make_shared<T>(componentManagerInstance);
 		pointer->SetEntityID(m_NextEntityIndex++);
 
+		pointer->AddComponent<Transform>(std::forward<Args>(args)...);
 		m_Entities.emplace_back(std::dynamic_pointer_cast<Entity>(pointer));
 
 		return pointer;

@@ -149,7 +149,7 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		}
 	}
 
-	glm::vec2 d = { trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z, trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x };
+	glm::vec2 d = { trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x, (-1) * (trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z) };
 	float s = sqrtf(d.x * d.x + d.y * d.y);
 
 	trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1) * (overlap * d.x / s), 0.0f, (-1) * (overlap * d.y / s)));
