@@ -1,4 +1,4 @@
-#include "AssetManager.h"
+ï»¿#include "AssetManager.h"
 
 AssetManager::AssetManager()
 {
@@ -16,7 +16,7 @@ Model* AssetManager::LoadModel(std::string path)
 	textures_loaded.clear();
 
 	Assimp::Importer import;
-
+	Model* model;
 	const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -24,12 +24,23 @@ Model* AssetManager::LoadModel(std::string path)
 		std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
 		return nullptr;
 	}
-
 	directory = path.substr(0, path.find_last_of('/'));
+	if (scene->HasAnimations())
+	{
+		if (scene->mAnimations[0]->mTicksPerSecond != 0.0)
+		{
+			ticks_per_second = scene->mAnimations[0]->mTicksPerSecond;
+		}
+		else
+		{
+			ticks_per_second = 25.0f;
+		}
 
+	}
+	
 	ProcessNode(scene->mRootNode, scene);
-
-	return new Model(meshes);
+	model = new Model(meshes);
+	return model;
 }
 
 void AssetManager::ProcessNode(aiNode *node, const aiScene *scene)
@@ -51,7 +62,9 @@ Mesh AssetManager::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
-
+	std::vector<VertexBoneData> bones_id_weights_for_each_vertex;
+	if(mesh->mNumBones>0)
+	bones_id_weights_for_each_vertex.resize(mesh->mNumVertices);
 	// Walk through each of the mesh's vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -125,8 +138,44 @@ Mesh AssetManager::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 
 
 	// return a mesh object created from the extracted mesh data
+	if (mesh->mNumBones > 0)
+		for (uint i = 0; i < mesh->mNumBones; i++)
+		{
+			uint bone_index = 0;
+			std::string bone_name(mesh->mBones[i]->mName.data);
 
+			
 
+			if (m_bone_mapping.find(bone_name) == m_bone_mapping.end()) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			{
+				// Allocate an index for a new bone
+				bone_index = m_num_bones;
+				m_num_bones++;
+				BoneMatrix bi;
+				m_bone_matrices.push_back(bi);
+				m_bone_matrices[bone_index].offset_matrix = mesh->mBones[i]->mOffsetMatrix;
+				m_bone_mapping[bone_name] = bone_index;
+
+				//cout << "bone_name: " << bone_name << "			 bone_index: " << bone_index << endl;
+			}
+			else
+			{
+				bone_index = m_bone_mapping[bone_name];
+			}
+
+			for (uint j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+			{
+				uint vertex_id = mesh->mBones[i]->mWeights[j].mVertexId; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+				float weight = mesh->mBones[i]->mWeights[j].mWeight;
+				bones_id_weights_for_each_vertex[vertex_id].addBoneData(bone_index, weight); // ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
+
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ vertex_id ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ bone_index  ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ weight
+				//cout << " vertex_id: " << vertex_id << "	bone_index: " << bone_index << "		weight: " << weight << endl;
+			}
+		}
+	if (mesh->mNumBones > 0)
+		return Mesh(vertices, indices, textures, bones_id_weights_for_each_vertex);
+	else
 	return Mesh(vertices, indices, textures);
 }
 
@@ -148,13 +197,13 @@ std::vector<Texture> AssetManager::LoadMaterialTextures(aiMaterial *mat, aiTextu
 			}
 		}
 		if (!skip)
-		{   // jeœli tekstura nie zosta³a jeszcze za³adowana, za³aduj j¹
+		{   // jeÅ›li tekstura nie zostaÅ‚a jeszcze zaÅ‚adowana, zaÅ‚aduj jÄ…
 			Texture texture;
 			texture.id = TextureFromFile(str.C_Str(), this->directory);
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);
-			textures_loaded.push_back(texture); // dodaj do za³adowanych wektora textures_loaded
+			textures_loaded.push_back(texture); // dodaj do zaÅ‚adowanych wektora textures_loaded
 		}
 	}
 	return textures;
