@@ -7,6 +7,7 @@ class Model
 {
 public:
 	Model(std::vector<Mesh> meshes);
+	Model();
 	~Model();
 	static const uint MAX_BONES = 100;
 	std::vector<Mesh> GetMeshes();
@@ -16,7 +17,7 @@ public:
 	uint m_num_bones = 0;
 	std::vector<BoneMatrix> m_bone_matrices;
 	aiMatrix4x4 m_global_inverse_transform;
-
+	void setMeshes(std::vector<Mesh> meshes);
 	GLuint m_bone_location[MAX_BONES];
 	float ticks_per_second = 0.0f;
 

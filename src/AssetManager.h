@@ -23,8 +23,7 @@ private:
 	std::vector<Texture> textures_loaded;
 	std::string directory;
 	std::vector<Mesh> meshes;
-	Assimp::Importer import;
-	const aiScene* scene;
+
 	std::map<std::string, uint> m_bone_mapping; // maps a bone name and their index
 	uint m_num_bones = 0;
 	std::vector<BoneMatrix> m_bone_matrices;

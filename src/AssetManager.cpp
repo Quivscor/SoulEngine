@@ -15,31 +15,31 @@ Model* AssetManager::LoadModel(std::string path)
 	meshes.clear();
 	textures_loaded.clear();
 
-	Assimp::Importer import;
-	Model* model;
-	const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	
+	Model* model = new Model();
+	model->scene = model->import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	if (!model->scene || model->scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !model->scene->mRootNode)
 	{
-		std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+		std::cout << "ERROR::ASSIMP::" << model->import.GetErrorString() << std::endl;
 		return nullptr;
 	}
 	directory = path.substr(0, path.find_last_of('/'));
-	if (scene->HasAnimations())
+	if (model->scene->HasAnimations())
 	{
-		if (scene->mAnimations[0]->mTicksPerSecond != 0.0)
+		if (model->scene->mAnimations[0]->mTicksPerSecond != 0.0)
 		{
-			ticks_per_second = scene->mAnimations[0]->mTicksPerSecond;
+			model->ticks_per_second = model->scene->mAnimations[0]->mTicksPerSecond;
 		}
 		else
 		{
-			ticks_per_second = 25.0f;
+			model->ticks_per_second = model->scene->mAnimations[0]->mTicksPerSecond;
 		}
 
 	}
 	
-	ProcessNode(scene->mRootNode, scene);
-	model = new Model(meshes);
+	ProcessNode(model->scene->mRootNode, model->scene);
+	model->setMeshes(meshes);
 	return model;
 }
 

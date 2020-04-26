@@ -9,7 +9,14 @@ Model::~Model()
 {
 
 }
+Model::Model() 
+{
 
+}
+void Model::setMeshes(std::vector<Mesh> meshez)
+{
+	meshes = meshez;
+}
 std::vector<Mesh> Model::GetMeshes()
 {
 	return meshes;
