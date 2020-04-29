@@ -1,5 +1,6 @@
 ﻿#include "Model.h"
 
+
 Model::Model(std::vector<Mesh> meshes) : meshes(meshes)
 {
 
@@ -31,6 +32,30 @@ uint Model::findPosition(float p_animation_time, const aiNodeAnim* p_node_anim)
 
 	assert(0);
 	return 0;
+}
+
+void Model::initShaders(GLuint shader_program)
+{
+	for (uint i = 0; i < MAX_BONES; i++) // get location all matrices of bones
+	{
+		std::string name = "bones[" +std::to_string(i) + "]";// name like in shader
+		m_bone_location[i] = glGetUniformLocation(shader_program, name.c_str());
+	}
+
+	// rotate head AND AXIS(y_z) about x !!!!!  Not be gimbal lock
+	//rotate_head_xz *= glm::quat(cos(glm::radians(-45.0f / 2)), sin(glm::radians(-45.0f / 2)) * glm::vec3(1.0f, 0.0f, 0.0f));
+}
+
+void Model::ChangeBonePositions()
+{
+	std::vector<aiMatrix4x4> transforms;
+	boneTransform((double)Time::GetDeltaTime() / 1000.0f, transforms);
+
+	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
+	{
+		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
+	}
+
 }
 
 uint Model::findRotation(float p_animation_time, const aiNodeAnim* p_node_anim)
