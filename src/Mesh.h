@@ -3,7 +3,7 @@
 #include "Shader.h"
 #include "Material.h"
 #include "Renderer.h"
-#include "assimp\Importer.hpp"
+
 typedef unsigned int uint;
 #define NUM_BONES_PER_VEREX 4
 
