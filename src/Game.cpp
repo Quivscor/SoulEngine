@@ -24,7 +24,7 @@ Game::~Game()
 void Game::Init()
 {
 	m_Window = m_Window->GetInstance();
-	m_Window->Init("SoulEater", 640, 480);
+	m_Window->Init("SoulEater", 1280, 720);
 
 	LogEvent e("Hello events!");
 	m_Window->EventCallback(e);
@@ -45,8 +45,9 @@ void Game::Run()
 
 
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
+	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	
-	LoadMap(5,5, renderer, assetManager, physics);
+	//LoadMap(5,5, renderer, assetManager, physics);
 
 	//float fTheta = glm::pi<float>() * 2.0f / 5.0f;
 	std::vector<glm::vec2> colliderShape;
@@ -65,6 +66,60 @@ void Game::Run()
 	character->AddComponent<Transform>();
 	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
 	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	std::shared_ptr<Entity> map = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	map->AddComponent<Transform>();
+	map->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	map->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	map->AddComponent<Mesh>();
+	map->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
+	map->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
+	map->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
+	map->GetComponent<Mesh>()->setupMesh();
+	physics->RegisterEntity(map);
+	renderer->RegisterEntity(map);
+
+	std::shared_ptr<Entity> map2 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	map2->AddComponent<Transform>();
+	map2->GetComponent<Transform>()->SetPosition(glm::vec3(15.0f, 0.0f, 0.0f));
+	map2->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	map2->AddComponent<Mesh>();
+	map2->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
+	map2->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
+	map2->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
+	map2->GetComponent<Mesh>()->setupMesh();
+	physics->RegisterEntity(map2);
+	renderer->RegisterEntity(map2);
+
+	std::shared_ptr<Entity> map3 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	map3->AddComponent<Transform>();
+	map3->GetComponent<Transform>()->SetPosition(glm::vec3(15, 0.0f, 15.0f));
+	map3->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	map3->AddComponent<Mesh>();
+	map3->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
+	map3->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
+	map3->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
+	map3->GetComponent<Mesh>()->setupMesh();
+	physics->RegisterEntity(map3);
+	renderer->RegisterEntity(map3);
+
+	std::shared_ptr<Entity> map4 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	map4->AddComponent<Transform>();
+	map4->GetComponent<Transform>()->SetPosition(glm::vec3(0, 0.0f, 15.0f));
+	map4->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	map4->AddComponent<Mesh>();
+	map4->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
+	map4->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
+	map4->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
+	map4->GetComponent<Mesh>()->setupMesh();
+	physics->RegisterEntity(map4);
+	renderer->RegisterEntity(map4);
+
+	
 
 	character->AddComponent<Mesh>();
 	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
@@ -163,7 +218,7 @@ void Game::Run()
 	physics->RegisterEntity(cube);
 
 	//set camera position
-	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 2.0f, -6.0f));
+	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, -5.0f, -6.0f));
 	camera->GetComponent<Transform>()->SetRotation(glm::vec3(45.0f, 0.0f, 0.0f));
 
 	renderer->SetCamera(camera);
