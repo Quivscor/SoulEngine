@@ -34,17 +34,15 @@ uint Model::findPosition(float p_animation_time, const aiNodeAnim* p_node_anim)
 	return 0;
 }
 
-void Model::initShaders(GLuint shader_program)
+void Model::initShaders(Shader* shader_program)
 {
 	for (uint i = 0; i < MAX_BONES; i++) // get location all matrices of bones
 	{
 		std::string name = "bones[" +std::to_string(i) + "]";// name like in shader
-		m_bone_location[i] = glGetUniformLocation(shader_program, name.c_str());
+		m_bone_location[i] = glGetUniformLocation(shader_program->ID, name.c_str());
 	}
 
-	// rotate head AND AXIS(y_z) about x !!!!!  Not be gimbal lock
-	//rotate_head_xz *= glm::quat(cos(glm::radians(-45.0f / 2)), sin(glm::radians(-45.0f / 2)) * glm::vec3(1.0f, 0.0f, 0.0f));
-}
+	}
 
 void Model::ChangeBonePositions()
 {
@@ -224,9 +222,11 @@ void Model::readNodeHierarchy(float p_animation_time, const aiNode* p_node, cons
 
 void Model::boneTransform(double time_in_sec, std::vector<aiMatrix4x4>& transforms)
 {
+	
 	aiMatrix4x4 identity_matrix; // = mat4(1.0f);
 
 	double time_in_ticks = time_in_sec * ticks_per_second;
+
 	float animation_time = fmod(time_in_ticks, scene->mAnimations[0]->mDuration);
 	readNodeHierarchy(animation_time, scene->mRootNode, identity_matrix);
 

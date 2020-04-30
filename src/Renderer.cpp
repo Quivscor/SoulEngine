@@ -66,13 +66,15 @@ void Renderer::DrawMeshes() const
 		defaultShader->use();
 
 		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * trns->matrix;
-
+		
 		unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 		unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
 		glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
-
+		glUniformMatrix4fv(glGetUniformLocation(defaultShader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->matrix));
+		glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->matrix)));
+		glUniformMatrix4fv(glGetUniformLocation(defaultShader->ID, "normals_matrix"), 1, GL_FALSE, glm::value_ptr(matr_normals_cube));
 		unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
 		glUniform1i(hasTexture, anyTexture);
 		// draw mesh

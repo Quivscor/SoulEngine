@@ -3,7 +3,7 @@
 #include "Mesh.h"
 #include <Time.h>
 
-class Model
+class Model : public Component
 {
 public:
 	Model(std::vector<Mesh> meshes);
@@ -23,7 +23,7 @@ public:
 	void Model::ChangeBonePositions();
 	glm::mat4 aiToGlm(aiMatrix4x4 ai_matr);
 	aiQuaternion nlerp(aiQuaternion a, aiQuaternion b, float blend); // super super n lerp =)
-	void initShaders(GLuint shader_program);
+	void initShaders(Shader *shader_program);
 private:
 	std::vector<Mesh> meshes;
 	uint findPosition(float p_animation_time, const aiNodeAnim* p_node_anim);
