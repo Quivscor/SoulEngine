@@ -253,6 +253,11 @@ void Game::Run()
 			std::cout << "LOG :: Hold W\n";
 			character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 25.0f);
 		}
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_ESCAPE)) {
+			glfwTerminate();
+			glfwSetWindowShouldClose(m_Window->GetMWindow(), true);
+		}
+			
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
 		{
 			std::cout << "LOG :: Hold S\n";
