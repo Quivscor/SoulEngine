@@ -120,7 +120,7 @@ void Game::Run()
 	renderer->RegisterEntity(map4);
 
 	
-
+	//player
 	character->AddComponent<Mesh>();
 	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
 	character->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
@@ -130,7 +130,6 @@ void Game::Run()
 	character->GetComponent<Material>()->SetShader(shader);*/
 	character->AddComponent<Collider>();
 	character->GetComponent<Collider>()->SetShape(colliderShape);
-	character->GetComponent<Collider>()->isTrigger = true;
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
@@ -160,14 +159,15 @@ void Game::Run()
 
 	character2->AddComponent<Collider>();
 	character2->GetComponent<Collider>()->SetShape(colliderShape);
+	character2->GetComponent<Collider>()->isTrigger = true;
 
 	physics->RegisterEntity(character2);
 	renderer->RegisterEntity(character2);
 
-	//nanosuit 2
+	//nanosuit 3
 	std::shared_ptr<Entity> character3 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	character3->AddComponent<Transform>();
-	character3->GetComponent<Transform>()->SetPosition(glm::vec3(-1.5f, 0.0f, -1.0f));
+	character3->GetComponent<Transform>()->SetPosition(glm::vec3(-1.5f, 0.0f, -1.2f));
 	character3->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character3->AddComponent<Mesh>();

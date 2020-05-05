@@ -29,7 +29,6 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 		{
 			collisions[i].controlFlag = controlFlag;
 
-			std::cout << "On Trigger stay!" << std::endl;
 			//execute OnTriggerStay(collision[i])
 
 			return;
@@ -42,7 +41,6 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 
 	collisions.push_back(newCollision);
 
-	std::cout << "On Trigger enter!" << std::endl;
 	//execute OnTriggerEnter(newCollision)
 }
 
@@ -54,7 +52,6 @@ void Collider::CheckControlFlags()
 	{
 		if (it->controlFlag != controlFlag)
 		{
-			std::cout << "On Trigger exit!" << std::endl;
 			//execute OnTriggerExit(it->collider)
 			it = collisions.erase(it);
 		}
