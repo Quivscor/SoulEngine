@@ -32,6 +32,13 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 			//execute OnTriggerStay(collision[i])
 			EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerStay(otherObjCollider);
 
+			/*std::vector<std::shared_ptr<ScriptableObject>> scripts = EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponents<ScriptableObject>();
+
+			for (int i = 0; i < scripts.size(); i++)
+			{
+				scripts[i]->OnTriggerStay(otherObjCollider);
+			}*/
+
 			return;
 		}
 	}
@@ -43,6 +50,13 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 	collisions.push_back(newCollision);
 
 	//execute OnTriggerEnter(newCollision)
+	/*std::vector<std::shared_ptr<ScriptableObject>> scripts = EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponents<ScriptableObject>();
+
+	for (int i = 0; i < scripts.size(); i++)
+	{
+		scripts[i]->OnTriggerEnter(otherObjCollider);
+	}*/
+
 	EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerEnter(otherObjCollider);
 }
 
@@ -56,6 +70,14 @@ void Collider::CheckControlFlags()
 		{
 			//execute OnTriggerExit(it->collider)
 			EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerExit(it->collider);
+
+			/*std::vector<std::shared_ptr<ScriptableObject>> scripts = EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponents<ScriptableObject>();
+			std::cout << "Length of scriptable objects: " << scripts.size() << std::endl;
+			for (int i = 0; i < scripts.size(); i++)
+			{
+				scripts[i]->OnTriggerExit(it->collider);
+			}*/
+
 			it = collisions.erase(it);
 		}
 		else

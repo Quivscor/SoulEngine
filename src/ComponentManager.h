@@ -54,6 +54,31 @@ public:
 		return std::dynamic_pointer_cast<T>(it->second);
 	}
 
+	/*template <typename T>
+	std::vector<std::shared_ptr<T>> GetComponents(int ownerID)
+	{
+		T temp;
+		ComponentType type = temp.GetComponentType();
+		std::vector<std::shared_ptr<T>> componentsOfGivenType;
+
+		auto it = m_Components.begin();
+
+		while (it != m_Components.end())
+		{
+			if (it->first.first == ownerID && it->first.second == type)
+				componentsOfGivenType.push_back(std::dynamic_pointer_cast<T>(it->second));
+
+			if (it->first.second == type)
+				std::cout << type << std::endl;
+
+			it++;
+		}
+
+		std::cout << componentsOfGivenType.size() << std::endl;
+
+		return componentsOfGivenType;
+	}*/
+
 private:
 	static std::shared_ptr<ComponentManager> m_Instance;
 

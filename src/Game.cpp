@@ -11,6 +11,7 @@
 #include "Collider.h"
 #include "MapLoader.h"
 #include "Scripts/ColorChanger.h"
+#include "Scripts/HelloTriggers.h"
 
 #include <fstream>
 #include <iostream>
@@ -165,6 +166,7 @@ void Game::Run()
 	character2->GetComponent<Collider>()->SetShape(colliderShape);
 	character2->GetComponent<Collider>()->isTrigger = true;
 	character2->GetComponent<Collider>()->isStatic = true;
+	//character2->AddComponent<HelloTriggers>();
 	character2->AddComponent<ColorChanger>();
 
 	physics->RegisterEntity(character2);
