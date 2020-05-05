@@ -65,7 +65,7 @@ void Renderer::DrawMeshes() const
 
 		defaultShader->use();
 
-		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * trns->matrix;
+		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
 
 		unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -147,7 +147,7 @@ void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Tran
 
 	defaultShader->use();
 
-	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix;// *trns->matrix;
+	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix();// *trns->matrix;
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -231,7 +231,7 @@ void Renderer::DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Ma
 
 	defaultShader->use();
 
-	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * transform->matrix;
+	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * transform->GetGlobalMatrix();
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));

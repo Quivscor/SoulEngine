@@ -5,18 +5,24 @@
 class Transform : public Component
 {
 public:
-	friend class Physics;
-	friend class Renderer;
-
 	Transform();
 	~Transform();
-	glm::vec3 GetPosition();
-	glm::vec3 GetPositionFromMatrix();
-	glm::vec3 GetRotation();
-	glm::vec3 GetScale();
-	void SetPosition(glm::vec3 vector);
-	void SetRotation(glm::vec3 vector);
-	void SetScale(glm::vec3 vector);
+	glm::vec3 GetLocalPosition();
+	glm::vec3 GetLocalPositionFromMatrix();
+	glm::vec3 GetLocalRotation();
+	glm::vec3 GetLocalScale();
+	glm::mat4 GetLocalMatrix();
+	glm::vec3 GetGlobalPosition();
+	glm::vec3 GetGlobalPositionFromMatrix();
+	glm::vec3 GetGlobalRotation();
+	glm::vec3 GetGlobalScale();
+	glm::mat4 GetGlobalMatrix();
+	void SetLocalPosition(glm::vec3 vector);
+	void SetLocalRotation(glm::vec3 vector);
+	void SetLocalScale(glm::vec3 vector);
+	void SetLocalMatrix(glm::mat4 matrix);
+	
+	void SetParent(std::shared_ptr<Transform> parent);
 
 	virtual ComponentType GetComponentType() const override { return ComponentType::TransformComponent; }
 
@@ -31,6 +37,19 @@ public:
 	void Move(glm::vec3 vector);
 	void Rotate(glm::vec3 vector);
 
+	bool IsDirty();
+	void SetDirty(bool value);
+
+	glm::vec3 GetMoveVector();
+	glm::vec3 GetRotateVector();
+	void SetMoveVector(glm::vec3 vector);
+	void SetRotateVector(glm::vec3 vector);
+
+	void SetGlobalPosition();
+	void SetGlobalRotation();
+	void SetGlobalScale();
+	void SetGlobalMatrix();
+
 private:
 	glm::mat4 matrix = glm::mat4(1);
 	glm::vec3 rotation = glm::vec3(0);
@@ -40,5 +59,12 @@ private:
 	glm::vec3 moveVector = glm::vec3(0);
 	glm::vec3 rotateVector = glm::vec3(0);
 
+	glm::mat4 m_GlobalMatrix;
+	glm::vec3 m_GlobalPosition;
+	glm::vec3 m_GlobalRotation;
+	glm::vec3 m_GlobalScale;
+
 	bool dirtyFlag = false;
+
+	std::shared_ptr<Transform> m_Parent;
 };

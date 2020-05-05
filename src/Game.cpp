@@ -10,6 +10,7 @@
 #include "InputSystem.h"
 #include "Collider.h"
 #include "MapLoader.h"
+#include "SceneGraph.h"
 
 #include <fstream>
 #include <iostream>
@@ -63,8 +64,8 @@ void Game::Run()
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	character->AddComponent<Transform>();
-	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
-	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character->AddComponent<Mesh>();
 	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
@@ -82,8 +83,8 @@ void Game::Run()
 	//nanosuit 2
 	std::shared_ptr<Entity> character2 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	character2->AddComponent<Transform>();
-	character2->GetComponent<Transform>()->SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
-	character2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
+	character2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character2->AddComponent<Mesh>();
 	character2->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
@@ -111,8 +112,8 @@ void Game::Run()
 	//nanosuit 2
 	std::shared_ptr<Entity> character3 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	character3->AddComponent<Transform>();
-	character3->GetComponent<Transform>()->SetPosition(glm::vec3(-1.5f, 0.0f, -1.0f));
-	character3->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character3->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-1.5f, 0.0f, -1.0f));
+	character3->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character3->AddComponent<Mesh>();
 	character3->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
@@ -153,18 +154,19 @@ void Game::Run()
 	//Object for cube
 	std::shared_ptr<Entity> cube = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 	cube->AddComponent<Transform>();
+	cube->GetComponent<Transform>()->SetParent(character->GetComponent<Transform>());
 	cube->AddComponent<Material>();
 	cube->GetComponent<Material>()->SetShader(shader);
 
-	cube->GetComponent<Transform>()->SetPosition(glm::vec3(1.0f, 0.0f, -5.0f));
-	cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, 0.0f, 45.0f));
-	cube->GetComponent<Transform>()->SetScale(glm::vec3(0.5f, 0.75f, 1.0f));
+	cube->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1.0f, 20.0f, -5.0f));
+	cube->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0.0f, 0.0f, 45.0f));
+	cube->GetComponent<Transform>()->SetLocalScale(glm::vec3(20.5f, 20.75f, 20.0f));
 
 	physics->RegisterEntity(cube);
 
 	//set camera position
-	camera->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 2.0f, -6.0f));
-	camera->GetComponent<Transform>()->SetRotation(glm::vec3(45.0f, 0.0f, 0.0f));
+	camera->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 2.0f, -6.0f));
+	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));
 
 	renderer->SetCamera(camera);
 	renderer->debugMode = true;
@@ -230,7 +232,9 @@ void Game::Run()
 
 		//cube object 
 		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
-		cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f));
+		cube->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f));
+
+		
 
 		//character object
 		character->GetComponent<Mesh>()->material->SetColor(glm::vec3(1.0f, sin((GLfloat)glfwGetTime()), sin((GLfloat)glfwGetTime())));
@@ -243,9 +247,13 @@ void Game::Run()
 		renderer->Update();
 		renderer->DrawCube(cube->GetComponent<Transform>(), cube->GetComponent<Material>());
 
+		std::cout << cube->GetComponent<Transform>()->GetGlobalPosition().x << "x " << cube->GetComponent<Transform>()->GetGlobalPosition().y << "y " << cube->GetComponent<Transform>()->GetGlobalPosition().z << "z \n";
+
 		physics->LateUpdate();
 		renderer->LateUpdate();
 		inputSystem->LateUpdate();
+
+		std::cout << cube->GetComponent<Transform>()->GetGlobalPosition().x << "x " << cube->GetComponent<Transform>()->GetGlobalPosition().y << "y " << cube->GetComponent<Transform>()->GetGlobalPosition().z << "z \n";
 	}
 }
 void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* assetManager, Physics* physics)
@@ -272,8 +280,8 @@ void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* asset
 
 			std::shared_ptr<Entity> chunk = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
 			chunk->AddComponent<Transform>();
-			chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
-			chunk->GetComponent<Transform>()->SetScale(glm::vec3(temps[3], temps[4], temps[5]));
+			chunk->GetComponent<Transform>()->SetLocalPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
+			chunk->GetComponent<Transform>()->SetLocalScale(glm::vec3(temps[3], temps[4], temps[5]));
 
 			chunk->AddComponent<Mesh>();
 			chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;

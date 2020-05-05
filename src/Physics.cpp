@@ -28,14 +28,15 @@ void Physics::Update() const
 		transform = m_Entities[i]->GetComponent<Transform>();
 		collider = m_Entities[i]->GetComponent<Collider>();
 
-		if (transform->dirtyFlag == true)
+		if (transform->IsDirty())
 		{
-			transform->matrix = glm::mat4(1.0f);
-			transform->matrix = glm::translate(transform->matrix, transform->position);
-			transform->matrix = glm::rotate(transform->matrix, (transform->rotation.x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
-			transform->matrix = glm::rotate(transform->matrix, (transform->rotation.y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-			transform->matrix = glm::rotate(transform->matrix, (transform->rotation.z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-			transform->matrix = glm::scale(transform->matrix, transform->scale);
+			glm::mat4 matrix = transform->GetLocalMatrix();
+			matrix = glm::translate(matrix, transform->GetLocalPosition());
+			matrix = glm::rotate(matrix, (transform->GetLocalRotation().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
+			matrix = glm::rotate(matrix, (transform->GetLocalRotation().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+			matrix = glm::rotate(matrix, (transform->GetLocalRotation().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
+			matrix = glm::scale(matrix, transform->GetLocalScale());
+			transform->SetLocalMatrix(matrix);
 
 			//collider shape depends on entity 
 
@@ -45,9 +46,9 @@ void Physics::Update() const
 				glm::vec4 point;
 
 				glm::mat4 colliderMatrix = glm::mat4(1.0f);
-				colliderMatrix = glm::translate(colliderMatrix, transform->position);
-				colliderMatrix = glm::rotate(colliderMatrix, (transform->rotation.y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-				colliderMatrix = glm::scale(colliderMatrix, transform->scale);
+				colliderMatrix = glm::translate(colliderMatrix, transform->GetLocalPosition());
+				colliderMatrix = glm::rotate(colliderMatrix, (transform->GetLocalRotation().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+				colliderMatrix = glm::scale(colliderMatrix, transform->GetLocalScale());
 
 				for (int i = 0; i < collider->polygon.shape.size(); i++)
 				{
@@ -55,7 +56,7 @@ void Physics::Update() const
 					collider->polygon.points[i] = glm::vec2(point.x, point.z);
 				}
 			}
-			transform->dirtyFlag = false;
+			transform->SetDirty(false);
 		}
 
 		if (collider != nullptr)
@@ -69,7 +70,7 @@ void Physics::Update() const
 	{
 		transform = m_Entities[i]->GetComponent<Transform>();
 
-		if (transform->moveVector == glm::vec3(0) && transform->rotateVector == glm::vec3(0))
+		if (transform->GetMoveVector() == glm::vec3(0) && transform->GetRotateVector() == glm::vec3(0))
 			continue;
 
 		collider = m_Entities[i]->GetComponent<Collider>();
@@ -79,15 +80,17 @@ void Physics::Update() const
 			MoveCollider(collider, transform);
 		}
 
-		transform->matrix = glm::translate(transform->matrix, transform->moveVector * (-1.0f));
-		transform->matrix = glm::rotate(transform->matrix, (transform->rotateVector.x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
-		transform->matrix = glm::rotate(transform->matrix, (transform->rotateVector.y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-		transform->matrix = glm::rotate(transform->matrix, (transform->rotateVector.z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-		transform->matrix = glm::translate(transform->matrix, transform->moveVector * 2.0f);
+		glm::mat4 matrix = glm::mat4(1);
+		matrix = glm::translate(matrix, transform->GetMoveVector() * (-1.0f));
+		matrix = glm::rotate(matrix, (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
+		matrix = glm::rotate(matrix, (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+		matrix = glm::rotate(matrix, (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
+		matrix = glm::translate(matrix, transform->GetMoveVector() * 2.0f);
+		transform->SetLocalMatrix(matrix);
 
 		//transform->matrix = glm::translate(transform->matrix, transform->moveVector);
-		transform->moveVector = glm::vec3(0);
-		transform->rotateVector = glm::vec3(0);
+		transform->SetMoveVector(glm::vec3(0));
+		transform->SetRotateVector(glm::vec3(0));
 	}
 
 	for (int i = 0; i < colliders.size(); i++)
@@ -149,16 +152,16 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		}
 	}
 
-	glm::vec2 d = { trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x, (-1) * (trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z) };
+	glm::vec2 d = { trns2->GetGlobalPositionFromMatrix().x - trns1->GetGlobalPositionFromMatrix().x, (-1) * (trns2->GetGlobalPositionFromMatrix().z - trns1->GetGlobalPositionFromMatrix().z) };
 	float s = sqrtf(d.x * d.x + d.y * d.y);
 
-	trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1) * (overlap * d.x / s), 0.0f, (-1) * (overlap * d.y / s)));
+	trns1->SetLocalMatrix(glm::translate(trns1->GetLocalMatrix(), glm::vec3((-1) * (overlap * d.x / s), 0.0f, (-1) * (overlap * d.y / s))));
 
 	glm::vec4 point;
 
 	for (int i = 0; i < col1->polygon.shape.size(); i++)
 	{
-		point = trns1->matrix * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
+		point = trns1->GetLocalMatrix() * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
 		col1->polygon.points[i] = glm::vec2(point.x, point.z);
 	}
 
@@ -167,10 +170,10 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 
 void Physics::MoveCollider(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const
 {
-	glm::mat4 colliderMatrix = trns->matrix;
-	colliderMatrix = glm::translate(colliderMatrix, trns->moveVector * (-1.0f));
-	colliderMatrix = glm::rotate(colliderMatrix, (trns->rotateVector.y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-	colliderMatrix = glm::translate(colliderMatrix, trns->moveVector * 2.0f);
+	glm::mat4 colliderMatrix = trns->GetLocalMatrix();
+	colliderMatrix = glm::translate(colliderMatrix, trns->GetMoveVector() * (-1.0f));
+	colliderMatrix = glm::rotate(colliderMatrix, (trns->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+	colliderMatrix = glm::translate(colliderMatrix, trns->GetMoveVector() * 2.0f);
 
 	glm::vec4 point;
 
@@ -194,18 +197,20 @@ void Physics::FixedUpdate() const
 	{
 		transform = m_Entities[i]->GetComponent<Transform>();
 
-		if (transform->moveVector == glm::vec3(0) && transform->rotateVector == glm::vec3(0))
+		if (transform->GetMoveVector() == glm::vec3(0) && transform->GetRotateVector() == glm::vec3(0))
 			continue;
 
-		transform->matrix = glm::translate(transform->matrix, transform->moveVector * (-1.0f));
-		transform->matrix = glm::rotate(transform->matrix, (transform->rotateVector.x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
-		transform->matrix = glm::rotate(transform->matrix, (transform->rotateVector.y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-		transform->matrix = glm::rotate(transform->matrix, (transform->rotateVector.z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-		transform->matrix = glm::translate(transform->matrix, transform->moveVector);
+		glm::mat4 matrix = transform->GetLocalMatrix();
+		matrix = glm::translate(matrix, transform->GetMoveVector() * (-1.0f));
+		matrix = glm::rotate(matrix, (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
+		matrix = glm::rotate(matrix, (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+		matrix = glm::rotate(matrix, (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
+		matrix = glm::translate(matrix, transform->GetMoveVector());
+		transform->SetLocalMatrix(matrix);
 
-		transform->matrix = glm::translate(transform->matrix, transform->moveVector);
-		transform->moveVector = glm::vec3(0);
-		transform->rotateVector = glm::vec3(0);
+		//transform->matrix = glm::translate(transform->matrix, transform->moveVector);
+		transform->SetMoveVector(glm::vec3(0));
+		transform->SetRotateVector(glm::vec3(0));
 	}
 }
 
