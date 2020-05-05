@@ -17,3 +17,8 @@ std::shared_ptr<EntityManager> EntityManager::GetInstance()
 
 	return EntityManager::m_Instance;
 }
+
+std::shared_ptr<Entity> EntityManager::GetEntity(int entityID)
+{
+	return m_Entities[entityID];
+}

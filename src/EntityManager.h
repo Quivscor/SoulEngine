@@ -25,6 +25,8 @@ public:
 		return pointer;
 	}
 
+	std::shared_ptr<Entity> GetEntity(int entityID);
+
 private:
 	static std::shared_ptr<EntityManager> m_Instance;
 
