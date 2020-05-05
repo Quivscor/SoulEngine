@@ -18,6 +18,9 @@ public:
 	ComponentManager();
 	~ComponentManager();
 
+
+	static std::shared_ptr<ComponentManager> GetInstance();
+
 	template <typename T, typename... Args>
 	std::shared_ptr<T> AddComponent(int ownerID, Args&& ...)
 	{
@@ -52,6 +55,8 @@ public:
 	}
 
 private:
+	static std::shared_ptr<ComponentManager> m_Instance;
+
 	int m_NextComponentID = 0;
 	std::unordered_map<std::pair<int, ComponentType>, std::shared_ptr<Component>, PairHash> m_Components;
 };

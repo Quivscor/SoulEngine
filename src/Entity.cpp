@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity(ComponentManager* componentManagerInstance) : m_ComponentManagerInstance(componentManagerInstance)
+Entity::Entity()
 {
 }
 

@@ -23,6 +23,9 @@ Game::~Game()
 
 void Game::Init()
 {
+	m_EntityManager = EntityManager::GetInstance();
+	m_ComponentManager = ComponentManager::GetInstance();
+
 	m_Window = m_Window->GetInstance();
 	m_Window->Init("SoulEater", 1280, 720);
 
@@ -62,12 +65,12 @@ void Game::Run()
 	colliderShape.push_back({ 5.0f, -5.0f });
 
 	//Object with model
-	std::shared_ptr<Entity> character = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
 	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
 	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
-	std::shared_ptr<Entity> map = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> map = m_EntityManager->CreateEntity<Entity>();
 	map->AddComponent<Transform>();
 	map->GetComponent<Transform>()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	map->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -80,7 +83,7 @@ void Game::Run()
 	physics->RegisterEntity(map);
 	renderer->RegisterEntity(map);
 
-	std::shared_ptr<Entity> map2 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> map2 = m_EntityManager->CreateEntity<Entity>();
 	map2->AddComponent<Transform>();
 	map2->GetComponent<Transform>()->SetPosition(glm::vec3(15.0f, 0.0f, 0.0f));
 	map2->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -93,7 +96,7 @@ void Game::Run()
 	physics->RegisterEntity(map2);
 	renderer->RegisterEntity(map2);
 
-	std::shared_ptr<Entity> map3 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> map3 = m_EntityManager->CreateEntity<Entity>();
 	map3->AddComponent<Transform>();
 	map3->GetComponent<Transform>()->SetPosition(glm::vec3(15, 0.0f, 15.0f));
 	map3->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -106,7 +109,7 @@ void Game::Run()
 	physics->RegisterEntity(map3);
 	renderer->RegisterEntity(map3);
 
-	std::shared_ptr<Entity> map4 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> map4 = m_EntityManager->CreateEntity<Entity>();
 	map4->AddComponent<Transform>();
 	map4->GetComponent<Transform>()->SetPosition(glm::vec3(0, 0.0f, 15.0f));
 	map4->GetComponent<Transform>()->SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -135,7 +138,7 @@ void Game::Run()
 	renderer->RegisterEntity(character);
 
 	//nanosuit 2
-	std::shared_ptr<Entity> character2 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> character2 = m_EntityManager->CreateEntity<Entity>();
 	character2->AddComponent<Transform>();
 	character2->GetComponent<Transform>()->SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
 	character2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
@@ -164,7 +167,7 @@ void Game::Run()
 	renderer->RegisterEntity(character2);
 
 	//nanosuit 2
-	std::shared_ptr<Entity> character3 = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> character3 = m_EntityManager->CreateEntity<Entity>();
 	character3->AddComponent<Transform>();
 	character3->GetComponent<Transform>()->SetPosition(glm::vec3(-1.5f, 0.0f, -1.0f));
 	character3->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
@@ -194,19 +197,19 @@ void Game::Run()
 
 
 	//Camera object
-	std::shared_ptr<Entity> camera = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> camera = m_EntityManager->CreateEntity<Entity>();
 	
 	camera->AddComponent<Transform>();
 	physics->RegisterEntity(camera);
 	camera->AddComponent<Camera>();
 
 	//Input register test
-	std::shared_ptr<Entity> inputHandler = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> inputHandler = m_EntityManager->CreateEntity<Entity>();
 	inputHandler->AddComponent<InputHandler>();
 	inputSystem->RegisterEntity(inputHandler);
 
 	//Object for cube
-	std::shared_ptr<Entity> cube = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+	std::shared_ptr<Entity> cube = m_EntityManager->CreateEntity<Entity>();
 	cube->AddComponent<Transform>();
 	cube->AddComponent<Material>();
 	cube->GetComponent<Material>()->SetShader(shader);
@@ -330,7 +333,7 @@ void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* asset
 
 			}
 
-			std::shared_ptr<Entity> chunk = m_EntityManager.CreateEntity<Entity>(&m_ComponentManager);
+			std::shared_ptr<Entity> chunk = m_EntityManager->CreateEntity<Entity>();
 			chunk->AddComponent<Transform>();
 			chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
 			chunk->GetComponent<Transform>()->SetScale(glm::vec3(temps[3], temps[4], temps[5]));
