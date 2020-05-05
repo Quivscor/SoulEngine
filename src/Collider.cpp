@@ -30,6 +30,7 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 			collisions[i].controlFlag = controlFlag;
 
 			//execute OnTriggerStay(collision[i])
+			EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerStay(otherObjCollider);
 
 			return;
 		}
@@ -42,6 +43,7 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 	collisions.push_back(newCollision);
 
 	//execute OnTriggerEnter(newCollision)
+	EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerEnter(otherObjCollider);
 }
 
 void Collider::CheckControlFlags()
@@ -53,6 +55,7 @@ void Collider::CheckControlFlags()
 		if (it->controlFlag != controlFlag)
 		{
 			//execute OnTriggerExit(it->collider)
+			EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerExit(it->collider);
 			it = collisions.erase(it);
 		}
 		else

@@ -10,6 +10,7 @@
 #include "InputSystem.h"
 #include "Collider.h"
 #include "MapLoader.h"
+#include "Scripts/ColorChanger.h"
 
 #include <fstream>
 #include <iostream>
@@ -163,6 +164,8 @@ void Game::Run()
 	character2->AddComponent<Collider>();
 	character2->GetComponent<Collider>()->SetShape(colliderShape);
 	character2->GetComponent<Collider>()->isTrigger = true;
+	character2->GetComponent<Collider>()->isStatic = true;
+	character2->AddComponent<ColorChanger>();
 
 	physics->RegisterEntity(character2);
 	renderer->RegisterEntity(character2);
@@ -192,6 +195,7 @@ void Game::Run()
 
 	character3->AddComponent<Collider>();
 	character3->GetComponent<Collider>()->SetShape(colliderShape);
+	character3->GetComponent<Collider>()->isStatic = true;
 
 	physics->RegisterEntity(character3);
 	renderer->RegisterEntity(character3);
@@ -297,7 +301,7 @@ void Game::Run()
 		cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f));
 
 		//character object
-		character->GetComponent<Mesh>()->material->SetColor(glm::vec3(1.0f, sin((GLfloat)glfwGetTime()), sin((GLfloat)glfwGetTime())));
+		//character->GetComponent<Mesh>()->material->SetColor(glm::vec3(1.0f, sin((GLfloat)glfwGetTime()), sin((GLfloat)glfwGetTime())));
 		//character->GetComponent<Transform>()->SetRotation(glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f));
 		//scene graph required!!!
 		//character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);

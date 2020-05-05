@@ -1,6 +1,8 @@
 #pragma once
 #include "Core.h"
 #include "Renderer.h"
+#include "EntityManager.h"
+#include "ScriptableObject.h"
 
 struct ColliderPolygon {
 	std::vector<glm::vec2> points;
@@ -28,6 +30,7 @@ public:
 	virtual ComponentType GetComponentType() const override { return ComponentType::ColliderComponent; }
 
 	bool isTrigger = false;
+	bool isStatic = false;
 
 private:
 	ColliderPolygon polygon;

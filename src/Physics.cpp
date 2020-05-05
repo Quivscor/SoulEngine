@@ -109,6 +109,9 @@ void Physics::Update() const
 
 bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Collider> col2, std::shared_ptr<Transform> trns1, std::shared_ptr<Transform> trns2) const
 {
+	if (col1->isStatic && col2->isStatic)
+		return true;
+
 	Collider* col1ref = col1.get();
 	Collider* col2ref = col2.get();
 

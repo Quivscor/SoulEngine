@@ -12,15 +12,23 @@ ColorChanger::~ColorChanger()
 
 void ColorChanger::OnTriggerEnter(std::shared_ptr<Collider> other)
 {
-	std::cout << "Trigger enter" << std::endl;
+	Material* mat = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Mesh>()->material;
+	if (mat != nullptr)
+	{
+		mat->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
+	}
 }
 
 void ColorChanger::OnTriggerStay(std::shared_ptr<Collider> other)
 {
-	std::cout << "Trigger stay" << std::endl;
+
 }
 
 void ColorChanger::OnTriggerExit(std::shared_ptr<Collider> other)
 {
-	std::cout << "Trigger exit" << std::endl;
+	Material* mat = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Mesh>()->material;
+	if (mat != nullptr)
+	{
+		mat->SetColor(glm::vec3(0.0f, 1.0f, 0.0f));
+	}
 }
