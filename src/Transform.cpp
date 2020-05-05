@@ -131,7 +131,7 @@ void Transform::SetLocalScale(glm::vec3 vector)
 
 void Transform::SetLocalMatrix(glm::mat4 matrix)
 {
-	matrix = matrix;
+	this->matrix = matrix;
 	dirtyFlag = true;
 
 	Transform::SetGlobalMatrix();

@@ -30,7 +30,7 @@ void Physics::Update() const
 
 		if (transform->IsDirty())
 		{
-			glm::mat4 matrix = transform->GetLocalMatrix();
+			glm::mat4 matrix = glm::mat4(1.0f);
 			matrix = glm::translate(matrix, transform->GetLocalPosition());
 			matrix = glm::rotate(matrix, (transform->GetLocalRotation().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
 			matrix = glm::rotate(matrix, (transform->GetLocalRotation().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
