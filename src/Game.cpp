@@ -130,6 +130,7 @@ void Game::Run()
 	character->GetComponent<Material>()->SetShader(shader);*/
 	character->AddComponent<Collider>();
 	character->GetComponent<Collider>()->SetShape(colliderShape);
+	character->GetComponent<Collider>()->isTrigger = true;
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
@@ -238,19 +239,19 @@ void Game::Run()
 		
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_A))
 		{
-			std::cout << "LOG :: Hold A\n";
+			//std::cout << "LOG :: Hold A\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
 			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 50.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
 		{
-			std::cout << "LOG :: Hold D\n";
+			//std::cout << "LOG :: Hold D\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
 			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * -50.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
 		{
-			std::cout << "LOG :: Hold W\n";
+			//std::cout << "LOG :: Hold W\n";
 			character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 25.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_ESCAPE)) {
@@ -260,31 +261,31 @@ void Game::Run()
 			
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
 		{
-			std::cout << "LOG :: Hold S\n";
+			//std::cout << "LOG :: Hold S\n";
 			character->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 25.0f);
 		}
 
 		//camera movement
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_J))
 		{
-			std::cout << "LOG :: Hold J\n";
+			//std::cout << "LOG :: Hold J\n";
 			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
 			camera->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_L))
 		{
-			std::cout << "LOG :: Hold L\n";
+			//std::cout << "LOG :: Hold L\n";
 			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
 			camera->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_I))
 		{
-			std::cout << "LOG :: Hold I\n";
+			//std::cout << "LOG :: Hold I\n";
 			camera->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_K))
 		{
-			std::cout << "LOG :: Hold K\n";
+			//std::cout << "LOG :: Hold K\n";
 			camera->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 20.0f);
 		}
 
@@ -308,6 +309,7 @@ void Game::Run()
 		inputSystem->LateUpdate();
 	}
 }
+
 void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* assetManager, Physics* physics)
 {
 	std::vector<std::shared_ptr<Entity>> map;
