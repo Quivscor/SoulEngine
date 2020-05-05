@@ -22,9 +22,9 @@ public:
 	static std::shared_ptr<ComponentManager> GetInstance();
 
 	template <typename T, typename... Args>
-	std::shared_ptr<T> AddComponent(int ownerID, Args&& ...)
+	std::shared_ptr<T> AddComponent(int ownerID, Args&&... args)
 	{
-		std::shared_ptr<T> component = std::make_shared<T>(std::forward<Args>(args)...);
+		std::shared_ptr<T> component = std::make_shared<T>();
 		component->SetComponentID(m_NextComponentID++);
 		component->SetOwnerID(ownerID);
 		ComponentType type = component->GetComponentType();

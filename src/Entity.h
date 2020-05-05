@@ -11,7 +11,7 @@ public:
 	int GetEntityID();
 
 	template <typename T, typename... Args>
-	std::shared_ptr<T> AddComponent(Args&& ...)
+	std::shared_ptr<T> AddComponent(Args&&... args)
 	{
 		return ComponentManager::GetInstance()->AddComponent<T>(m_EntityID, std::forward<Args>(args)...);
 	}
