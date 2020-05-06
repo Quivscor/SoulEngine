@@ -202,6 +202,36 @@ void Game::Run()
 	physics->RegisterEntity(character3);
 	renderer->RegisterEntity(character3);
 
+	//nanosuit 4
+	std::shared_ptr<Entity> character4 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	character4->AddComponent<Transform>();
+	character4->GetComponent<Transform>()->SetPosition(glm::vec3(-2.0f, 0.0f, 1.0f));
+	character4->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	character4->AddComponent<Mesh>();
+	character4->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
+	character4->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
+	character4->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+	character4->GetComponent<Mesh>()->setupMesh();
+	character4->AddComponent<Material>();
+	character4->GetComponent<Material>()->SetShader(shader);
+	colliderShape.clear();
+	colliderShape.push_back({ -8.0f, -5.0f });
+	colliderShape.push_back({ -5.0f, -8.0f });
+	colliderShape.push_back({ 5.0f, -8.0f });
+	colliderShape.push_back({ 8.0f, -5.0f });
+	colliderShape.push_back({ 8.0f, 5.0f });
+	colliderShape.push_back({ 5.0f,  8.0f });
+	colliderShape.push_back({ -5.0f, 8.0f });
+	colliderShape.push_back({ -8.0f, 5.0f });
+
+	character4->AddComponent<Collider>();
+	character4->GetComponent<Collider>()->SetShape(colliderShape);
+	character4->GetComponent<Collider>()->isStatic = true;
+
+	physics->RegisterEntity(character4);
+	renderer->RegisterEntity(character4);
+
 
 	//Camera object
 	std::shared_ptr<Entity> camera = m_EntityManager->CreateEntity<Entity>();
