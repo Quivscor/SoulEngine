@@ -186,14 +186,14 @@ void Game::Run()
 	character3->AddComponent<Material>();
 	character3->GetComponent<Material>()->SetShader(shader);
 	colliderShape.clear();
-	colliderShape.push_back({ -5.0f, -3.0f });
-	colliderShape.push_back({ -3.0f, -5.0f });
-	colliderShape.push_back({ 3.0f, -5.0f });
-	colliderShape.push_back({ 5.0f, -3.0f });
-	colliderShape.push_back({ 5.0f, 3.0f });
-	colliderShape.push_back({ 3.0f,  5.0f });
-	colliderShape.push_back({ -3.0f, 5.0f });
-	colliderShape.push_back({ -5.0f, 3.0f });
+	colliderShape.push_back({ -8.0f, -5.0f });
+	colliderShape.push_back({ -5.0f, -8.0f });
+	colliderShape.push_back({ 5.0f, -8.0f });
+	colliderShape.push_back({ 8.0f, -5.0f });
+	colliderShape.push_back({ 8.0f, 5.0f });
+	colliderShape.push_back({ 5.0f,  8.0f });
+	colliderShape.push_back({ -5.0f, 8.0f });
+	colliderShape.push_back({ -8.0f, 5.0f });
 
 	character3->AddComponent<Collider>();
 	character3->GetComponent<Collider>()->SetShape(colliderShape);
@@ -240,6 +240,7 @@ void Game::Run()
 	{
 		//physics->FixedUpdate();
 		Time::RunTimer();
+		//double start = glfwGetTime();
 		glfwPollEvents();
 
 		//input must be early to read from it
@@ -317,6 +318,8 @@ void Game::Run()
 		physics->LateUpdate();
 		renderer->LateUpdate();
 		inputSystem->LateUpdate();
+
+		//Sleep(start + 16 - glfwGetTime());
 	}
 }
 

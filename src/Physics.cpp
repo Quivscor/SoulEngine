@@ -69,15 +69,15 @@ void Physics::Update() const
 	{
 		transform = m_Entities[i]->GetComponent<Transform>();
 
-		if (transform->moveVector == glm::vec3(0) && transform->rotateVector == glm::vec3(0))
-			continue;
-
 		collider = m_Entities[i]->GetComponent<Collider>();
 
 		if (collider != nullptr)
 		{
 			MoveCollider(collider, transform);
 		}
+
+		if (transform->moveVector == glm::vec3(0) && transform->rotateVector == glm::vec3(0))
+			continue;
 
 		transform->matrix = glm::translate(transform->matrix, transform->moveVector * (-1.0f));
 		transform->matrix = glm::rotate(transform->matrix, (transform->rotateVector.x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -167,18 +167,37 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 	//if anyone is trigger then calculate response
 	if (!isTrigger)
 	{
-		glm::vec2 d = { trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x, (-1) * (trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z) };
+		glm::vec2 d = { trns2->GetPositionFromMatrix().x - trns1->GetPositionFromMatrix().x, trns2->GetPositionFromMatrix().z - trns1->GetPositionFromMatrix().z };
 		float s = sqrtf(d.x * d.x + d.y * d.y);
 
-		trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1) * (overlap * d.x / s), 0.0f, (-1) * (overlap * d.y / s)));
+		glm::mat4 tmpMatrix = trns1->matrix;
+		tmpMatrix[3][0] -= (overlap * d.x / s);
+		tmpMatrix[3][2] -= (overlap * d.y / s);
 
-		glm::vec4 point;
+		trns1->matrix = tmpMatrix;
+
+		//trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1.0f) * (overlap * d.x / s), 0.0f, (-1.0f) * (overlap * d.y / s)));
+
+		/*glm::vec4 point;
+
+		glm::mat4 colliderMatrix = glm::mat4(1.0f);
+		colliderMatrix = glm::translate(colliderMatrix, trns1->position);
+		colliderMatrix = glm::rotate(colliderMatrix, (trns1->rotation.y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+		colliderMatrix = glm::scale(colliderMatrix, trns1->scale);
+
+		for (int i = 0; i < col1->polygon.shape.size(); i++)
+		{
+			point = colliderMatrix * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
+			col1->polygon.points[i] = glm::vec2(point.x, point.z);
+		}*/
+
+		/*glm::vec4 point;
 
 		for (int i = 0; i < col1->polygon.shape.size(); i++)
 		{
 			point = trns1->matrix * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
 			col1->polygon.points[i] = glm::vec2(point.x, point.z);
-		}
+		}*/
 	}
 	//for triggers
 	else
