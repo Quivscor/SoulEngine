@@ -38,25 +38,26 @@ Model* AssetManager::LoadModel(std::string path)
 
 	}
 	
-	ProcessNode(model->scene->mRootNode, model->scene);
+	ProcessNode(model->scene->mRootNode, model->scene,model);
+
 	model->setMeshes(meshes);
 	return model;
 }
 
-void AssetManager::ProcessNode(aiNode *node, const aiScene *scene)
+void AssetManager::ProcessNode(aiNode *node, const aiScene *scene,Model* model)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(ProcessMesh(mesh, scene));
+		meshes.push_back(ProcessMesh(mesh, scene, model));
 	}
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene);
+		ProcessNode(node->mChildren[i], scene, model);
 	}
 }
 
-Mesh AssetManager::ProcessMesh(aiMesh *mesh, const aiScene *scene)
+Mesh AssetManager::ProcessMesh(aiMesh *mesh, const aiScene *scene, Model* model)
 {
 	// data to fill
 	std::vector<Vertex> vertices;
@@ -146,21 +147,21 @@ Mesh AssetManager::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 
 			
 
-			if (m_bone_mapping.find(bone_name) == m_bone_mapping.end()) // ��������� ��� �� � ������� ��������
+			if (model->m_bone_mapping.find(bone_name) == model->m_bone_mapping.end()) // ��������� ��� �� � ������� ��������
 			{
 				// Allocate an index for a new bone
-				bone_index = m_num_bones;
-				m_num_bones++;
+				bone_index = model->m_num_bones;
+				model->m_num_bones++;
 				BoneMatrix bi;
-				m_bone_matrices.push_back(bi);
-				m_bone_matrices[bone_index].offset_matrix = mesh->mBones[i]->mOffsetMatrix;
-				m_bone_mapping[bone_name] = bone_index;
+				model->m_bone_matrices.push_back(bi);
+				model->m_bone_matrices[bone_index].offset_matrix = mesh->mBones[i]->mOffsetMatrix;
+				model->m_bone_mapping[bone_name] = bone_index;
 
 				//cout << "bone_name: " << bone_name << "			 bone_index: " << bone_index << endl;
 			}
 			else
 			{
-				bone_index = m_bone_mapping[bone_name];
+				bone_index = model->m_bone_mapping[bone_name];
 			}
 
 			for (uint j = 0; j < mesh->mBones[i]->mNumWeights; j++)

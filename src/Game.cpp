@@ -266,6 +266,7 @@ void Game::Run()
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_ESCAPE)) {
 			glfwTerminate();
 			glfwSetWindowShouldClose(m_Window->GetMWindow(), true);
+			exit(3);
 		}
 			
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))

@@ -11,7 +11,10 @@ Time::Time()
 Time::~Time()
 {
 }
-
+double Time::GetTime()
+{
+	return Time::m_Time;
+}
 double Time::GetDeltaTime()
 {
 	return Time::m_DeltaTime;

@@ -40,3 +40,7 @@
 #include "assimp\scene.h"
 #include "assimp\postprocess.h"
 #include "assimp\pbrmaterial.h"
+
+
+typedef unsigned int uint;
+#include "Time.h"
