@@ -11,10 +11,12 @@ public:
 	EntityManager();
 	~EntityManager();
 
+	static std::shared_ptr<EntityManager> GetInstance();
+
 	template <typename T, typename... Args>
-	std::shared_ptr<T> CreateEntity(ComponentManager* componentManagerInstance, Args&&... args)
+	std::shared_ptr<T> CreateEntity(Args&&... args)
 	{
-		std::shared_ptr<T> pointer = std::make_shared<T>(componentManagerInstance);
+		std::shared_ptr<T> pointer = std::make_shared<T>();
 		pointer->SetEntityID(m_NextEntityIndex++);
 
 		pointer->AddComponent<Transform>(std::forward<Args>(args)...);
@@ -23,7 +25,11 @@ public:
 		return pointer;
 	}
 
+	std::shared_ptr<Entity> GetEntity(int entityID);
+
 private:
+	static std::shared_ptr<EntityManager> m_Instance;
+
 	std::vector<std::shared_ptr<Entity>> m_Entities;
 	int m_NextEntityIndex = 0;
 };

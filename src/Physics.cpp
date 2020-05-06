@@ -70,9 +70,6 @@ void Physics::Update() const
 	{
 		transform = m_Entities[i]->GetComponent<Transform>();
 
-		if (transform->GetMoveVector() == glm::vec3(0) && transform->GetRotateVector() == glm::vec3(0))
-			continue;
-
 		collider = m_Entities[i]->GetComponent<Collider>();
 
 		if (collider != nullptr)
@@ -80,12 +77,15 @@ void Physics::Update() const
 			MoveCollider(collider, transform);
 		}
 
+		if (transform->moveVector == glm::vec3(0) && transform->rotateVector == glm::vec3(0))
+			continue;
+
 		glm::mat4 matrix = glm::mat4(1);
-		matrix = glm::translate(matrix, transform->GetMoveVector() * (-1.0f));
-		matrix = glm::rotate(matrix, (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
-		matrix = glm::rotate(matrix, (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-		matrix = glm::rotate(matrix, (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-		matrix = glm::translate(matrix, transform->GetMoveVector() * 2.0f);
+		matrix = glm::translate(transform->matrix, transform->GetMoveVector() * (-1.0f));
+		matrix = glm::rotate(transform->matrix, (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
+		matrix = glm::rotate(transform->matrix, (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+		matrix = glm::rotate(transform->matrix, (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
+		matrix = glm::translate(transform->matrix, transform->GetMoveVector() * 2.0f);
 		transform->SetLocalMatrix(matrix);
 
 		transform->SetLocalPosition(transform->GetLocalPosition() + transform->GetMoveVector());
@@ -96,6 +96,10 @@ void Physics::Update() const
 		transform->SetRotateVector(glm::vec3(0));
 	}
 
+	//prepare for triggers function
+	for (int i = 0; i < colliders.size(); i++)
+		colliders[i]->IncreaseControlFlag();
+
 	for (int i = 0; i < colliders.size(); i++)
 	{
 		for (int j = i + 1; j < colliders.size(); j++)
@@ -103,12 +107,21 @@ void Physics::Update() const
 			CheckCollisions(colliders[i], colliders[j], collidersTransforms[i], collidersTransforms[j]);			
 		}
 	}
+
+	//check triggers function
+	for (int i = 0; i < colliders.size(); i++)
+		colliders[i]->CheckControlFlags();
 }
 
 bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Collider> col2, std::shared_ptr<Transform> trns1, std::shared_ptr<Transform> trns2) const
 {
+	if (col1->isStatic && col2->isStatic)
+		return true;
+
 	Collider* col1ref = col1.get();
 	Collider* col2ref = col2.get();
+
+	bool isTrigger = col1ref->isTrigger || col2ref->isTrigger;
 
 	float overlap = INFINITY;
 
@@ -146,7 +159,8 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 				max_r2 = std::max(max_r2, q);
 			}
 
-			overlap = std::min(std::min(max_r1, max_r2) - std::max(min_r1, min_r2), overlap);
+			if (!isTrigger)
+				overlap = std::min(std::min(max_r1, max_r2) - std::max(min_r1, min_r2), overlap);
 
 			if (!(max_r2 >= min_r1 && max_r1 >= min_r2))
 			{
@@ -155,17 +169,49 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		}
 	}
 
-	glm::vec2 d = { trns2->GetGlobalPositionFromMatrix().x - trns1->GetGlobalPositionFromMatrix().x, (-1) * (trns2->GetGlobalPositionFromMatrix().z - trns1->GetGlobalPositionFromMatrix().z) };
-	float s = sqrtf(d.x * d.x + d.y * d.y);
-
-	trns1->SetLocalMatrix(glm::translate(trns1->GetLocalMatrix(), glm::vec3((-1) * (overlap * d.x / s), 0.0f, (-1) * (overlap * d.y / s))));
-
-	glm::vec4 point;
-
-	for (int i = 0; i < col1->polygon.shape.size(); i++)
+	//all code below execute when two objects collide with each other
+	//if anyone is trigger then calculate response
+	if (!isTrigger)
 	{
-		point = trns1->GetLocalMatrix() * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
-		col1->polygon.points[i] = glm::vec2(point.x, point.z);
+		glm::vec2 d = { trns2->GetGlobalPositionFromMatrix().x - trns1->GetGlobalPositionFromMatrix().x, trns2->GetGlobalPositionFromMatrix().z - trns1->GetGlobalPositionFromMatrix().z };
+		float s = sqrtf(d.x * d.x + d.y * d.y);
+
+		glm::mat4 tmpMatrix = trns1->matrix;
+		tmpMatrix[3][0] -= (overlap * d.x / s);
+		tmpMatrix[3][2] -= (overlap * d.y / s);
+
+		trns1->matrix = tmpMatrix;
+
+		//trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1.0f) * (overlap * d.x / s), 0.0f, (-1.0f) * (overlap * d.y / s)));
+
+		/*glm::vec4 point;
+
+		glm::mat4 colliderMatrix = glm::mat4(1.0f);
+		colliderMatrix = glm::translate(colliderMatrix, trns1->position);
+		colliderMatrix = glm::rotate(colliderMatrix, (trns1->rotation.y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+		colliderMatrix = glm::scale(colliderMatrix, trns1->scale);
+
+		for (int i = 0; i < col1->polygon.shape.size(); i++)
+		{
+			point = colliderMatrix * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
+			col1->polygon.points[i] = glm::vec2(point.x, point.z);
+		}*/
+
+		/*glm::vec4 point;
+
+		for (int i = 0; i < col1->polygon.shape.size(); i++)
+		{
+			point = trns1->matrix * glm::vec4(col1->polygon.shape[i].x, 0.0f, col1->polygon.shape[i].y, 1.0f);
+			col1->polygon.points[i] = glm::vec2(point.x, point.z);
+		}*/
+	}
+	//for triggers
+	else
+	{
+		if (col1->isTrigger)
+			col1->AddTriggerCollision(col2);
+		if (col2->isTrigger)
+			col2->AddTriggerCollision(col1);
 	}
 
 	return false;
@@ -216,18 +262,3 @@ void Physics::FixedUpdate() const
 		transform->SetRotateVector(glm::vec3(0));
 	}
 }
-
-
-
-/*std::cout << "Test 1" << std::endl;
-collisionDetector->Initialize(glm::vec3(0), glm::vec3(0, 0, 5), glm::vec3(-500, 500, 5), glm::vec3(500, 500, 5), glm::vec3(0, -10000, 5), 1, 1, 1);
-std::cout << collisionDetector->DetectCollision() << std::endl;
-std::cout << "Test 2" << std::endl;
-collisionDetector->Initialize(glm::vec3(0), glm::vec3(0, 0, 5), glm::vec3(0, 0, 2), glm::vec3(0, 6, 5), glm::vec3(0, -6, 5), 1, 1, 1);
-std::cout << collisionDetector->DetectCollision() << std::endl;
-std::cout << "Test 3" << std::endl;
-collisionDetector->Initialize(glm::vec3(0), glm::vec3(-10, 0, 0), glm::vec3(-10, 0, 0), glm::vec3(-2, -500, 0), glm::vec3(-2, 500, 0), 1, 1, 1);
-std::cout << collisionDetector->DetectCollision() << std::endl;
-std::cout << "Test 4" << std::endl;
-collisionDetector->Initialize(glm::vec3(0), glm::vec3(1, 0, 0), glm::vec3(-500, -500, 15), glm::vec3(-500, -500, 5), glm::vec3(-100, -10000, 5), 1, 1, 1);
-std::cout << collisionDetector->DetectCollision() << std::endl;*/

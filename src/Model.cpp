@@ -1,5 +1,6 @@
 ﻿#include "Model.h"
 
+
 Model::Model(std::vector<Mesh> meshes) : meshes(meshes)
 {
 
@@ -31,6 +32,28 @@ uint Model::findPosition(float p_animation_time, const aiNodeAnim* p_node_anim)
 
 	assert(0);
 	return 0;
+}
+
+void Model::initShaders(Shader* shader_program)
+{
+	for (uint i = 0; i < MAX_BONES; i++) // get location all matrices of bones
+	{
+		std::string name = "bones[" +std::to_string(i) + "]";// name like in shader
+		m_bone_location[i] = glGetUniformLocation(shader_program->ID, name.c_str());
+	}
+
+	}
+
+void Model::ChangeBonePositions()
+{
+	std::vector<aiMatrix4x4> transforms;
+	boneTransform((double)Time::GetDeltaTime() / 1000.0f, transforms);
+
+	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
+	{
+		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
+	}
+
 }
 
 uint Model::findRotation(float p_animation_time, const aiNodeAnim* p_node_anim)
@@ -199,9 +222,11 @@ void Model::readNodeHierarchy(float p_animation_time, const aiNode* p_node, cons
 
 void Model::boneTransform(double time_in_sec, std::vector<aiMatrix4x4>& transforms)
 {
+	
 	aiMatrix4x4 identity_matrix; // = mat4(1.0f);
 
 	double time_in_ticks = time_in_sec * ticks_per_second;
+
 	float animation_time = fmod(time_in_ticks, scene->mAnimations[0]->mDuration);
 	readNodeHierarchy(animation_time, scene->mRootNode, identity_matrix);
 

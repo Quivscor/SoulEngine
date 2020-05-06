@@ -20,7 +20,7 @@ public:
 private:
 	std::shared_ptr<Window> m_Window;
 
-	EntityManager m_EntityManager;
-	ComponentManager m_ComponentManager;
+	std::shared_ptr<EntityManager> m_EntityManager;
+	std::shared_ptr<ComponentManager> m_ComponentManager;
 	SystemManager m_SystemManager;
 };

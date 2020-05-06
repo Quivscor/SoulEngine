@@ -5,7 +5,7 @@
 class Player : public Entity
 {
 public:
-	Player(ComponentManager* m_ComponentManager);
+	Player();
 	~Player();
 
 	std::shared_ptr<Transform> m_Transform;
