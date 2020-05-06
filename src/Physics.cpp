@@ -88,6 +88,9 @@ void Physics::Update() const
 		matrix = glm::translate(matrix, transform->GetMoveVector() * 2.0f);
 		transform->SetLocalMatrix(matrix);
 
+		transform->SetLocalPosition(transform->GetLocalPosition() + transform->GetMoveVector());
+		transform->SetLocalRotation(transform->GetLocalRotation() + transform->GetRotateVector());
+
 		//transform->matrix = glm::translate(transform->matrix, transform->moveVector);
 		transform->SetMoveVector(glm::vec3(0));
 		transform->SetRotateVector(glm::vec3(0));

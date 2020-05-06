@@ -195,9 +195,11 @@ glm::vec3 Transform::GetRotateVector()
 void Transform::SetMoveVector(glm::vec3 vector)
 {
 	moveVector = vector;
+	dirtyFlag = true;
 }
 
 void Transform::SetRotateVector(glm::vec3 vector)
 {
 	rotateVector = vector;
+	dirtyFlag = true;
 }
