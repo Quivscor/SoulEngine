@@ -142,7 +142,7 @@ void Game::Run()
 	//nanosuit 2
 	std::shared_ptr<Entity> character2 = m_EntityManager->CreateEntity<Entity>();
 	character2->AddComponent<Transform>();
-	character2->GetComponent<Transform>()->SetPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
+	character2->GetComponent<Transform>()->SetPosition(glm::vec3(1.0f, 0.0f, 3.0f));
 	character2->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character2->AddComponent<Mesh>();
@@ -175,7 +175,7 @@ void Game::Run()
 	//nanosuit 3
 	std::shared_ptr<Entity> character3 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	character3->AddComponent<Transform>();
-	character3->GetComponent<Transform>()->SetPosition(glm::vec3(-1.5f, 0.0f, -1.2f));
+	character3->GetComponent<Transform>()->SetPosition(glm::vec3(0.5f, 0.0f, 0.5f));
 	character3->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character3->AddComponent<Mesh>();
@@ -205,7 +205,7 @@ void Game::Run()
 	//nanosuit 4
 	std::shared_ptr<Entity> character4 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	character4->AddComponent<Transform>();
-	character4->GetComponent<Transform>()->SetPosition(glm::vec3(-2.0f, 0.0f, 1.0f));
+	character4->GetComponent<Transform>()->SetPosition(glm::vec3(-0.0f, 0.0f, 3.0f));
 	character4->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character4->AddComponent<Mesh>();
