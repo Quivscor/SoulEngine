@@ -77,18 +77,18 @@ void Physics::Update() const
 			MoveCollider(collider, transform);
 		}
 
-		if (transform->moveVector == glm::vec3(0) && transform->rotateVector == glm::vec3(0))
+		if (transform->GetMoveVector() == glm::vec3(0) && transform->GetRotateVector() == glm::vec3(0))
 			continue;
 
 		glm::mat4 matrix = glm::mat4(1);
-		matrix = glm::translate(transform->matrix, transform->GetMoveVector() * (-1.0f));
-		matrix = glm::rotate(transform->matrix, (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
-		matrix = glm::rotate(transform->matrix, (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-		matrix = glm::rotate(transform->matrix, (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-		matrix = glm::translate(transform->matrix, transform->GetMoveVector() * 2.0f);
+		matrix = glm::translate(transform->GetLocalMatrix(), transform->GetMoveVector() * (-1.0f));
+		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
+		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
+		matrix = glm::translate(transform->GetLocalMatrix(), transform->GetMoveVector() * 2.0f);
 		transform->SetLocalMatrix(matrix);
 
-		transform->SetLocalPosition(transform->GetLocalPosition() + transform->GetMoveVector());
+		transform->SetLocalPosition(glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]));
 		transform->SetLocalRotation(transform->GetLocalRotation() + transform->GetRotateVector());
 
 		//transform->matrix = glm::translate(transform->matrix, transform->moveVector);
@@ -176,11 +176,11 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		glm::vec2 d = { trns2->GetGlobalPositionFromMatrix().x - trns1->GetGlobalPositionFromMatrix().x, trns2->GetGlobalPositionFromMatrix().z - trns1->GetGlobalPositionFromMatrix().z };
 		float s = sqrtf(d.x * d.x + d.y * d.y);
 
-		glm::mat4 tmpMatrix = trns1->matrix;
+		glm::mat4 tmpMatrix = trns1->GetLocalMatrix();
 		tmpMatrix[3][0] -= (overlap * d.x / s);
 		tmpMatrix[3][2] -= (overlap * d.y / s);
 
-		trns1->matrix = tmpMatrix;
+		trns1->SetLocalMatrix(tmpMatrix);
 
 		//trns1->matrix = glm::translate(trns1->matrix, glm::vec3((-1.0f) * (overlap * d.x / s), 0.0f, (-1.0f) * (overlap * d.y / s)));
 
@@ -219,7 +219,7 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 
 void Physics::MoveCollider(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const
 {
-	glm::mat4 colliderMatrix = trns->GetLocalMatrix();
+	glm::mat4 colliderMatrix = trns->GetGlobalMatrix();
 	colliderMatrix = glm::translate(colliderMatrix, trns->GetMoveVector() * (-1.0f));
 	colliderMatrix = glm::rotate(colliderMatrix, (trns->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
 	colliderMatrix = glm::translate(colliderMatrix, trns->GetMoveVector() * 2.0f);

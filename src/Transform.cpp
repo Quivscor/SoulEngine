@@ -76,7 +76,7 @@ glm::vec3 Transform::GetGlobalPosition()
 glm::vec3 Transform::GetGlobalPositionFromMatrix()
 {
 	if (m_Parent != NULL)
-		return m_Parent->GetGlobalPositionFromMatrix() * glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]);
+		return m_Parent->GetGlobalPositionFromMatrix() + glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]);
 	else
 		return GetLocalPositionFromMatrix(); 
 }
@@ -142,7 +142,7 @@ void Transform::SetGlobalPosition()
 	dirtyFlag = true;
 
 	if (m_Parent != NULL)
-		m_GlobalPosition = m_Parent->GetGlobalPosition() * position;
+		m_GlobalPosition = m_Parent->GetGlobalPosition() + position;
 	else
 		m_GlobalPosition = position;
 }
@@ -152,7 +152,7 @@ void Transform::SetGlobalRotation()
 	dirtyFlag = true;
 
 	if (m_Parent != NULL)
-		m_GlobalRotation = m_Parent->GetGlobalRotation() * rotation;
+		m_GlobalRotation = m_Parent->GetGlobalRotation() + rotation;
 	else
 		m_GlobalRotation = rotation;
 }
@@ -162,7 +162,7 @@ void Transform::SetGlobalScale()
 	dirtyFlag = true;
 
 	if (m_Parent != NULL)
-		m_GlobalScale = m_Parent->GetGlobalScale() * scale;
+		m_GlobalScale = m_Parent->GetGlobalScale() + scale;
 	else
 		m_GlobalScale = scale;
 }

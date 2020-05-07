@@ -22,6 +22,13 @@ public:
 	void SetLocalScale(glm::vec3 vector);
 	void SetLocalMatrix(glm::mat4 matrix);
 	
+	glm::vec3 GetLocalForward();
+	glm::vec3 GetLocalBack();
+	glm::vec3 GetLocalDown();
+	glm::vec3 GetLocalUp();
+	glm::vec3 GetLocalLeft();
+	glm::vec3 GetLocalRight();
+
 	void SetParent(std::shared_ptr<Transform> parent);
 
 	virtual ComponentType GetComponentType() const override { return ComponentType::TransformComponent; }
