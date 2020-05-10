@@ -6,10 +6,10 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "Collider.h"
-
-class Mesh;
+//#include "Model.h"
+//class Mesh;
 class Collider;
-
+//class Model;
 class Renderer : public System
 {
 public:

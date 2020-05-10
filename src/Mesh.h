@@ -44,11 +44,11 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	Material* material;
-
+	void SetAll(Mesh m);
 	unsigned int GetVAO() const;
 	unsigned int GetVBO();
 	unsigned int GetEBO();
-
+	void Draw(Shader* shaders_program);
 	virtual ComponentType GetComponentType() const override { return ComponentType::MeshComponent; }
 
 	void setupMesh();

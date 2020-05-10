@@ -1,5 +1,5 @@
 #include "Renderer.h"
-
+ #include "Model.h"
 Shader* Renderer::defaultShader = nullptr;
 
 Renderer::Renderer(Shader* shader)
@@ -43,7 +43,13 @@ void Renderer::DrawMeshes() const
 		defaultShader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
-
+		if (m_Entities[i]->GetComponent<Model>() != nullptr)
+		{
+			m_Entities[i]->GetComponent<Model>()->initShaders(defaultShader);
+			m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
+			m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
+		}
+			
 		
 		for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
 		{

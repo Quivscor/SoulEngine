@@ -41,7 +41,7 @@ void Game::Run()
 	//TO DELETE:
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
-
+	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/basic.frag");
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
@@ -51,9 +51,9 @@ void Game::Run()
 
 	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
-	
+	Model* testModela = assetManager->LoadModel("./res/models/man/model.dae");
 	//LoadMap(5,5, renderer, assetManager, physics);
-
+	/*std::cout<<testModela->scene->mAnimations[0]->mDuration;*/
 	//float fTheta = glm::pi<float>() * 2.0f / 5.0f;
 	std::vector<glm::vec2> colliderShape;
 	/*for (int i = 0; i < 5; i++)
@@ -67,10 +67,7 @@ void Game::Run()
 	colliderShape.push_back({ 5.0f, -5.0f });
 
 	//Object with model
-	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
-	character->AddComponent<Transform>();
-	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
-	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	
 
 	std::shared_ptr<Entity> map = m_EntityManager->CreateEntity<Entity>();
 	map->AddComponent<Transform>();
@@ -126,11 +123,28 @@ void Game::Run()
 
 	
 	//player
+	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
+	character->AddComponent<Transform>();
+	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character->GetComponent<Transform>()->SetRotation(glm::vec3(1.0f, 0.0f, 0.0f));
+
 	character->AddComponent<Mesh>();
-	character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
+	character->AddComponent<Model>();
+
+	character->GetComponent<Model>()->UseModel(testModela);
+	
+	character->GetComponent<Mesh>()->SetAll(testModela->GetMeshes()[0]);
+
+	
+	character->GetComponent<Mesh>()->material->SetShader(shader);
+	//character->GetComponent<Model>()->initShaders(character->GetComponent<Mesh>()->material->GetShader());
+
+	/*character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
 	character->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
-	character->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
-	character->GetComponent<Mesh>()->setupMesh();
+	character->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;*/
+	//character->GetComponent<Mesh>()->setupMesh();
+	character->GetComponent<Mesh>()->setupMeshfBones();
 	/*character->AddComponent<Material>();
 	character->GetComponent<Material>()->SetShader(shader);*/
 	character->AddComponent<Collider>();

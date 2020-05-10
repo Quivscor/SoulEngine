@@ -7,10 +7,10 @@ layout(location = 3) in ivec4 bone_ids;     // INT pointer
 layout(location = 4) in vec4 weights;
 
 
-out vec3 normal;
+
 out vec3 Color;
 out vec2 TexCoords;
-
+out vec3 normal;
 
 uniform mat4 M_matrix;
 uniform mat4 normals_matrix;
