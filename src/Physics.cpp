@@ -181,6 +181,7 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 		tmpMatrix[3][2] -= (overlap * d.y / s);
 
 		trns1->SetLocalMatrix(tmpMatrix);
+		trns1->SetLocalPosition(glm::vec3(tmpMatrix[3][0], tmpMatrix[3][1], tmpMatrix[3][2]));
 	}
 	//for triggers
 	else
