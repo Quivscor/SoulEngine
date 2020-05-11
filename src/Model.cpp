@@ -3,16 +3,16 @@
 
 Model::Model(std::vector<Mesh> meshes) : meshes(meshes)
 {
-
+	scene = nullptr;
 }
 
 Model::~Model()
 {
-
+	import.FreeScene();
 }
 Model::Model() 
 {
-
+	scene = nullptr;
 }
 void Model::setMeshes(std::vector<Mesh> meshez)
 {
@@ -44,17 +44,53 @@ void Model::initShaders(Shader* shader_program)
 
 	}
 
+void Model::UseModel(Model* model)
+{
+	import.FreeScene();
+	this->m_bone_mapping= model->m_bone_mapping;
+	this->scene = model->scene;
+	for (int j = 0; j < MAX_BONES; j++)
+		this->m_bone_location[j] = model->m_bone_location[j];
+	this->scene = model->scene;
+	//this->scene= model->scene->mNumAnimations;
+	 //aiCopyScene(model->scene, scenes);
+	this->m_bone_matrices = model->m_bone_matrices;
+	this->m_global_inverse_transform = model->m_global_inverse_transform;
+	this->m_num_bones = model->m_num_bones;
+	this->ticks_per_second = model->ticks_per_second;
+	
+}
+
 void Model::ChangeBonePositions()
 {
 	std::vector<aiMatrix4x4> transforms;
-	boneTransform((double)Time::GetDeltaTime() / 1000.0f, transforms);
+	std::cout << (double)Time::GetTime()<<std::endl;
+	boneTransform((double)Time::GetTime() , transforms);
+
+	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
+	{
+		
+		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
+	}
+
+}
+void Model::draw(Shader* shaders_program)
+{
+	std::vector<aiMatrix4x4> transforms;
+	boneTransform((double)Time::GetTime() / 1000.0f, transforms);
+
 
 	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
 	{
 		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
 	}
 
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].Draw(shaders_program);
+	}
 }
+
 
 uint Model::findRotation(float p_animation_time, const aiNodeAnim* p_node_anim)
 {
@@ -173,6 +209,7 @@ void Model::readNodeHierarchy(float p_animation_time, const aiNode* p_node, cons
 
 	std::string node_name(p_node->mName.data);
 
+	//scene->mNumAnimations = 2;
 	
 	const aiAnimation* animation = scene->mAnimations[0];
 	aiMatrix4x4 node_transform = p_node->mTransformation;
@@ -227,14 +264,14 @@ void Model::boneTransform(double time_in_sec, std::vector<aiMatrix4x4>& transfor
 
 	double time_in_ticks = time_in_sec * ticks_per_second;
 
-	float animation_time = fmod(time_in_ticks, scene->mAnimations[0]->mDuration);
+	float animation_time = fmod(time_in_ticks, this->scene->mAnimations[0]->mDuration);
 	readNodeHierarchy(animation_time, scene->mRootNode, identity_matrix);
 
-	transforms.resize(m_num_bones);
+	transforms.resize(this->m_num_bones);
 
-	for (uint i = 0; i < m_num_bones; i++)
+	for (uint i = 0; i < this->m_num_bones; i++)
 	{
-		transforms[i] = m_bone_matrices[i].final_world_transform;
+		transforms[i] = this->m_bone_matrices[i].final_world_transform;
 	}
 }
 

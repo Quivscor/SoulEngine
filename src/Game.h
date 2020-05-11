@@ -5,9 +5,11 @@
 #include "EntityManager.h"
 #include "ComponentManager.h"
 #include "AssetManager.h"
+#include "GameLogic.h"
+#include "InputSystem.h"
 #include <fstream>
 #include <iostream>
-
+#include "Model.h"
 class Game
 {
 public:
@@ -16,6 +18,7 @@ public:
 
 	void Init();
 	void Run();
+	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem);
 	void LoadMap(int, int, Renderer*, AssetManager*, Physics*);
 private:
 	std::shared_ptr<Window> m_Window;

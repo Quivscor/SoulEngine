@@ -41,6 +41,6 @@
 #include "assimp\postprocess.h"
 #include "assimp\pbrmaterial.h"
 
-
+#include "assimp\cexport.h"
 typedef unsigned int uint;
 #include "Time.h"

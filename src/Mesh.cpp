@@ -53,6 +53,14 @@ void Mesh::setupMesh()
 	glBindVertexArray(0);
 }
 
+void Mesh::SetAll(Mesh m)
+{
+	vertices = m.vertices;
+	indices = m.indices;
+	material = m.material;
+	bones_id_weights_for_each_vertex = m.bones_id_weights_for_each_vertex;
+}
+
 unsigned int Mesh::GetVAO() const
 {
 	return VAO;
@@ -66,6 +74,40 @@ unsigned int Mesh::GetVBO()
 unsigned int Mesh::GetEBO()
 {
 	return EBO;
+}
+void Mesh::Draw(Shader* shaders_program)
+{
+	unsigned int diffuseNr = 1;
+	unsigned int specularNr = 1;
+
+	for (int i = 0; i < material->GetTextures().size(); i++)
+	{
+		std::string number;
+		std::string name = material->GetTextures()[i].type;
+		if (name == "texture_diffuse")
+			number = std::to_string(diffuseNr++);
+		else if (name == "texture_specular")
+			number = std::to_string(specularNr++);
+
+		//defaultShader->setFloat(("material." + name + number).c_str(), i);
+		glUniform1i(glGetUniformLocation(shaders_program->ID, (name + number).c_str()),i);
+		glBindTexture(GL_TEXTURE_2D, material->GetTextures()[i].id);
+	}
+
+	//glUniform1f(glGetUniformLocation(shaders_program, "material.shininess"), 32.0f);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glLineWidth(2);
+	//Draw
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	for (int i = 0; i < material->GetTextures().size(); i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 }
 Mesh::Mesh(std::vector<Vertex> vertic, std::vector<GLuint> ind, std::vector<Texture> textures, std::vector<VertexBoneData> bone_id_weights)
 {

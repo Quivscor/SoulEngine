@@ -4,12 +4,20 @@
 #include "Collider.h"
 #include "Transform.h"
 #include "Mesh.h"
+//#include "Model.h"
 #include "EntityManager.h"
+#include "GameLogic.h"
+
+//class Model;
+
+class GameLogic;
+#define thisEntity EntityManager::GetInstance()->GetEntity(GetOwnerID())
 
 class ScriptableObject : public Component
 {
 public:
 	friend class Collider;
+	friend class GameLogic;
 
 	ScriptableObject();
 	~ScriptableObject();

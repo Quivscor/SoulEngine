@@ -1,18 +1,21 @@
 #pragma once
 #include "Core.h"
 #include "Mesh.h"
-#include <Time.h>
 
+class Mesh;
+struct VertexBoneData;
 class Model : public Component
 {
 public:
 	Model(std::vector<Mesh> meshes);
 	Model();
+
 	~Model();
 	static const uint MAX_BONES = 100;
 	std::vector<Mesh> GetMeshes();
 	Assimp::Importer import;
 	const aiScene* scene;
+	aiScene** scenes;
 	std::map<std::string, uint> m_bone_mapping; // maps a bone name and their index
 	uint m_num_bones = 0;
 	std::vector<BoneMatrix> m_bone_matrices;
@@ -24,6 +27,8 @@ public:
 	glm::mat4 aiToGlm(aiMatrix4x4 ai_matr);
 	aiQuaternion nlerp(aiQuaternion a, aiQuaternion b, float blend); // super super n lerp =)
 	void initShaders(Shader *shader_program);
+	void UseModel(Model* model);
+	void draw(Shader* shader_program);
 private:
 	std::vector<Mesh> meshes;
 	uint findPosition(float p_animation_time, const aiNodeAnim* p_node_anim);
