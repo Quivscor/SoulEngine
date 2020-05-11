@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
@@ -11,10 +11,12 @@ layout(location = 4) in vec4 weights;
 out vec3 Color;
 out vec2 TexCoords;
 out vec3 normal;
+out vec3 frag_pos;
 
 uniform mat4 M_matrix;
 uniform mat4 normals_matrix;
 uniform mat4 transform;
+
 uniform vec3 color;
 const int MAX_BONES = 100;
 uniform mat4 bones[MAX_BONES];
@@ -29,8 +31,8 @@ void main()
 	vec4 boned_position = bone_transform * vec4(aPos, 1.0); // transformed by bones
 
 	normal = normalize(vec3(normals_matrix * (bone_transform * vec4(aNormal, 0.0))));
-
-	Color = vec3(M_matrix * boned_position);
+	Color =color;
+	frag_pos = vec3(M_matrix * boned_position);
 	TexCoords = aTexCoords;
 
 	gl_Position = transform * boned_position;

@@ -41,7 +41,7 @@ void Game::Run()
 	//TO DELETE:
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
-	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/basic.frag");
+	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
@@ -125,26 +125,26 @@ void Game::Run()
 	//player
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
-	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+	character->GetComponent<Transform>()->SetPosition(glm::vec3(2.0f, 5.0f, -5.0f));
 	character->GetComponent<Transform>()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	character->GetComponent<Transform>()->SetRotation(glm::vec3(1.0f, 0.0f, 0.0f));
+	//character->GetComponent<Transform>()->SetRotation(glm::vec3(1.0f, 0.0f, 0.0f));
 
 	character->AddComponent<Mesh>();
 	character->AddComponent<Model>();
 
 	character->GetComponent<Model>()->UseModel(testModela);
-	
 	character->GetComponent<Mesh>()->SetAll(testModela->GetMeshes()[0]);
-
+	character->GetComponent<Mesh>()->material->SetShader(shadera);
 	
-	character->GetComponent<Mesh>()->material->SetShader(shader);
-	//character->GetComponent<Model>()->initShaders(character->GetComponent<Mesh>()->material->GetShader());
+	character->GetComponent<Mesh>()->setupMeshfBones();
+	
+	
 
 	/*character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
 	character->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
 	character->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;*/
 	//character->GetComponent<Mesh>()->setupMesh();
-	character->GetComponent<Mesh>()->setupMeshfBones();
+	
 	/*character->AddComponent<Material>();
 	character->GetComponent<Material>()->SetShader(shader);*/
 	character->AddComponent<Collider>();
