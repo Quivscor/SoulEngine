@@ -346,8 +346,6 @@ void Game::Run()
 		//character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);
 		//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
 
-		std::cout << camera->GetComponent<Transform>()->GetGlobalPositionFromMatrix().x << " " << camera->GetComponent<Transform>()->GetGlobalPositionFromMatrix().y << " " << camera->GetComponent<Transform>()->GetGlobalPositionFromMatrix().z << " " << std::endl;
-
 		physics->Update();
 		renderer->Update();
 		renderer->DrawCube(cube->GetComponent<Transform>(), cube->GetComponent<Material>());
