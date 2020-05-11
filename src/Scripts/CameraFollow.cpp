@@ -17,7 +17,7 @@ void CameraFollow::Start()
 
 	if (objectToFollow != nullptr)
 	{
-		thisEntity->GetComponent<Transform>()->SetPosition(objectToFollow->GetPositionFromMatrix() * glm::vec3(-1.0f, -1.0f, -1.0f) + glm::vec3(0.0f, -1.0f, -2.0f));
+		thisEntity->GetComponent<Transform>()->SetLocalPosition(objectToFollow->GetGlobalPosition() * glm::vec3(-1.0f, -1.0f, -1.0f) + glm::vec3(0.0f, -1.0f, -2.0f));
 	}
 }
 
@@ -25,6 +25,6 @@ void CameraFollow::Update()
 {
 	if (objectToFollow != nullptr)
 	{
-		thisEntity->GetComponent<Transform>()->SetPosition(objectToFollow->GetPositionFromMatrix() * glm::vec3(-1.0f, -1.0f, -1.0f) + glm::vec3(0.0f, -1.0f, -2.0f));
+		thisEntity->GetComponent<Transform>()->SetLocalPosition(objectToFollow->GetGlobalPosition() * glm::vec3(-1.0f, -1.0f, -1.0f) + glm::vec3(0.0f, -1.0f, -2.0f));
 	}
 }

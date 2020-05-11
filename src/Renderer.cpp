@@ -77,11 +77,11 @@ void Renderer::DrawMeshes() const
 			m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
 			//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
 		}
-			glUniform3f(glGetUniformLocation(defaultShader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetPosition().x, mainCamera->GetComponent<Transform>()->GetPosition().y, mainCamera->GetComponent<Transform>()->GetPosition().z);
+			glUniform3f(glGetUniformLocation(defaultShader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
 		glUniform1f(glGetUniformLocation(defaultShader->ID, "material.shininess"), 32.0f);
 		glUniform1f(glGetUniformLocation(defaultShader->ID, "material.transparency"), 1.0f);
 		// Point Light 1
-		glUniform3f(glGetUniformLocation(defaultShader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetPosition().x, mainCamera->GetComponent<Transform>()->GetPosition().y, mainCamera->GetComponent<Transform>()->GetPosition().z);
+		glUniform3f(glGetUniformLocation(defaultShader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
 
 		glUniform3f(glGetUniformLocation(defaultShader->ID, "point_light.ambient"), 0.1f, 0.1f, 0.1f);
 		glUniform3f(glGetUniformLocation(defaultShader->ID, "point_light.diffuse"), 1.0f, 1.0f, 1.0f);
@@ -91,15 +91,15 @@ void Renderer::DrawMeshes() const
 		glUniform1f(glGetUniformLocation(defaultShader->ID, "point_light.linear"), 0.007);	
 		glUniform1f(glGetUniformLocation(defaultShader->ID, "point_light.quadratic"), 0.0002);
 
-		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * trns->matrix;
+		glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
 
 		unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 		unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
 		glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
-		glUniformMatrix4fv(glGetUniformLocation(defaultShader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->matrix));
-		glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->matrix)));
+		glUniformMatrix4fv(glGetUniformLocation(defaultShader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
+		glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->GetGlobalMatrix())));
 		glUniformMatrix4fv(glGetUniformLocation(defaultShader->ID, "normals_matrix"), 1, GL_FALSE, glm::value_ptr(matr_normals_cube));
 		unsigned int hasTexture = glGetUniformLocation(defaultShader->ID, "hasTexture");
 		glUniform1i(hasTexture, anyTexture);
@@ -179,7 +179,7 @@ void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Tran
 
 	defaultShader->use();
 
-	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix;// *trns->matrix;
+	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix();// *trns->matrix;
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -263,7 +263,7 @@ void Renderer::DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Ma
 
 	defaultShader->use();
 
-	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->matrix * transform->matrix;
+	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * transform->GetGlobalMatrix();
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));

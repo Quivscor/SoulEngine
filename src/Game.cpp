@@ -77,80 +77,12 @@ void Game::Run()
 			exit(3);
 		}
 
-		
-		/*if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_A))
-		{
-			//std::cout << "LOG :: Hold A\n";
-			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 50.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
-		{
-			//std::cout << "LOG :: Hold D\n";
-			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * -50.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
-		{
-			//std::cout << "LOG :: Hold W\n";
-			character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 25.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_ESCAPE)) {
-			glfwTerminate();
-			glfwSetWindowShouldClose(m_Window->GetMWindow(), true);
-			exit(3);
-		}
-			
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
-		{
-			//std::cout << "LOG :: Hold S\n";
-			character->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 25.0f);
-		}*/
-
-		//camera movement
-		/*if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_J))
-		{
-			//std::cout << "LOG :: Hold J\n";
-			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 20.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_L))
-		{
-			//std::cout << "LOG :: Hold L\n";
-			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 20.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_I))
-		{
-			//std::cout << "LOG :: Hold I\n";
-			camera->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 20.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_K))
-		{
-			//std::cout << "LOG :: Hold K\n";
-			camera->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 20.0f);
-		}*/
-
-		//cube object 
-		//cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
-		//cube->GetComponent<Transform>()->SetRotation(glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f));
-
-		//character object
-		//character->GetComponent<Mesh>()->material->SetColor(glm::vec3(1.0f, sin((GLfloat)glfwGetTime()), sin((GLfloat)glfwGetTime())));
-		//character->GetComponent<Transform>()->SetRotation(glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f));
-		//scene graph required!!!
-		//character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);
-		//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-
 		physics->Update();
 		renderer->Update();
-		//renderer->DrawCube(cube->GetComponent<Transform>(), cube->GetComponent<Material>());
 
 		physics->LateUpdate();
 		renderer->LateUpdate();
 		inputSystem->LateUpdate();
-
-		//Sleep(start + 16 - glfwGetTime());
 	}
 }
 
@@ -178,8 +110,8 @@ void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* asset
 
 			std::shared_ptr<Entity> chunk = m_EntityManager->CreateEntity<Entity>();
 			chunk->AddComponent<Transform>();
-			chunk->GetComponent<Transform>()->SetPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
-			chunk->GetComponent<Transform>()->SetScale(glm::vec3(temps[3], temps[4], temps[5]));
+			chunk->GetComponent<Transform>()->SetLocalPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
+			chunk->GetComponent<Transform>()->SetLocalScale(glm::vec3(temps[3], temps[4], temps[5]));
 
 			chunk->AddComponent<Mesh>();
 			chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
@@ -435,136 +367,4 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	renderer->SetCamera(camera);
 	renderer->debugMode = true;
-
-	//---------------------------------------------------------------------------------
-
-	while (true)
-	{
-		//physics->FixedUpdate();
-		Time::RunTimer();
-		//double start = glfwGetTime();
-		glfwPollEvents();
-
-		//input must be early to read from it
-		inputSystem->Update();
-
-		
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_A))
-		{
-			//std::cout << "LOG :: Hold A\n";
-			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 50.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
-		{
-			//std::cout << "LOG :: Hold D\n";
-			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * -50.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
-		{
-			//std::cout << "LOG :: Hold W\n";
-			character->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 25.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_ESCAPE)) {
-			glfwTerminate();
-			glfwSetWindowShouldClose(m_Window->GetMWindow(), true);
-			exit(3);
-		}
-			
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
-		{
-			//std::cout << "LOG :: Hold S\n";
-			character->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 25.0f);
-		}
-
-		//camera movement
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_J))
-		{
-			//std::cout << "LOG :: Hold J\n";
-			//character->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Move(Transform::Right() * (float)Time::GetDeltaTime() * 20.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_L))
-		{
-			//std::cout << "LOG :: Hold L\n";
-			//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-			camera->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 20.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_I))
-		{
-			//std::cout << "LOG :: Hold I\n";
-			camera->GetComponent<Transform>()->Move(Transform::Forward() * (float)Time::GetDeltaTime() * 20.0f);
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_K))
-		{
-			//std::cout << "LOG :: Hold K\n";
-			camera->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 20.0f);
-		}
-
-		//cube object 
-		cube->GetComponent<Material>()->SetColor(glm::vec3(sin((GLfloat)glfwGetTime()), 1.0f, cos((GLfloat)glfwGetTime() * 0.24f)));
-		cube->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0.0f, (GLfloat)glfwGetTime() * 5.0f, (GLfloat)glfwGetTime() * 10.0f));
-
-		
-
-		//character object
-		//character->GetComponent<Mesh>()->material->SetColor(glm::vec3(1.0f, sin((GLfloat)glfwGetTime()), sin((GLfloat)glfwGetTime())));
-		//character->GetComponent<Transform>()->SetRotation(glm::vec3((GLfloat)glfwGetTime() * (-5.0f), 0.0f, (GLfloat)glfwGetTime() * 2.0f));
-		//scene graph required!!!
-		//character->GetComponent<Transform>()->Rotate(Transform::Up() * (float)Time::GetDeltaTime() * 5.0f);
-		//character->GetComponent<Transform>()->Move(Transform::Left() * (float)Time::GetDeltaTime() * 300.0f);
-
-		physics->Update();
-		renderer->Update();
-		renderer->DrawCube(cube->GetComponent<Transform>(), cube->GetComponent<Material>());
-
-		//std::cout << cube->GetComponent<Transform>()->GetGlobalPosition().x << "x " << cube->GetComponent<Transform>()->GetGlobalPosition().y << "y " << cube->GetComponent<Transform>()->GetGlobalPosition().z << "z \n";
-
-		physics->LateUpdate();
-		renderer->LateUpdate();
-		inputSystem->LateUpdate();
-	}
-}
-
-void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* assetManager, Physics* physics)
-{
-	std::vector<std::shared_ptr<Entity>> map;
-	Model* testModel = assetManager->LoadModel("./res/models/chunk.obj");
-	for (int x = 0; x < sizeX; x++)
-	{
-		for (int j = 0; j < sizeY; j++)
-		{
-			std::ifstream file;
-			file.open("./res/maps/Map1.txt");
-			if (!file)
-			{
-				std::cout << "Unable to open file txt";
-			}
-			float var;
-			std::vector<float> temps;
-			while (file >> var)
-			{
-				temps.push_back(var);
-
-			}
-
-			std::shared_ptr<Entity> chunk = m_EntityManager->CreateEntity<Entity>();
-			chunk->AddComponent<Transform>();
-			chunk->GetComponent<Transform>()->SetLocalPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
-			chunk->GetComponent<Transform>()->SetLocalScale(glm::vec3(temps[3], temps[4], temps[5]));
-
-			chunk->AddComponent<Mesh>();
-			chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
-			chunk->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
-			chunk->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
-			chunk->GetComponent<Mesh>()->setupMesh();
-
-			map.push_back(chunk);
-			renderer->RegisterEntity(chunk);
-			physics->RegisterEntity(chunk);
-			temps.clear();
-
-		}
-	}
 }
