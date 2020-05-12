@@ -96,10 +96,7 @@ void Physics::Update() const
 		transform->SetRotateVector(glm::vec3(0));
 	}
 
-	if (transform->displayPositionInPhysicsCalculation == true)
-	{
-		std::cout << transform->GetGlobalPosition().x << "x " << transform->GetGlobalPosition().y << "y " << transform->GetGlobalPosition().z << "z\n";
-	}
+	transform->ShowDebugInfo();
 
 	//prepare for triggers function
 	for (int i = 0; i < colliders.size(); i++)

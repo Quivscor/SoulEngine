@@ -22,7 +22,8 @@ public:
 	void SetLocalScale(glm::vec3 vector);
 	void SetLocalMatrix(glm::mat4 matrix);
 	
-	bool displayPositionInPhysicsCalculation;
+	void DisplayDebugInfo(bool value);
+	void ShowDebugInfo();
 
 	glm::vec3 GetLocalForward();
 	glm::vec3 GetLocalBack();
@@ -74,6 +75,7 @@ private:
 	glm::vec3 m_GlobalScale;
 
 	bool dirtyFlag = false;
+	bool displayPositionInPhysicsCalculation;
 
 	std::shared_ptr<Transform> m_Parent;
 };

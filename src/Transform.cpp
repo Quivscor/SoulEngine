@@ -138,6 +138,20 @@ void Transform::SetLocalMatrix(glm::mat4 matrix)
 	Transform::SetGlobalMatrix();
 }
 
+void Transform::DisplayDebugInfo(bool value)
+{
+	displayPositionInPhysicsCalculation = value;
+}
+
+void Transform::ShowDebugInfo()
+{
+	std::cout << "Debug\n";
+	if (displayPositionInPhysicsCalculation == true)
+	{
+		std::cout << GetGlobalPosition().x << "x " << GetGlobalPosition().y << "y " << GetGlobalPosition().z << "z\n";
+	}
+}
+
 void Transform::SetGlobalPosition()
 {
 	dirtyFlag = true;
