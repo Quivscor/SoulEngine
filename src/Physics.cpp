@@ -81,11 +81,11 @@ void Physics::Update() const
 			continue;
 
 		glm::mat4 matrix;
-		matrix = glm::translate(transform->GetLocalMatrix(), transform->GetMoveVector() * (-1.0f));
+		matrix = glm::translate(transform->GetLocalMatrix(), (transform->GetMoveVector()) * (-1.0f));
 		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
 		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
 		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-		matrix = glm::translate(transform->GetLocalMatrix(), transform->GetMoveVector() * 2.0f);
+		matrix = glm::translate(transform->GetLocalMatrix(), (transform->GetMoveVector()) * 2.0f);
 		transform->SetLocalMatrix(matrix);
 
 		transform->SetLocalPosition(glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]));
@@ -94,6 +94,11 @@ void Physics::Update() const
 		//transform->matrix = glm::translate(transform->matrix, transform->moveVector);
 		transform->SetMoveVector(glm::vec3(0));
 		transform->SetRotateVector(glm::vec3(0));
+	}
+
+	if (transform->displayPositionInPhysicsCalculation == true)
+	{
+		std::cout << transform->GetGlobalPosition().x << "x " << transform->GetGlobalPosition().y << "y " << transform->GetGlobalPosition().z << "z\n";
 	}
 
 	//prepare for triggers function
@@ -218,25 +223,5 @@ void Physics::LateUpdate() const
 
 void Physics::FixedUpdate() const
 {
-	std::shared_ptr<Transform> transform;
 
-	for (int i = 0; i < m_Entities.size(); i++)
-	{
-		transform = m_Entities[i]->GetComponent<Transform>();
-
-		if (transform->GetMoveVector() == glm::vec3(0) && transform->GetRotateVector() == glm::vec3(0))
-			continue;
-
-		glm::mat4 matrix = transform->GetLocalMatrix();
-		matrix = glm::translate(matrix, transform->GetMoveVector() * (-1.0f));
-		matrix = glm::rotate(matrix, (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
-		matrix = glm::rotate(matrix, (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-		matrix = glm::rotate(matrix, (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-		matrix = glm::translate(matrix, transform->GetMoveVector());
-		transform->SetLocalMatrix(matrix);
-
-		//transform->matrix = glm::translate(transform->matrix, transform->moveVector);
-		transform->SetMoveVector(glm::vec3(0));
-		transform->SetRotateVector(glm::vec3(0));
-	}
 }

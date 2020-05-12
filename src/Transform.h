@@ -22,6 +22,8 @@ public:
 	void SetLocalScale(glm::vec3 vector);
 	void SetLocalMatrix(glm::mat4 matrix);
 	
+	bool displayPositionInPhysicsCalculation;
+
 	glm::vec3 GetLocalForward();
 	glm::vec3 GetLocalBack();
 	glm::vec3 GetLocalDown();

@@ -138,14 +138,23 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Model* testModela = assetManager->LoadModel("./res/models/man/model.dae");
 
 	//Camera object
+	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
+	cameraRoot->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, -1.0f, -2.0f));
+	cameraRoot->AddComponent<CameraFollow>();
+	physics->RegisterEntity(cameraRoot);
+	gameLogic->RegisterEntity(cameraRoot);
+
 	std::shared_ptr<Entity> camera = m_EntityManager->CreateEntity<Entity>();
-	camera->AddComponent<CameraFollow>();
+	camera->AddComponent<Camera>();
 	physics->RegisterEntity(camera);
 	renderer->SetCamera(camera);
 	renderer->debugMode = true;
 
-	gameLogic->RegisterEntity(camera);
-
+	//set camera position
+	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));
+	camera->GetComponent<Transform>()->SetParent(cameraRoot->GetComponent<Transform>());
+	camera->GetComponent<Transform>()->displayPositionInPhysicsCalculation = true;
+	
 
 	//LoadMap(5,5, renderer, assetManager, physics);
 	/*std::cout<<testModela->scene->mAnimations[0]->mDuration;*/
@@ -166,6 +175,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->AddComponent<Transform>();
 	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
 	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character->GetComponent<Transform>()->displayPositionInPhysicsCalculation = true;
 
 	std::shared_ptr<Entity> map = m_EntityManager->CreateEntity<Entity>();
 	map->AddComponent<Transform>();
@@ -343,10 +353,6 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(character4);
 	renderer->RegisterEntity(character4);
 
-
-
-
-
 	//Object for cube
 	std::shared_ptr<Entity> cube = m_EntityManager->CreateEntity<Entity>();
 	cube->AddComponent<Transform>();
@@ -358,12 +364,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	cube->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0.0f, 0.0f, 45.0f));
 	cube->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.5f, 1.75f, 1.0f));
 
-	physics->RegisterEntity(cube);
+	cameraRoot->GetComponent<CameraFollow>()->objectToFollow = character->GetComponent<Transform>();
 
-	//set camera position
-	camera->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, -5.0f, -6.0f));
-	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));
-	camera->GetComponent<CameraFollow>()->objectToFollow = character->GetComponent<Transform>();
+	physics->RegisterEntity(cube);
 
 	renderer->SetCamera(camera);
 	renderer->debugMode = true;
