@@ -139,9 +139,10 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	//Camera object
 	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
-	cameraRoot->GetComponent<Transform>()->SetLocalRotation(glm::vec3(-45.0f, 0, 0));
+	//cameraRoot->GetComponent<Transform>()->SetLocalRotation(glm::vec3(-45.0f, 0, 0));
 
 	cameraRoot->AddComponent<CameraFollow>();
+	cameraRoot->GetComponent<Transform>()->DisplayDebugInfo(true);
 	physics->RegisterEntity(cameraRoot);
 	gameLogic->RegisterEntity(cameraRoot);
 
@@ -149,7 +150,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	camera->AddComponent<Camera>();
 	physics->RegisterEntity(camera);
 	renderer->SetCamera(camera);
-	renderer->debugMode = true;
+	//renderer->debugMode = true;
 
 	//set camera position
 	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));

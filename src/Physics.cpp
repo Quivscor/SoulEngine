@@ -66,6 +66,8 @@ void Physics::Update() const
 		}
 	}
 
+	bool shownDebugInfo = false;
+
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		transform = m_Entities[i]->GetComponent<Transform>();
@@ -78,14 +80,27 @@ void Physics::Update() const
 		}
 
 		if (transform->GetMoveVector() == glm::vec3(0) && transform->GetRotateVector() == glm::vec3(0))
+		{
+			transform->ShowDebugInfo();
+			shownDebugInfo = true;
 			continue;
+		}
 
 		glm::mat4 matrix;
-		matrix = glm::translate(transform->GetLocalMatrix(), (transform->GetMoveVector()) * (-1.0f));
-		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
-		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
-		matrix = glm::rotate(transform->GetLocalMatrix(), (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
-		matrix = glm::translate(transform->GetLocalMatrix(), (transform->GetMoveVector()) * 2.0f);
+
+		glm::mat4 translateToPivot = glm::mat4(1);
+		glm::mat4 translateFromPivot = glm::mat4(1);
+
+		glm::mat4 rotateMatrix = glm::mat4(1);
+		rotateMatrix = glm::rotate(rotateMatrix, (transform->GetRotateVector().x * 3.14f / 180), glm::vec3(1.0f, 0.0f, 0.0f));
+		rotateMatrix = glm::rotate(rotateMatrix, (transform->GetRotateVector().y * 3.14f / 180), glm::vec3(0.0f, 1.0f, 0.0f));
+		rotateMatrix = glm::rotate(rotateMatrix, (transform->GetRotateVector().z * 3.14f / 180), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		translateToPivot = glm::translate(glm::mat4(1.0f), (transform->GetMoveVector()) * (-1.0f));
+		translateFromPivot = glm::translate(glm::mat4(1.0f), (transform->GetMoveVector()));
+
+		matrix = glm::translate(transform->GetLocalMatrix(), (transform->GetMoveVector()));
+		matrix = matrix * (translateToPivot * rotateMatrix * translateFromPivot);
 		transform->SetLocalMatrix(matrix);
 
 		transform->SetLocalPosition(glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]));
@@ -94,9 +109,12 @@ void Physics::Update() const
 		//transform->matrix = glm::translate(transform->matrix, transform->moveVector);
 		transform->SetMoveVector(glm::vec3(0));
 		transform->SetRotateVector(glm::vec3(0));
-	}
 
-	transform->ShowDebugInfo();
+		if (shownDebugInfo == false)
+		{
+			transform->ShowDebugInfo();
+		}
+	}
 
 	//prepare for triggers function
 	for (int i = 0; i < colliders.size(); i++)

@@ -63,7 +63,7 @@ glm::vec3 Transform::GetGlobalPosition()
 {
 	if (m_Parent != NULL)
 	{
-		glm::vec3 _position = m_Parent->GetGlobalPosition() * position;
+		glm::vec3 _position = m_Parent->GetGlobalPosition() + position;
 		return _position;
 	}		
 	else
@@ -85,7 +85,7 @@ glm::vec3 Transform::GetGlobalPositionFromMatrix()
 glm::vec3 Transform::GetGlobalRotation()
 {
 	if (m_Parent != NULL)
-		return m_Parent->GetGlobalRotation() * rotation;
+		return m_Parent->GetGlobalRotation() + rotation;
 	else
 		return GetLocalRotation();
 }
@@ -93,7 +93,7 @@ glm::vec3 Transform::GetGlobalRotation()
 glm::vec3 Transform::GetGlobalScale()
 {
 	if (m_Parent != NULL)
-		return m_Parent->GetGlobalScale() * scale;
+		return m_Parent->GetGlobalScale() + scale;
 	else
 		return GetLocalScale();
 }
@@ -140,15 +140,15 @@ void Transform::SetLocalMatrix(glm::mat4 matrix)
 
 void Transform::DisplayDebugInfo(bool value)
 {
-	displayPositionInPhysicsCalculation = value;
+	this->displayPositionInPhysicsCalculation = value;
 }
 
 void Transform::ShowDebugInfo()
 {
-	std::cout << "Debug\n";
-	if (displayPositionInPhysicsCalculation == true)
+	if (this->displayPositionInPhysicsCalculation == true)
 	{
-		std::cout << GetGlobalPosition().x << "x " << GetGlobalPosition().y << "y " << GetGlobalPosition().z << "z\n";
+		std::cout << "Global position: " << GetGlobalPositionFromMatrix().x << "x " << GetGlobalPositionFromMatrix().y << "y " << GetGlobalPositionFromMatrix().z << "z\n";
+		std::cout << "Local position: " << GetLocalPositionFromMatrix().x << "x " << GetLocalPositionFromMatrix().y << "y " << GetLocalPositionFromMatrix().z << "z\n";
 	}
 }
 
