@@ -143,7 +143,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//cameraRoot->GetComponent<Transform>()->SetLocalRotation(glm::vec3(-45.0f, 0, 0));
 
 	cameraRoot->AddComponent<CameraFollow>();
-	cameraRoot->GetComponent<Transform>()->DisplayDebugInfo(true);
+	//cameraRoot->GetComponent<Transform>()->DisplayDebugInfo(true);
 	physics->RegisterEntity(cameraRoot);
 	gameLogic->RegisterEntity(cameraRoot);
 
@@ -156,7 +156,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//set camera position
 	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));
 	camera->GetComponent<Transform>()->SetParent(cameraRoot->GetComponent<Transform>());
-	camera->GetComponent<Transform>()->DisplayDebugInfo(true);
+	//camera->GetComponent<Transform>()->DisplayDebugInfo(true);
 	
 
 	//LoadMap(5,5, renderer, assetManager, physics);
@@ -178,7 +178,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->AddComponent<Transform>();
 	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
 	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	character->GetComponent<Transform>()->DisplayDebugInfo(true);
+	//character->GetComponent<Transform>()->DisplayDebugInfo(true);
 
 	std::shared_ptr<Entity> map = m_EntityManager->CreateEntity<Entity>();
 	map->AddComponent<Transform>();
