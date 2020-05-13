@@ -12,6 +12,7 @@
 #include "Scripts/HelloTriggers.h"
 #include "Scripts/CameraFollow.h"
 #include "Scripts/Player.h"
+#include "Scripts/Weapon.h"
 
 #include <fstream>
 #include <iostream>
@@ -231,6 +232,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(map4);
 	renderer->RegisterEntity(map4);
 
+	//player
 	character->AddComponent<Mesh>();
 	character->AddComponent<Model>();
 
@@ -245,20 +247,27 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	gameLogic->RegisterEntity(character);
 
-
-
-	/*character->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
-	character->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
-	character->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;*/
-	//character->GetComponent<Mesh>()->setupMesh();
-
-	/*character->AddComponent<Material>();
-	character->GetComponent<Material>()->SetShader(shader);*/
 	character->AddComponent<Collider>();
 	character->GetComponent<Collider>()->SetShape(colliderShape);
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
+
+	//player's weapon ! -> it should be spawned in player's script imo
+	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
+	weapon->AddComponent<Transform>();
+	weapon->GetComponent<Transform>()->SetParent(character->GetComponent<Transform>());
+	weapon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 11.0f));
+	weapon->AddComponent<Collider>();
+	weapon->GetComponent<Collider>()->SetShape(colliderShape);
+	weapon->GetComponent<Collider>()->isTrigger = true;
+	weapon->AddComponent<Weapon>();
+
+	gameLogic->RegisterEntity(weapon);
+	physics->RegisterEntity(weapon);
+	renderer->RegisterEntity(weapon);
+
+	character->GetComponent<Player>()->weapon = weapon->GetComponent<Weapon>();
 
 	//nanosuit 2
 	std::shared_ptr<Entity> character2 = m_EntityManager->CreateEntity<Entity>();

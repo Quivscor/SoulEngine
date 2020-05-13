@@ -138,6 +138,9 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 	if (col1->isStatic && col2->isStatic)
 		return true;
 
+	if (!col1->enabled || !col2->enabled)
+		return true;
+
 	Collider* col1ref = col1.get();
 	Collider* col2ref = col2.get();
 

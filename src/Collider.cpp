@@ -30,7 +30,8 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 			collisions[i].controlFlag = controlFlag;
 
 			//execute OnTriggerStay(collision[i])
-			EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerStay(otherObjCollider);
+			if (EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>() != nullptr)
+				EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerStay(otherObjCollider);
 
 			/*std::vector<std::shared_ptr<ScriptableObject>> scripts = EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponents<ScriptableObject>();
 
@@ -57,7 +58,8 @@ void Collider::AddTriggerCollision(std::shared_ptr<Collider> otherObjCollider)
 		scripts[i]->OnTriggerEnter(otherObjCollider);
 	}*/
 
-	EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerEnter(otherObjCollider);
+	if (EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>() != nullptr)
+		EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerEnter(otherObjCollider);
 }
 
 void Collider::CheckControlFlags()
@@ -69,7 +71,8 @@ void Collider::CheckControlFlags()
 		if (it->controlFlag != controlFlag)
 		{
 			//execute OnTriggerExit(it->collider)
-			EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerExit(it->collider);
+			if (EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>() != nullptr)
+				EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponent<ScriptableObject>()->OnTriggerExit(it->collider);
 
 			/*std::vector<std::shared_ptr<ScriptableObject>> scripts = EntityManager::GetInstance()->GetEntity(this->GetOwnerID())->GetComponents<ScriptableObject>();
 			std::cout << "Length of scriptable objects: " << scripts.size() << std::endl;

@@ -12,6 +12,9 @@ ColorChanger::~ColorChanger()
 
 void ColorChanger::OnTriggerEnter(std::shared_ptr<Collider> other)
 {
+	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Mesh>() == nullptr)
+		return;
+
 	Material* mat = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Mesh>()->material;
 	if (mat != nullptr)
 	{
@@ -26,6 +29,9 @@ void ColorChanger::OnTriggerStay(std::shared_ptr<Collider> other)
 
 void ColorChanger::OnTriggerExit(std::shared_ptr<Collider> other)
 {
+	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Mesh>() == nullptr)
+		return;
+
 	Material* mat = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Mesh>()->material;
 	if (mat != nullptr)
 	{

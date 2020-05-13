@@ -22,6 +22,8 @@ public:
 		return ComponentManager::GetInstance()->GetComponent<T>(m_EntityID);
 	}
 
+	bool isActive = true;
+
 	/*template <typename T>
 	std::vector<std::shared_ptr<T>> GetComponents()
 	{

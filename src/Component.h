@@ -22,6 +22,8 @@ public:
 	int GetOwnerID();
 	virtual ComponentType GetComponentType() const { return ComponentType::None; }
 
+	bool enabled = true;
+
 protected:
 	int m_EntityID;
 	int m_ComponentID;

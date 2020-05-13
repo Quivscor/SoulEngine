@@ -36,4 +36,14 @@ void Player::Update()
 	{
 		thisEntity->GetComponent<Transform>()->Move(Transform::Back() * (float)Time::GetDeltaTime() * 25.0f);
 	}
+
+	if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_J))
+	{
+		weapon->Use();
+	}
+}
+
+void Player::CreateWeapon()
+{
+
 }
