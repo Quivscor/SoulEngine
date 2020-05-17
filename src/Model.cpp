@@ -64,7 +64,7 @@ void Model::UseModel(Model* model)
 void Model::ChangeBonePositions()
 {
 	std::vector<aiMatrix4x4> transforms;
-	std::cout << (double)Time::GetTime()<<std::endl;
+	
 	boneTransform((double)Time::GetTime() , transforms);
 
 	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
