@@ -13,6 +13,7 @@
 #include "Scripts/CameraFollow.h"
 #include "Scripts/Player.h"
 #include "Scripts/Weapon.h"
+#include "Scripts/Character.h"
 
 #include <fstream>
 #include <iostream>
@@ -134,7 +135,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 
-	Model* testModel = assetManager->LoadModel("./res/models/nanosuit/nanosuit.obj");
+	Model* testModel = assetManager->LoadModel("./res/models/goblin.obj");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	Model* testModela = assetManager->LoadModel("./res/models/man/model.dae");
 
@@ -277,9 +278,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character2->AddComponent<Mesh>();
-	character2->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
-	character2->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
-	character2->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+	character2->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
+	character2->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
+	character2->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
 	character2->GetComponent<Mesh>()->setupMesh();
 	character2->AddComponent<Material>();
 	character2->GetComponent<Material>()->SetShader(shader);
@@ -297,8 +298,6 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character2->GetComponent<Collider>()->SetShape(colliderShape);
 	character2->GetComponent<Collider>()->isTrigger = true;
 	character2->GetComponent<Collider>()->isStatic = true;
-	//character2->AddComponent<HelloTriggers>();
-	character2->AddComponent<ColorChanger>();
 
 	physics->RegisterEntity(character2);
 	renderer->RegisterEntity(character2);
@@ -311,9 +310,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character3->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character3->AddComponent<Mesh>();
-	character3->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
-	character3->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
-	character3->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+	character3->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
+	character3->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
+	character3->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
 	character3->GetComponent<Mesh>()->setupMesh();
 	character3->AddComponent<Material>();
 	character3->GetComponent<Material>()->SetShader(shader);
@@ -330,7 +329,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character3->AddComponent<Collider>();
 	character3->GetComponent<Collider>()->SetShape(colliderShape);
 	character3->GetComponent<Collider>()->isStatic = true;
+	character3->AddComponent<Character>();
 
+	//gameLogic->RegisterEntity(character3);
 	physics->RegisterEntity(character3);
 	renderer->RegisterEntity(character3);
 
@@ -341,9 +342,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character4->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character4->AddComponent<Mesh>();
-	character4->GetComponent<Mesh>()->indices = testModel->GetMeshes()[1].indices;
-	character4->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[1].vertices;
-	character4->GetComponent<Mesh>()->material = testModel->GetMeshes()[1].material;
+	character4->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
+	character4->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
+	character4->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
 	character4->GetComponent<Mesh>()->setupMesh();
 	character4->AddComponent<Material>();
 	character4->GetComponent<Material>()->SetShader(shader);
@@ -360,7 +361,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character4->AddComponent<Collider>();
 	character4->GetComponent<Collider>()->SetShape(colliderShape);
 	character4->GetComponent<Collider>()->isStatic = true;
+	character4->AddComponent<Character>();
 
+	//gameLogic->RegisterEntity(character4);
 	physics->RegisterEntity(character4);
 	renderer->RegisterEntity(character4);
 
@@ -380,5 +383,5 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(cube);
 
 	renderer->SetCamera(camera);
-	renderer->debugMode = true;
+	//renderer->debugMode = true;
 }

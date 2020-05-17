@@ -30,7 +30,16 @@ void Weapon::Update()
 
 void Weapon::OnTriggerStay(std::shared_ptr<Collider> other)
 {
-	std::cout << "Imagine how wonderful is this dmg" << std::endl;
+	for (int i = 0; i < hitObjects.size(); i++)
+		if (hitObjects[i] != nullptr && EntityManager::GetInstance()->GetEntity(other->GetOwnerID()) == hitObjects[i])
+			return;
+
+	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>() != nullptr)
+	{
+		hitObjects.push_back(EntityManager::GetInstance()->GetEntity(other->GetOwnerID()));
+
+		EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>()->GetHit(damage);
+	}
 }
 
 void Weapon::Use()
@@ -45,6 +54,7 @@ void Weapon::Use()
 
 void Weapon::TurnOffCollider()
 {
+	hitObjects.clear();
 	isAttacking = false;
 	thisEntity->GetComponent<Collider>()->enabled = false;
 }

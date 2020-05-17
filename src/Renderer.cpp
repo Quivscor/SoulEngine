@@ -37,6 +37,9 @@ void Renderer::DrawMeshes() const
 
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
+		if (!m_Entities[i]->isActive)
+			continue;
+
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 
 		if (m_Entities[i]->GetComponent<Mesh>() != nullptr)

@@ -1,5 +1,7 @@
 #pragma once
 #include "ScriptableObject.h"
+#include "Character.h"
+
 class Weapon : public ScriptableObject
 {
 public:
@@ -16,7 +18,9 @@ protected:
 private:
 	void TurnOffCollider();
 
-	float attackTime = 2.0f;
+	float attackTime = 0.2f;
 	float currentAttackTime = 0.0f;
+	float damage = 25.0f;
+	std::vector<std::shared_ptr<Entity>> hitObjects;
 	bool isAttacking = false;
 };

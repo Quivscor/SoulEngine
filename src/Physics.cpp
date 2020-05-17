@@ -25,6 +25,9 @@ void Physics::Update() const
 
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
+		if (!m_Entities[i]->isActive)
+			continue;
+
 		transform = m_Entities[i]->GetComponent<Transform>();
 		collider = m_Entities[i]->GetComponent<Collider>();
 
@@ -70,6 +73,9 @@ void Physics::Update() const
 
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
+		if (!m_Entities[i]->isActive)
+			continue;
+
 		transform = m_Entities[i]->GetComponent<Transform>();
 
 		collider = m_Entities[i]->GetComponent<Collider>();

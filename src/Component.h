@@ -9,7 +9,8 @@ enum ComponentType
 	MeshComponent = 4,
 	InputComponent = 5,
 	ColliderComponent = 6,
-	ScriptableObjectComponent = 7
+	ScriptableObjectComponent = 7,
+	CharacterComponent = 8
 };
 
 class Component
