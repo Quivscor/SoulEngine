@@ -135,7 +135,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 
-	Model* testModel = assetManager->LoadModel("./res/models/goblin.obj");
+	Model* testModel = assetManager->LoadModel("./res/models/character/goblin.obj");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	Model* testModela = assetManager->LoadModel("./res/models/man/model.dae");
 

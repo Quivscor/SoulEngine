@@ -83,3 +83,15 @@ target_include_directories("stb_image" PRIVATE "${STB_IMAGE_DIR}")
 
 set(STB_IMAGE_LIBRARY "stb_image")
 set(STB_IMAGE_INCLUDE_DIR "${STB_IMAGE_DIR}")
+
+#freetype
+
+#set(Freetype_DIR "${THIRDPARTY_DIR}/freetype/include")
+
+#add_library("freetype" STATIC "${Freetype_DIR}/ft2build.h")
+
+
+#target_link_libraries(freetype "${THIRDPARTY_DIR}/freetype/win32/freetype.lib")
+#target_include_directories(freetype PUBLIC "${THIRDPARTY_DIR}/freetype/include")
+#target_include_directories(freetype PUBLIC "${THIRDPARTY_DIR}/freetype/include/freetype")
+#target_include_directories(freetype PUBLIC "${THIRDPARTY_DIR}/freetype/include/freetype/config")

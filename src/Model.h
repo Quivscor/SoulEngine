@@ -17,7 +17,7 @@ public:
 	const aiScene* scene;
 	aiScene** scenes;
 	std::map<std::string, uint> m_bone_mapping; // maps a bone name and their index
-	uint m_num_bones = 0;
+	uint m_num_bones = 0;	
 	std::vector<BoneMatrix> m_bone_matrices;
 	aiMatrix4x4 m_global_inverse_transform;
 	void setMeshes(std::vector<Mesh> meshes);
@@ -29,8 +29,9 @@ public:
 	void initShaders(Shader *shader_program);
 	void UseModel(Model* model);
 	void draw(Shader* shader_program);
-private:
 	std::vector<Mesh> meshes;
+private:
+	
 	uint findPosition(float p_animation_time, const aiNodeAnim* p_node_anim);
 	uint findRotation(float p_animation_time, const aiNodeAnim* p_node_anim);
 	uint findScaling(float p_animation_time, const aiNodeAnim* p_node_anim);

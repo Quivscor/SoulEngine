@@ -147,9 +147,9 @@ void Transform::ShowDebugInfo()
 {
 	if (this->displayPositionInPhysicsCalculation == true)
 	{
-		std::cout << "Global position: " << GetGlobalPositionFromMatrix().x << "x " << GetGlobalPositionFromMatrix().y << "y " << GetGlobalPositionFromMatrix().z << "z\n";
+	/*	std::cout << "Global position: " << GetGlobalPositionFromMatrix().x << "x " << GetGlobalPositionFromMatrix().y << "y " << GetGlobalPositionFromMatrix().z << "z\n";
 		std::cout << "Local position: " << GetLocalPositionFromMatrix().x << "x " << GetLocalPositionFromMatrix().y << "y " << GetLocalPositionFromMatrix().z << "z\n";
-	}
+	*/}
 }
 
 void Transform::SetGlobalPosition()
