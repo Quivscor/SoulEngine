@@ -88,57 +88,80 @@ void Game::Run()
 	}
 }
 
-void Game::LoadMap(int sizeX, int sizeY, Renderer* renderer, AssetManager* assetManager, Physics* physics)
+void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics)
 {
 	std::vector<std::shared_ptr<Entity>> map;
-	Model* testModel = assetManager->LoadModel("./res/models/chunk.obj");
-	for (int x = 0; x < sizeX; x++)
+	enum tileEnum
 	{
-		for (int j = 0; j < sizeY; j++)
-		{
-			std::ifstream file;
-			file.open("./res/maps/Map1.txt");
-			if (!file)
-			{
-				std::cout << "Unable to open file txt";
-			}
-			float var;
-			std::vector<float> temps;
-			while (file >> var)
-			{
-				temps.push_back(var);
+		tree,
+		rock,
+		grass
+	};
+	float pos[3];
+	float scale[3];
+	std::string name;
+	Model* tileModels[2];
+	tileModels[0] = assetManager->LoadModel("./res/models/tiles/Grass/Grass.obj");
+	tileModels[1] = assetManager->LoadModel("./res/models/tiles/Tree/Tree.obj");
 
-			}
-
-			std::shared_ptr<Entity> chunk = m_EntityManager->CreateEntity<Entity>();
-			chunk->AddComponent<Transform>();
-			chunk->GetComponent<Transform>()->SetLocalPosition(glm::vec3(temps[0] + x*10, temps[1], temps[2] + j*10));
-			chunk->GetComponent<Transform>()->SetLocalScale(glm::vec3(temps[3], temps[4], temps[5]));
-
-			chunk->AddComponent<Mesh>();
-			chunk->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
-			chunk->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
-			chunk->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
-			chunk->GetComponent<Mesh>()->setupMesh();
-
-			map.push_back(chunk);
-			renderer->RegisterEntity(chunk);
-			physics->RegisterEntity(chunk);
-			temps.clear();
-
-		}
+	std::ifstream file;
+	file.open("./res/maps/TileForest.txt");
+	if (!file)
+	{
+		std::cout << "Unable to open file txt";
 	}
+	
+	std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
+	tile->AddComponent<Transform>();
+	
+	map.push_back(tile);
+	renderer->RegisterEntity(tile);
+	physics->RegisterEntity(tile);
+	std::vector<float> tileObjects;
+	while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])
+	{
+		std::cout << "\nName: " + name;
+		std::cout << "\nPosition: " << pos[0] << " " << pos[1] << " " << pos[2];
+		std::cout << "\nScale: " << scale[0] << " " << scale[1] << " " << scale[2];
+		std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+		object->AddComponent<Transform>();
+		object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
+		object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
+		object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0], scale[1], scale[2]));
+		
+
+		object->AddComponent<Mesh>();
+		object->GetComponent<Mesh>()->indices = (FindModelByName(tileModels,name))->GetMeshes()[0].indices;
+		object->GetComponent<Mesh>()->vertices = (FindModelByName(tileModels, name))->GetMeshes()[0].vertices;
+		object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
+		object->GetComponent<Mesh>()->setupMesh();
+
+		map.push_back(object);
+		renderer->RegisterEntity(object);
+		physics->RegisterEntity(object);
+	}
+	//land->GetComponent<Transform>()->SetLocalRotation(glm::vec3(90, 0, 0));
+}
+Model* Game::FindModelByName(Model* array[], std::string name)
+{
+	if (name == "Grass")
+		return array[0];
+	else if (name == "Tree")
+		return array[1];
 }
 
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem)
 {
+
+	
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 
 	Model* testModel = assetManager->LoadModel("./res/models/character/goblin.obj");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	Model* testModela = assetManager->LoadModel("./res/models/man/model.dae");
-
+	
+	LoadMap(renderer, assetManager, physics);
 	//Camera object
 	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
 	//cameraRoot->GetComponent<Transform>()->SetLocalRotation(glm::vec3(-45.0f, 0, 0));
@@ -181,6 +204,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 	//character->GetComponent<Transform>()->DisplayDebugInfo(true);
 
+	/*
 	std::shared_ptr<Entity> map = m_EntityManager->CreateEntity<Entity>();
 	map->AddComponent<Transform>();
 	map->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -231,7 +255,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	map4->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
 	map4->GetComponent<Mesh>()->setupMesh();
 	physics->RegisterEntity(map4);
-	renderer->RegisterEntity(map4);
+	renderer->RegisterEntity(map4); */
 
 	//player
 	character->AddComponent<Mesh>();

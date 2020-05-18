@@ -19,7 +19,8 @@ public:
 	void Init();
 	void Run();
 	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem);
-	void LoadMap(int, int, Renderer*, AssetManager*, Physics*);
+	void LoadMap( Renderer*, AssetManager*, Physics*);
+	Model * FindModelByName(Model* [], std::string name);
 private:
 	std::shared_ptr<Window> m_Window;
 
