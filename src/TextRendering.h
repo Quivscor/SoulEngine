@@ -8,7 +8,7 @@
 #include <map>
 #include <string>
 // for text rendering
-//#include "ft2build.h"
+#include "ft2build.h"
 //#include FT_FREETYPE_H
 #include "Core.h"
 #include "Shader.h"

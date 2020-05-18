@@ -20,6 +20,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${GLAD_INCLUDE_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLM_INCLUDE_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${IMGUI_INCLUDE_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${STB_IMAGE_INCLUDE_DIR}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${THIRDPARTY_DIR}/freetype/include")
 
 target_link_libraries(${PROJECT_NAME} "${OPENGL_LIBRARY}")
 target_link_libraries(${PROJECT_NAME} "${ASSIMP_LIBRARY}")
@@ -27,9 +28,7 @@ target_link_libraries(${PROJECT_NAME} "${GLFW_LIBRARY}")
 target_link_libraries(${PROJECT_NAME} "${GLAD_LIBRARY}"      "${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} "${IMGUI_LIBRARY}"     "${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} "${STB_IMAGE_LIBRARY}" "${CMAKE_DL_LIBS}")
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
-target_compile_definitions(${PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
+target_link_libraries(${PROJECT_NAME} "${THIRDPARTY_DIR}/freetype/win64/freetype.lib")
 
 add_custom_command(TARGET  ${PROJECT_NAME} POST_BUILD
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory

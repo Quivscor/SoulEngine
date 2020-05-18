@@ -86,12 +86,12 @@ set(STB_IMAGE_INCLUDE_DIR "${STB_IMAGE_DIR}")
 
 #freetype
 
-#set(Freetype_DIR "${THIRDPARTY_DIR}/freetype/include")
+include(FindFreetype)
 
-#add_library("freetype" STATIC "${Freetype_DIR}/ft2build.h")
+SET(CMAKE_CXX_FLAGS "-O2 -std=c++11")
 
+SET(CMAKE_EXE_LINKER_FLAGS "-v")
 
-#target_link_libraries(freetype "${THIRDPARTY_DIR}/freetype/win32/freetype.lib")
-#target_include_directories(freetype PUBLIC "${THIRDPARTY_DIR}/freetype/include")
-#target_include_directories(freetype PUBLIC "${THIRDPARTY_DIR}/freetype/include/freetype")
-#target_include_directories(freetype PUBLIC "${THIRDPARTY_DIR}/freetype/include/freetype/config")
+add_executable(SoulEngine src/main.cpp)
+target_link_libraries(SoulEngine "${THIRDPARTY_DIR}/freetype/win64/freetype.lib" "${THIRDPARTY_DIR}/freetype/win64/freetype.dll")
+target_include_directories(SoulEngine PUBLIC "${THIRDPARTY_DIR}/freetype/include")
