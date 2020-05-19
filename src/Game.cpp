@@ -245,7 +245,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	Model* testModela = assetManager->LoadModel("./res/models/player/run.dae");
 	
-	LoadMap(renderer, assetManager, physics);
+
 	//Camera object
 	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
 	cameraRoot->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 10, 0));
@@ -285,7 +285,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
-	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, -10.0f));
 	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
 	//character->GetComponent<Transform>()->DisplayDebugInfo(true);
 
@@ -309,7 +309,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
-
+	LoadMap(renderer, assetManager, physics);
 	//player's weapon ! -> it should be spawned in player's script imo
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();
@@ -445,7 +445,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(cube);
 
 	renderer->SetCamera(camera);
-	//renderer->debugMode = true;
+	renderer->debugMode = true;
 
 	//testing weapon 1
 	std::shared_ptr<Entity> weaponOnTheGround1 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
