@@ -95,32 +95,41 @@ void Game::Run()
 void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics)
 {
 	std::vector<std::shared_ptr<Entity>> map;
-	enum tileEnum
-	{
-		tree,
-		rock,
-		grass
-	};
+
+	std::vector<glm::vec2> colliderShape;
+	colliderShape.push_back({ -2.0f, -1.25f });
+	colliderShape.push_back({ -1.25f, -2.0f });
+	colliderShape.push_back({ 1.25f, -2.0f });
+	colliderShape.push_back({ 2.0f, -1.25f });
+	colliderShape.push_back({ 2.0f, 1.25f });
+	colliderShape.push_back({ 1.25f,  2.0f });
+	colliderShape.push_back({ -1.25f, 2.0f });
+	colliderShape.push_back({ -2.0f, 1.25f });
+
+	
 	float pos[3];
 	float scale[3];
 	int x = rand() % 7 + 5;
 	int y = rand() % 7 + 5;
 	std::string name;
-	Model* tileModels[6];
+	Model* tileModels[8];
 	tileModels[0] = assetManager->LoadModel("./res/models/tiles/Grass/Grass.obj");
 	tileModels[1] = assetManager->LoadModel("./res/models/tiles/Tree/Tree.obj");
 	tileModels[2] = assetManager->LoadModel("./res/models/tiles/Tree/Birch.obj");
 	tileModels[3] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
 	tileModels[4] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock2.obj");
 	tileModels[5] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock3.obj");
+	tileModels[6] = assetManager->LoadModel("./res/models/tiles/Houses/house_1.obj");
+	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
 	std::cout << "\nX: " << x << " Y: " << y << std::endl;
 	x = 2;
 	y = 2;
+	int random = 0;
 	for (int i = 0; i < x; i++)
 	{
 		for (int j = 0; j < y; j++)
 		{
-			int random = rand()%2;
+			//int random = rand()%4;
 			std::ifstream file;
 			if (random == 0)
 			{
@@ -131,7 +140,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 					std::cout << "Unable to open file txt";
 				}
 			}
-			else 
+			if(random == 1)
 			{
 				std::cout << "Forest 2 loading \n";
 				file.open("./res/maps/TileForest2.txt");
@@ -140,6 +149,26 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 					std::cout << "Unable to open file txt";
 				}
 			}
+			if (random == 2)
+			{
+				std::cout << "Village loading \n";
+				file.open("./res/maps/TileVillage.txt");
+				if (!file)
+				{
+					std::cout << "Unable to open file txt";
+				}
+			}
+			if (random == 3)
+			{
+				std::cout << "Mountain loading \n";
+				file.open("./res/maps/TileMountain.txt");
+				if (!file)
+				{
+					std::cout << "Unable to open file txt";
+				}
+			}
+			random++;
+
 			std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
 			tile->AddComponent<Transform>();
 
@@ -152,6 +181,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				std::cout << "\nPosition: " << pos[0] << " " << pos[1] << " " << pos[2];
 				std::cout << "\nScale: " << scale[0] << " " << scale[1] << " " << scale[2];
 				std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+				
 				object->AddComponent<Transform>();
 				object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
 				object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
@@ -164,19 +194,24 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
 				object->GetComponent<Mesh>()->setupMesh();
 
+				if (name == "Tree" || name == "Birch")
+				{
+					object->AddComponent<Collider>();
+					object->GetComponent<Collider>()->SetShape(colliderShape);
+					object->GetComponent<Collider>()->isStatic = true;
+				}
+
 				map.push_back(object);
-				renderer->RegisterEntity(object);
 				physics->RegisterEntity(object);
+				renderer->RegisterEntity(object);
+				
 			}
 			file.close();
-			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(i*15,0,j*15));
+			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(i*16,0,j*16));
 
 		}
 	}
 
-	
-	
-	
 	//land->GetComponent<Transform>()->SetLocalRotation(glm::vec3(90, 0, 0));
 }
 Model* Game::FindModelByName(Model* array[], std::string name)
@@ -193,6 +228,10 @@ Model* Game::FindModelByName(Model* array[], std::string name)
 		return array[4];
 	else if (name == "Rock3")
 		return array[5];
+	else if (name == "House1")
+		return array[6];
+	else if (name == "House2")
+		return array[7];
 }
 
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem)
@@ -209,6 +248,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	LoadMap(renderer, assetManager, physics);
 	//Camera object
 	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
+	cameraRoot->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 10, 0));
 	//cameraRoot->GetComponent<Transform>()->SetLocalRotation(glm::vec3(-45.0f, 0, 0));
 
 	cameraRoot->AddComponent<CameraFollow>();
@@ -246,61 +286,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
 	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
-	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
 	//character->GetComponent<Transform>()->DisplayDebugInfo(true);
-
-	/*
-	std::shared_ptr<Entity> map = m_EntityManager->CreateEntity<Entity>();
-	map->AddComponent<Transform>();
-	map->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	map->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.0f, 1.0f, 1.0f));
-
-	map->AddComponent<Mesh>();
-	map->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
-	map->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
-	map->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
-	map->GetComponent<Mesh>()->setupMesh();
-	physics->RegisterEntity(map);
-	renderer->RegisterEntity(map);
-
-	std::shared_ptr<Entity> map2 = m_EntityManager->CreateEntity<Entity>();
-	map2->AddComponent<Transform>();
-	map2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15.0f, 0.0f, 0.0f));
-	map2->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.0f, 1.0f, 1.0f));
-
-	map2->AddComponent<Mesh>();
-	map2->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
-	map2->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
-	map2->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
-	map2->GetComponent<Mesh>()->setupMesh();
-	physics->RegisterEntity(map2);
-	renderer->RegisterEntity(map2);
-
-	std::shared_ptr<Entity> map3 = m_EntityManager->CreateEntity<Entity>();
-	map3->AddComponent<Transform>();
-	map3->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 0.0f, 15.0f));
-	map3->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.0f, 1.0f, 1.0f));
-
-	map3->AddComponent<Mesh>();
-	map3->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
-	map3->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
-	map3->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
-	map3->GetComponent<Mesh>()->setupMesh();
-	physics->RegisterEntity(map3);
-	renderer->RegisterEntity(map3);
-
-	std::shared_ptr<Entity> map4 = m_EntityManager->CreateEntity<Entity>();
-	map4->AddComponent<Transform>();
-	map4->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0.0f, 15.0f));
-	map4->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.0f, 1.0f, 1.0f));
-
-	map4->AddComponent<Mesh>();
-	map4->GetComponent<Mesh>()->indices = mapModel->GetMeshes()[0].indices;
-	map4->GetComponent<Mesh>()->vertices = mapModel->GetMeshes()[0].vertices;
-	map4->GetComponent<Mesh>()->material = mapModel->GetMeshes()[0].material;
-	map4->GetComponent<Mesh>()->setupMesh();
-	physics->RegisterEntity(map4);
-	renderer->RegisterEntity(map4); */
 
 	//player
 	character->AddComponent<Mesh>();
@@ -335,7 +322,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	gameLogic->RegisterEntity(weapon);
 	physics->RegisterEntity(weapon);
-	renderer->RegisterEntity(weapon);
+	//renderer->RegisterEntity(weapon);
 
 	character->GetComponent<Player>()->weapon = weapon->GetComponent<Weapon>();
 
@@ -344,7 +331,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character2->AddComponent<Transform>();
 
 	character2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1.0f, 0.0f, 3.0f));
-	character2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
 
 	character2->AddComponent<Mesh>();
 	character2->AddComponent<Model>();
@@ -378,7 +365,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character3->AddComponent<Transform>();
 
 	character3->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.5f));
-	character3->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character3->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
 
 	character3->AddComponent<Mesh>();
 	character3->AddComponent<Model>();
@@ -412,7 +399,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	std::shared_ptr<Entity> character4 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	character4->AddComponent<Transform>();
 	character4->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-0.0f, 0.0f, 3.0f));
-	character4->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	character4->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
 
 	character4->AddComponent<Mesh>();
 	character4->AddComponent<Model>();
@@ -458,7 +445,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(cube);
 
 	renderer->SetCamera(camera);
-	renderer->debugMode = true;
+	//renderer->debugMode = true;
 
 	//testing weapon 1
 	std::shared_ptr<Entity> weaponOnTheGround1 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
