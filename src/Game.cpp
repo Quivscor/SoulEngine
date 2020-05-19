@@ -15,6 +15,7 @@
 #include "Scripts/Weapon.h"
 #include "Scripts/Character.h"
 #include "Scripts/WeaponOnTheGround.h"
+#include <time.h>
 
 #include <fstream>
 #include <iostream>
