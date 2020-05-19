@@ -4,7 +4,7 @@
 #include "Material.h"
 #include "Renderer.h"
 #include "Physics.h"
-#include "Time.h"
+#include "TimeCustom.h"
 #include "InputHandler.h"
 #include "Collider.h"
 #include "MapLoader.h"
@@ -37,7 +37,7 @@ void Game::Init()
 	LogEvent e("Hello events!");
 	m_Window->EventCallback(e);
 
-
+	srand(time(NULL));
 }
 
 void Game::Run()
@@ -67,7 +67,7 @@ void Game::Run()
 	while (true)
 	{
 		//physics->FixedUpdate();
-		Time::RunTimer();
+		TimeCustom::RunTimer();
 		//double start = glfwGetTime();
 		glfwPollEvents();
 

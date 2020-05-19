@@ -47,5 +47,5 @@ void WeaponOnTheGround::Start()
 
 void WeaponOnTheGround::Update() 
 {
-	thisEntity->GetComponent<Transform>()->Rotate(glm::vec3(0.0f, rotatingSpeed * Time::GetDeltaTime(), 0.0f));
+	thisEntity->GetComponent<Transform>()->Rotate(glm::vec3(0.0f, rotatingSpeed * TimeCustom::GetDeltaTime(), 0.0f));
 }

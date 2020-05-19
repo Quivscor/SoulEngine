@@ -19,7 +19,7 @@ void Weapon::Update()
 {
 	if (isAttacking)
 	{
-		currentAttackTime += Time::GetDeltaTime();
+		currentAttackTime += TimeCustom::GetDeltaTime();
 
 		if (currentAttackTime >= attackTime)
 		{

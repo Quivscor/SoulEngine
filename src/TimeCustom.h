@@ -1,9 +1,9 @@
 #pragma once
-static class Time
+static class TimeCustom
 {
 public:
-	Time();
-	~Time();
+	TimeCustom();
+	~TimeCustom();
 
 	static double GetDeltaTime();
 	static void RunTimer();
