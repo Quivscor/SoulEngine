@@ -34,6 +34,23 @@ std::shared_ptr<WeaponStats> WeaponFactory::GetWeapon()
 	return std::make_shared<WeaponStats>(newWeapon);
 }
 
+std::shared_ptr<WeaponStats> WeaponFactory::GetDefaultWeapon()
+{
+	if (weapons.size() == 0)
+		return nullptr;
+
+	WeaponStats newWeapon;
+
+	for(int i = 0; i < weapons.size(); i++)
+		if (weapons[i].type == Sword)
+			newWeapon.model = weapons[i];
+	
+	newWeapon.bonusDamage = 0;
+	newWeapon.bonusOther = 0;
+
+	return std::make_shared<WeaponStats>(newWeapon);
+}
+
 /*std::shared_ptr<WeaponFactory> WeaponFactory::GetInstance()
 {
 	if (WeaponFactory::m_Instance == NULL)

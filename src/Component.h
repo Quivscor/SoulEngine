@@ -10,7 +10,8 @@ enum ComponentType
 	InputComponent = 5,
 	ColliderComponent = 6,
 	ScriptableObjectComponent = 7,
-	CharacterComponent = 8
+	CharacterComponent = 8,
+	WeaponOnTheGroundComponent = 9
 };
 
 class Component
