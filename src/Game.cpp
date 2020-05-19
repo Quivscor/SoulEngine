@@ -15,6 +15,7 @@
 #include "Scripts/Weapon.h"
 #include "Scripts/Character.h"
 #include "Scripts/WeaponOnTheGround.h"
+#include <time.h>
 
 #include <fstream>
 #include <iostream>
@@ -103,12 +104,16 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	float pos[3];
 	float scale[3];
 	std::string name;
-	Model* tileModels[2];
+	Model* tileModels[6];
 	tileModels[0] = assetManager->LoadModel("./res/models/tiles/Grass/Grass.obj");
 	tileModels[1] = assetManager->LoadModel("./res/models/tiles/Tree/Tree.obj");
+	tileModels[2] = assetManager->LoadModel("./res/models/tiles/Tree/Birch.obj");
+	tileModels[3] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
+	tileModels[4] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock2.obj");
+	tileModels[5] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock3.obj");
 
 	std::ifstream file;
-	file.open("./res/maps/TileForest.txt");
+	file.open("./res/maps/TileForest2.txt");
 	if (!file)
 	{
 		std::cout << "Unable to open file txt";
@@ -151,6 +156,14 @@ Model* Game::FindModelByName(Model* array[], std::string name)
 		return array[0];
 	else if (name == "Tree")
 		return array[1];
+	else if (name == "Birch")
+		return array[2];
+	else if (name == "Rock1")
+		return array[3];
+	else if (name == "Rock2")
+		return array[4];
+	else if (name == "Rock3")
+		return array[5];
 }
 
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem)
