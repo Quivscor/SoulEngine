@@ -41,9 +41,32 @@ void Player::Update()
 	{
 		weapon->Use();
 	}
+
+	if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_E))
+	{
+		Swap();
+	}
 }
 
 void Player::CreateWeapon()
 {
 
+}
+
+void Player::Swap()
+{
+	if (weaponInRange == nullptr)
+		return;
+}
+
+void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
+{
+	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>() != nullptr)
+		std::cout << "Weapon in range yes!" << std::endl;
+}
+
+void Player::OnTriggerExit(std::shared_ptr<Collider> other)
+{
+	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>() != nullptr)
+		std::cout << "Weapon in range no!" << std::endl;
 }

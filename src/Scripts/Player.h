@@ -17,6 +17,12 @@ protected:
 	virtual void Start();
 	virtual void Update();
 
+	virtual void OnTriggerEnter(std::shared_ptr<Collider> other) override;
+	virtual void OnTriggerExit(std::shared_ptr<Collider> other) override;
+
 private:
 	void CreateWeapon();
+	void Swap();
+
+	std::shared_ptr<WeaponOnTheGround> weaponInRange;
 };

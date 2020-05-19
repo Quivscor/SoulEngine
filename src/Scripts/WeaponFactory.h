@@ -33,6 +33,7 @@ public:
 	static void SetWeapon(Mesh* mesh, WeaponType type);
 
 	static std::shared_ptr<WeaponStats> GetWeapon();
+	static std::shared_ptr<WeaponStats> GetDefaultWeapon();
 
 private:
 	static std::vector<WeaponModel> weapons;

@@ -13,6 +13,8 @@ Weapon::~Weapon()
 void Weapon::Start()
 {
 	thisEntity->GetComponent<Collider>()->enabled = false;
+
+	equipedWeapon = WeaponFactory::GetDefaultWeapon();
 }
 
 void Weapon::Update()
@@ -38,7 +40,7 @@ void Weapon::OnTriggerStay(std::shared_ptr<Collider> other)
 	{
 		hitObjects.push_back(EntityManager::GetInstance()->GetEntity(other->GetOwnerID()));
 
-		EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>()->GetHit(damage);
+		EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>()->GetHit(damage + equipedWeapon->bonusDamage);
 	}
 }
 
@@ -57,4 +59,14 @@ void Weapon::TurnOffCollider()
 	hitObjects.clear();
 	isAttacking = false;
 	thisEntity->GetComponent<Collider>()->enabled = false;
+}
+
+std::shared_ptr<WeaponStats> Weapon::GetWeapon()
+{
+	return equipedWeapon;
+}
+
+void Weapon::SetWeapon(std::shared_ptr<WeaponStats> newWeapon)
+{
+	equipedWeapon = newWeapon;
 }
