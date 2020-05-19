@@ -103,6 +103,8 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	};
 	float pos[3];
 	float scale[3];
+	int x = rand() % 7 + 5;
+	int y = rand() % 7 + 5;
 	std::string name;
 	Model* tileModels[6];
 	tileModels[0] = assetManager->LoadModel("./res/models/tiles/Grass/Grass.obj");
@@ -111,43 +113,70 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	tileModels[3] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
 	tileModels[4] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock2.obj");
 	tileModels[5] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock3.obj");
-
-	std::ifstream file;
-	file.open("./res/maps/TileForest2.txt");
-	if (!file)
+	std::cout << "\nX: " << x << " Y: " << y << std::endl;
+	x = 2;
+	y = 2;
+	for (int i = 0; i < x; i++)
 	{
-		std::cout << "Unable to open file txt";
-	}
-	
-	std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
-	tile->AddComponent<Transform>();
-	
-	map.push_back(tile);
-	renderer->RegisterEntity(tile);
-	physics->RegisterEntity(tile);
-	std::vector<float> tileObjects;
-	while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])
-	{
-		std::cout << "\nName: " + name;
-		std::cout << "\nPosition: " << pos[0] << " " << pos[1] << " " << pos[2];
-		std::cout << "\nScale: " << scale[0] << " " << scale[1] << " " << scale[2];
-		std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
-		object->AddComponent<Transform>();
-		object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
-		object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
-		object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0], scale[1], scale[2]));
-		
+		for (int j = 0; j < y; j++)
+		{
+			int random = rand()%2;
+			std::ifstream file;
+			if (random == 0)
+			{
+				std::cout << "\nForest 1 loading \n";
+				file.open("./res/maps/TileForest.txt");
+				if (!file)
+				{
+					std::cout << "Unable to open file txt";
+				}
+			}
+			else 
+			{
+				std::cout << "Forest 2 loading \n";
+				file.open("./res/maps/TileForest2.txt");
+				if (!file)
+				{
+					std::cout << "Unable to open file txt";
+				}
+			}
+			std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
+			tile->AddComponent<Transform>();
 
-		object->AddComponent<Mesh>();
-		object->GetComponent<Mesh>()->indices = (FindModelByName(tileModels,name))->GetMeshes()[0].indices;
-		object->GetComponent<Mesh>()->vertices = (FindModelByName(tileModels, name))->GetMeshes()[0].vertices;
-		object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
-		object->GetComponent<Mesh>()->setupMesh();
+			map.push_back(tile);
+			renderer->RegisterEntity(tile);
+			physics->RegisterEntity(tile);
+			while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])
+			{
+				std::cout << "\nName: " + name;
+				std::cout << "\nPosition: " << pos[0] << " " << pos[1] << " " << pos[2];
+				std::cout << "\nScale: " << scale[0] << " " << scale[1] << " " << scale[2];
+				std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+				object->AddComponent<Transform>();
+				object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
+				object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
+				object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0], scale[1], scale[2]));
 
-		map.push_back(object);
-		renderer->RegisterEntity(object);
-		physics->RegisterEntity(object);
+
+				object->AddComponent<Mesh>();
+				object->GetComponent<Mesh>()->indices = (FindModelByName(tileModels, name))->GetMeshes()[0].indices;
+				object->GetComponent<Mesh>()->vertices = (FindModelByName(tileModels, name))->GetMeshes()[0].vertices;
+				object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
+				object->GetComponent<Mesh>()->setupMesh();
+
+				map.push_back(object);
+				renderer->RegisterEntity(object);
+				physics->RegisterEntity(object);
+			}
+			file.close();
+			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(i*15,0,j*15));
+
+		}
 	}
+
+	
+	
+	
 	//land->GetComponent<Transform>()->SetLocalRotation(glm::vec3(90, 0, 0));
 }
 Model* Game::FindModelByName(Model* array[], std::string name)
