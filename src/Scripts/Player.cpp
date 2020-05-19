@@ -37,12 +37,12 @@ void Player::Update()
 		thisEntity->GetComponent<Transform>()->Move(Transform::Back() * (float)TimeCustom::GetDeltaTime() * 25.0f);
 	}
 
-	if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_J))
+	if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_J))
 	{
 		weapon->Use();
 	}
 
-	if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_E))
+	if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_E))
 	{
 		Swap();
 	}
@@ -57,16 +57,24 @@ void Player::Swap()
 {
 	if (weaponInRange == nullptr)
 		return;
+
+	std::shared_ptr<WeaponStats> weaponTmp = weapon->GetWeapon();
+	weapon->SetWeapon(weaponInRange->weapon);
+	weaponInRange->weapon = weaponTmp;
+
+	weaponTmp.reset();
+
+	weaponInRange->UpdateWeapon();
 }
 
 void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
 {
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>() != nullptr)
-		std::cout << "Weapon in range yes!" << std::endl;
+		weaponInRange = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>();
 }
 
 void Player::OnTriggerExit(std::shared_ptr<Collider> other)
 {
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>() != nullptr)
-		std::cout << "Weapon in range no!" << std::endl;
+		weaponInRange = nullptr;
 }

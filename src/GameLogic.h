@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMELOGIC_H
+#define GAMELOGIC_H
 #include "Core.h"
 #include "System.h"
 #include "Shader.h"
@@ -20,3 +21,5 @@ public:
 
 private:
 };
+
+#endif
