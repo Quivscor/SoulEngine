@@ -14,6 +14,7 @@
 #include "Scripts/Player.h"
 #include "Scripts/Weapon.h"
 #include "Scripts/Character.h"
+#include "Scripts/WeaponOnTheGround.h"
 
 #include <fstream>
 #include <iostream>
@@ -35,6 +36,8 @@ void Game::Init()
 
 	LogEvent e("Hello events!");
 	m_Window->EventCallback(e);
+
+
 }
 
 void Game::Run()
@@ -152,12 +155,12 @@ Model* Game::FindModelByName(Model* array[], std::string name)
 
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem)
 {
-
+	InitializeWeapons(assetManager);
 	
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 
-	Model* testModel = assetManager->LoadModel("./res/models/character/goblin.obj");
+	Model* testModel = assetManager->LoadModel("./res/models/man/model.dae");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	Model* testModela = assetManager->LoadModel("./res/models/man/model.dae");
 	
@@ -302,12 +305,14 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character2->AddComponent<Mesh>();
-	character2->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
-	character2->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
-	character2->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
-	character2->GetComponent<Mesh>()->setupMesh();
-	character2->AddComponent<Material>();
-	character2->GetComponent<Material>()->SetShader(shader);
+	character2->AddComponent<Model>();
+
+	character2->GetComponent<Model>()->UseModel(testModel);
+	character2->GetComponent<Mesh>()->SetAll(testModel->GetMeshes()[0]);
+	character2->GetComponent<Mesh>()->material->SetShader(shadera);
+
+	character2->GetComponent<Mesh>()->setupMeshfBones();
+
 	colliderShape.clear();
 	colliderShape.push_back({ -5.0f, -3.0f });
 	colliderShape.push_back({ -3.0f, -5.0f });
@@ -334,12 +339,14 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character3->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character3->AddComponent<Mesh>();
-	character3->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
-	character3->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
-	character3->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
-	character3->GetComponent<Mesh>()->setupMesh();
-	character3->AddComponent<Material>();
-	character3->GetComponent<Material>()->SetShader(shader);
+	character3->AddComponent<Model>();
+
+	character3->GetComponent<Model>()->UseModel(testModel);
+	character3->GetComponent<Mesh>()->SetAll(testModel->GetMeshes()[0]);
+	character3->GetComponent<Mesh>()->material->SetShader(shadera);
+
+	character3->GetComponent<Mesh>()->setupMeshfBones();
+
 	colliderShape.clear();
 	colliderShape.push_back({ -8.0f, -5.0f });
 	colliderShape.push_back({ -5.0f, -8.0f });
@@ -366,12 +373,14 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character4->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
 	character4->AddComponent<Mesh>();
-	character4->GetComponent<Mesh>()->indices = testModel->GetMeshes()[0].indices;
-	character4->GetComponent<Mesh>()->vertices = testModel->GetMeshes()[0].vertices;
-	character4->GetComponent<Mesh>()->material = testModel->GetMeshes()[0].material;
-	character4->GetComponent<Mesh>()->setupMesh();
-	character4->AddComponent<Material>();
-	character4->GetComponent<Material>()->SetShader(shader);
+	character4->AddComponent<Model>();
+
+	character4->GetComponent<Model>()->UseModel(testModel);
+	character4->GetComponent<Mesh>()->SetAll(testModel->GetMeshes()[0]);
+	character4->GetComponent<Mesh>()->material->SetShader(shadera);
+
+	character4->GetComponent<Mesh>()->setupMeshfBones();
+
 	colliderShape.clear();
 	colliderShape.push_back({ -8.0f, -5.0f });
 	colliderShape.push_back({ -5.0f, -8.0f });
@@ -407,5 +416,83 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(cube);
 
 	renderer->SetCamera(camera);
-	//renderer->debugMode = true;
+	renderer->debugMode = true;
+
+	//testing weapon 1
+	std::shared_ptr<Entity> weaponOnTheGround1 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	weaponOnTheGround1->AddComponent<Transform>();
+	weaponOnTheGround1->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 3.0f));
+	weaponOnTheGround1->AddComponent<Material>();
+	weaponOnTheGround1->GetComponent<Material>()->SetShader(shader);
+	weaponOnTheGround1->AddComponent<WeaponOnTheGround>();
+
+	gameLogic->RegisterEntity(weaponOnTheGround1);
+	physics->RegisterEntity(weaponOnTheGround1);
+	renderer->RegisterEntity(weaponOnTheGround1);
+
+	//testing weapon 2
+	std::shared_ptr<Entity> weaponOnTheGround2 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	weaponOnTheGround2->AddComponent<Transform>();
+	weaponOnTheGround2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 5.0f));
+	weaponOnTheGround2->AddComponent<Material>();
+	weaponOnTheGround2->GetComponent<Material>()->SetShader(shader);
+	weaponOnTheGround2->AddComponent<WeaponOnTheGround>();
+
+	gameLogic->RegisterEntity(weaponOnTheGround2);
+	physics->RegisterEntity(weaponOnTheGround2);
+	renderer->RegisterEntity(weaponOnTheGround2);
+
+	//testing weapon 3
+	std::shared_ptr<Entity> weaponOnTheGround3 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	weaponOnTheGround3->AddComponent<Transform>();
+	weaponOnTheGround3->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 7.0f));
+	weaponOnTheGround3->AddComponent<Material>();
+	weaponOnTheGround3->GetComponent<Material>()->SetShader(shader);
+	weaponOnTheGround3->AddComponent<WeaponOnTheGround>();
+
+	gameLogic->RegisterEntity(weaponOnTheGround3);
+	physics->RegisterEntity(weaponOnTheGround3);
+	renderer->RegisterEntity(weaponOnTheGround3);
+
+	//testing weapon 4
+	std::shared_ptr<Entity> weaponOnTheGround4 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	weaponOnTheGround4->AddComponent<Transform>();
+	weaponOnTheGround4->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 9.0f));
+	weaponOnTheGround4->AddComponent<Material>();
+	weaponOnTheGround4->GetComponent<Material>()->SetShader(shader);
+	weaponOnTheGround4->AddComponent<WeaponOnTheGround>();
+
+	gameLogic->RegisterEntity(weaponOnTheGround4);
+	physics->RegisterEntity(weaponOnTheGround4);
+	renderer->RegisterEntity(weaponOnTheGround4);
+}
+
+void Game::InitializeWeapons(AssetManager* assetManager)
+{
+	Mesh* axeMesh = new Mesh();
+
+	Model* axe = assetManager->LoadModel("./res/models/weapons/axe.obj");
+
+	axeMesh->indices = axe->GetMeshes()[0].indices;
+	axeMesh->vertices = axe->GetMeshes()[0].vertices;
+	axeMesh->material = axe->GetMeshes()[0].material;
+	WeaponFactory::SetWeapon(axeMesh, Axe);
+
+	Mesh* maceMesh = new Mesh();
+
+	Model* mace = assetManager->LoadModel("./res/models/weapons/mace.obj");
+
+	maceMesh->indices = mace->GetMeshes()[0].indices;
+	maceMesh->vertices = mace->GetMeshes()[0].vertices;
+	maceMesh->material = mace->GetMeshes()[0].material;
+	WeaponFactory::SetWeapon(maceMesh, Mace);
+
+	Mesh* swordMesh = new Mesh();
+
+	Model* sword = assetManager->LoadModel("./res/models/weapons/sword.obj");
+
+	swordMesh->indices = sword->GetMeshes()[0].indices;
+	swordMesh->vertices = sword->GetMeshes()[0].vertices;
+	swordMesh->material = sword->GetMeshes()[0].material;
+	WeaponFactory::SetWeapon(swordMesh, Sword);
 }

@@ -22,6 +22,8 @@ public:
 	void LoadMap( Renderer*, AssetManager*, Physics*);
 	Model * FindModelByName(Model* [], std::string name);
 private:
+	void InitializeWeapons(AssetManager* assetManager);
+
 	std::shared_ptr<Window> m_Window;
 
 	std::shared_ptr<EntityManager> m_EntityManager;
