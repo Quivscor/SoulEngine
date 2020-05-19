@@ -36,7 +36,7 @@ bool InputHandler::GetKeyUp(int key)
 
 bool InputHandler::GetKeyDown(int key)
 {
-	return InputHandler::CheckKey(key, GLFW_PRESS);
+	return InputHandler::CheckKey(key, GLFW_PRESS) && !InputHandler::CheckLastFrameKey(key, GLFW_PRESS);
 }
 
 bool InputHandler::GetKeyRepeat(int key)
