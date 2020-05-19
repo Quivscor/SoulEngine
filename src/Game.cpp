@@ -202,9 +202,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 
-	Model* testModel = assetManager->LoadModel("./res/models/man/model.dae");
+	Model* testModel = assetManager->LoadModel("./res/models/player/attack.dae");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
-	Model* testModela = assetManager->LoadModel("./res/models/man/model.dae");
+	Model* testModela = assetManager->LoadModel("./res/models/player/run.dae");
 	
 	LoadMap(renderer, assetManager, physics);
 	//Camera object
