@@ -215,10 +215,12 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 	//for triggers
 	else
 	{
-		if (col1->isTrigger)
+		if (col1->isTrigger || col2->isTrigger) 
+		{
 			col1->AddTriggerCollision(col2);
-		if (col2->isTrigger)
 			col2->AddTriggerCollision(col1);
+		}
+
 	}
 
 	return false;

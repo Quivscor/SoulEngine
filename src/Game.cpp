@@ -467,8 +467,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	weaponOnTheGround1->AddComponent<Material>();
 	weaponOnTheGround1->GetComponent<Material>()->SetShader(shader);
 	weaponOnTheGround1->AddComponent<WeaponOnTheGround>();
+	weaponOnTheGround1->GetComponent<WeaponOnTheGround>()->Start();
 
-	gameLogic->RegisterEntity(weaponOnTheGround1);
+	//gameLogic->RegisterEntity(weaponOnTheGround1);
 	physics->RegisterEntity(weaponOnTheGround1);
 	renderer->RegisterEntity(weaponOnTheGround1);
 
@@ -479,8 +480,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	weaponOnTheGround2->AddComponent<Material>();
 	weaponOnTheGround2->GetComponent<Material>()->SetShader(shader);
 	weaponOnTheGround2->AddComponent<WeaponOnTheGround>();
-
-	gameLogic->RegisterEntity(weaponOnTheGround2);
+	weaponOnTheGround2->GetComponent<WeaponOnTheGround>()->Start();
+	//gameLogic->RegisterEntity(weaponOnTheGround2);
 	physics->RegisterEntity(weaponOnTheGround2);
 	renderer->RegisterEntity(weaponOnTheGround2);
 
@@ -491,8 +492,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	weaponOnTheGround3->AddComponent<Material>();
 	weaponOnTheGround3->GetComponent<Material>()->SetShader(shader);
 	weaponOnTheGround3->AddComponent<WeaponOnTheGround>();
-
-	gameLogic->RegisterEntity(weaponOnTheGround3);
+	weaponOnTheGround3->GetComponent<WeaponOnTheGround>()->Start();
+	//gameLogic->RegisterEntity(weaponOnTheGround3);
 	physics->RegisterEntity(weaponOnTheGround3);
 	renderer->RegisterEntity(weaponOnTheGround3);
 
@@ -503,8 +504,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	weaponOnTheGround4->AddComponent<Material>();
 	weaponOnTheGround4->GetComponent<Material>()->SetShader(shader);
 	weaponOnTheGround4->AddComponent<WeaponOnTheGround>();
-
-	gameLogic->RegisterEntity(weaponOnTheGround4);
+	weaponOnTheGround4->GetComponent<WeaponOnTheGround>()->Start();
+	//gameLogic->RegisterEntity(weaponOnTheGround4);
 	physics->RegisterEntity(weaponOnTheGround4);
 	renderer->RegisterEntity(weaponOnTheGround4);
 }

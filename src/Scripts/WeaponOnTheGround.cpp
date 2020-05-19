@@ -1,6 +1,8 @@
 #include "WeaponOnTheGround.h"
 
-WeaponOnTheGround::WeaponOnTheGround() {}
+WeaponOnTheGround::WeaponOnTheGround() 
+{
+}
 
 WeaponOnTheGround::~WeaponOnTheGround() {}
 
@@ -35,17 +37,17 @@ void WeaponOnTheGround::Start()
 	if (weapon == nullptr)
 		return;
 
-	weapon->model;
-
 	thisEntity->AddComponent<Mesh>();
 	thisEntity->GetComponent<Mesh>()->indices = weapon->model.model->indices;
 	thisEntity->GetComponent<Mesh>()->vertices = weapon->model.model->vertices;
 	thisEntity->GetComponent<Mesh>()->material = weapon->model.model->material;
 	thisEntity->GetComponent<Mesh>()->setupMesh();
-
 }
 
-void WeaponOnTheGround::Update() 
+void WeaponOnTheGround::UpdateWeapon()
 {
-	thisEntity->GetComponent<Transform>()->Rotate(glm::vec3(0.0f, rotatingSpeed * TimeCustom::GetDeltaTime(), 0.0f));
+	thisEntity->GetComponent<Mesh>()->indices = weapon->model.model->indices;
+	thisEntity->GetComponent<Mesh>()->vertices = weapon->model.model->vertices;
+	thisEntity->GetComponent<Mesh>()->material = weapon->model.model->material;
+	thisEntity->GetComponent<Mesh>()->setupMesh();
 }
