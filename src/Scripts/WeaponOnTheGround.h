@@ -9,7 +9,7 @@ public:
 	WeaponOnTheGround();
 	~WeaponOnTheGround();
 
-	virtual ComponentType GetComponentType() const override { return ComponentType::WeaponOnTheGroundComponent; }
+	//virtual ComponentType GetComponentType() const override { return ComponentType::WeaponOnTheGroundComponent; }
 
 protected:
 	virtual void Start() override;
