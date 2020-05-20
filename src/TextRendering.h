@@ -1,16 +1,14 @@
 #pragma once
 #include "Core.h"
 
-#include "glm\glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
-#include "glm\gtc\type_ptr.hpp"
+
 #include <iostream>
 #include <map>
 #include <string>
 // for text rendering
 #include "ft2build.h"
-//#include FT_FREETYPE_H
-#include "Core.h"
+#include FT_FREETYPE_H
+
 #include "Shader.h"
 using namespace std;
 

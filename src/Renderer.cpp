@@ -1,10 +1,12 @@
 #include "Renderer.h"
  #include "Model.h"
+#include "TextRendering.h"
 Shader* Renderer::defaultShader = nullptr;
 
 Renderer::Renderer(Shader* shader)
 {
 	defaultShader = shader;
+
 }
 
 Renderer::~Renderer()
@@ -14,16 +16,26 @@ Renderer::~Renderer()
 
 void Renderer::Init() const
 {
-
+	
 }
 
 void Renderer::Update() const
 {
+	
 	glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
+	
 	DrawMeshes();
+	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
+	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
+	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
+	TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 1.0f), text_matrix_2D);
+
+
+
+
 }
 
 void Renderer::LateUpdate() const
@@ -33,8 +45,9 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawMeshes() const
 {
+	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+	
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		if (!m_Entities[i]->isActive)
@@ -49,80 +62,89 @@ void Renderer::DrawMeshes() const
 			int anyTexture = 0;
 			Shader* shader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
 			std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
-			if (m_Entities[i]->GetComponent<Model>() != nullptr)
+			//TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 0.0f), trns->GetGlobalMatrix());
+		// text 3D
+		/*	glm::mat4 scale = glm::scale(glm::mat4(), glm::vec3(0.02f, 0.02f, 0.0f));
+			glm::mat4 set_text_to_origin = glm::translate(glm::mat4(), glm::vec3(0.2f, 0.2f, 0.0f));
+			glm::mat4 text_rotate_y = glm::rotate(glm::mat4(), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 text_rotate_x = glm::rotate(glm::mat4(), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+			glm::mat4 text_translate_to_model_1 = glm::translate(glm::mat4(), trns->GetGlobalPosition());
+			glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * text_rotate_y * text_rotate_x * set_text_to_origin * scale;
+			TextRendering::Instance()->draw("Agent_1", glm::vec3(0.9f, .0f, 1.0f), text_matrix_3D_model_1);*/
+
 			{
-				m_Entities[i]->GetComponent<Model>()->initShaders(defaultShader);
-				m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
-				//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
+				for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
+				{
+						
+					anyTexture = 1;
+					//defaultShader->setInt("material.diffuse", i);
+					glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
+
+					std::string number;
+					std::string name = mesh->material->GetTextures()[j].type;
+					if (name == "texture_diffuse")
+						number = std::to_string(diffuseNr++);
+					else if (name == "texture_specular")
+						number = std::to_string(specularNr++);
+
+					//defaultShader->setFloat(("material." + name + number).c_str(), i);
+
+					glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
+					glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
+				}
+
+				shader->use();
+				if (m_Entities[i]->GetComponent<Model>() != nullptr)
+				{
+					m_Entities[i]->GetComponent<Model>()->initShaders(shader);
+					m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
+					
+					//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
+				}
+				glUniform3f(glGetUniformLocation(shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
+				glUniform1f(glGetUniformLocation(shader->ID, "material.shininess"), 32.0f);
+				glUniform1f(glGetUniformLocation(shader->ID, "material.transparency"), 1.0f);
+				// Point Light 1
+				glUniform3f(glGetUniformLocation(shader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
+
+				glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"), 0.1f, 0.1f, 0.1f);
+				glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 1.0f, 1.0f, 1.0f);
+				glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 1.0f, 1.0f, 1.0f);
+
+				glUniform1f(glGetUniformLocation(shader->ID, "point_light.constant"), 1.0f);
+				glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
+				glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
+
+				glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
+
+				unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
+				glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+				unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
+				glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
+				glUniformMatrix4fv(glGetUniformLocation(shader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
+				glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->GetGlobalMatrix())));
+				glUniformMatrix4fv(glGetUniformLocation(shader->ID, "normals_matrix"), 1, GL_FALSE, glm::value_ptr(matr_normals_cube));
+				unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
+				glUniform1i(hasTexture, anyTexture);
+				// draw mesh
+				glBindVertexArray(mesh->GetVAO());
+				glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				glActiveTexture(GL_TEXTURE0);
+				//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
+				for (int i = 0; i < mesh->material->GetTextures().size(); i++)
+				{
+					glActiveTexture(GL_TEXTURE0 + i);
+					glBindTexture(GL_TEXTURE_2D, 0);
+				}
+
 			}
-
-
-			for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
-			{
-				anyTexture = 1;
-				//defaultShader->setInt("material.diffuse", i);
-				glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
-
-				std::string number;
-				std::string name = mesh->material->GetTextures()[j].type;
-				if (name == "texture_diffuse")
-					number = std::to_string(diffuseNr++);
-				else if (name == "texture_specular")
-					number = std::to_string(specularNr++);
-
-				//defaultShader->setFloat(("material." + name + number).c_str(), i);
-
-				glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
-				glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
-			}
-
-			shader->use();
-			if (m_Entities[i]->GetComponent<Model>() != nullptr)
-			{
-				m_Entities[i]->GetComponent<Model>()->initShaders(shader);
-				m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
-				//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
-			}
-			glUniform3f(glGetUniformLocation(shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
-			glUniform1f(glGetUniformLocation(shader->ID, "material.shininess"), 32.0f);
-			glUniform1f(glGetUniformLocation(shader->ID, "material.transparency"), 1.0f);
-			// Point Light 1
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
-
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"), 0.1f, 0.1f, 0.1f);
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 1.0f, 1.0f, 1.0f);
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 1.0f, 1.0f, 1.0f);
-
-			glUniform1f(glGetUniformLocation(shader->ID, "point_light.constant"), 1.0f);
-			glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
-			glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
-
-			glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
-
-			unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
-			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
-
-			unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
-			glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
-			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
-			glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->GetGlobalMatrix())));
-			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "normals_matrix"), 1, GL_FALSE, glm::value_ptr(matr_normals_cube));
-			unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
-			glUniform1i(hasTexture, anyTexture);
-			// draw mesh
-			glBindVertexArray(mesh->GetVAO());
-			glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-
-			glActiveTexture(GL_TEXTURE0);
-			//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
-			for (int i = 0; i < mesh->material->GetTextures().size(); i++)
-			{
-				glActiveTexture(GL_TEXTURE0 + i);
-				glBindTexture(GL_TEXTURE_2D, 0);
-			}
+			
 		}
-		
+
 		if (debugMode)
 		{
 			std::shared_ptr<Collider> collider = m_Entities[i]->GetComponent<Collider>();
@@ -130,9 +152,13 @@ void Renderer::DrawMeshes() const
 			if (collider != nullptr && collider->enabled == true)
 			{
 				DrawColliders(collider, trns);
+				glm::mat4 scale = glm::scale(trns->GetGlobalMatrix(), glm::vec3(0.1f, 0.1f, 0.1f));
+				//TextRendering::Instance()->draw("Agent_1", glm::vec3(1.0f, .0f, 0.0f), scale);
 			}
+		
 		}
 	}
+	
 }
 
 void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const

@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "Collider.h"
+
 //#include "Model.h"
 //class Mesh;
 class Collider;
@@ -31,7 +32,7 @@ public:
 	bool debugMode = false;
 	//void DebugSetProjectionView(Transform* projection, Camera* view);
 	//std::vector<Mesh> meshes;
-
+	
 private:
 	//list of meshes?
 	void DrawMeshes() const;
