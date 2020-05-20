@@ -19,7 +19,7 @@ public:
 	void Init();
 	void Run();
 	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem);
-	void LoadMap( Renderer*, AssetManager*, Physics*);
+	void LoadMap( Renderer*, AssetManager*, Physics*, Shader*);
 	Model * FindModelByName(Model* [], std::string name);
 private:
 	void InitializeWeapons(AssetManager* assetManager);

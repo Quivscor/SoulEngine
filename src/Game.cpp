@@ -92,7 +92,7 @@ void Game::Run()
 	}
 }
 
-void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics)
+void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader)
 {
 	std::vector<std::shared_ptr<Entity>> map;
 
@@ -106,13 +106,23 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	colliderShape.push_back({ -1.25f, 2.0f });
 	colliderShape.push_back({ -2.0f, 1.25f });
 
+	std::vector<glm::vec2> characterCollider;
+	characterCollider.push_back({ -8.0f, -5.0f });
+	characterCollider.push_back({ -5.0f, -8.0f });
+	characterCollider.push_back({ 5.0f, -8.0f });
+	characterCollider.push_back({ 8.0f, -5.0f });
+	characterCollider.push_back({ 8.0f, 5.0f });
+	characterCollider.push_back({ 5.0f,  8.0f });
+	characterCollider.push_back({ -5.0f, 8.0f });
+	characterCollider.push_back({ -8.0f, 5.0f });
+
 	
 	float pos[3];
 	float scale[3];
 	int x = rand() % 7 + 5;
 	int y = rand() % 7 + 5;
 	std::string name;
-	Model* tileModels[8];
+	Model* tileModels[9];
 	tileModels[0] = assetManager->LoadModel("./res/models/tiles/Grass/Grass.obj");
 	tileModels[1] = assetManager->LoadModel("./res/models/tiles/Tree/Tree.obj");
 	tileModels[2] = assetManager->LoadModel("./res/models/tiles/Tree/Birch.obj");
@@ -121,7 +131,8 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	tileModels[5] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock3.obj");
 	tileModels[6] = assetManager->LoadModel("./res/models/tiles/Houses/house_1.obj");
 	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
-	std::cout << "\nX: " << x << " Y: " << y << std::endl;
+	tileModels[8] = assetManager->LoadModel("./res/models/player/attack.dae");
+	//std::cout << "\nX: " << x << " Y: " << y << std::endl;
 	x = 2;
 	y = 2;
 	int random = 0;
@@ -177,9 +188,9 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 			physics->RegisterEntity(tile);
 			while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])
 			{
-				std::cout << "\nName: " + name;
-				std::cout << "\nPosition: " << pos[0] << " " << pos[1] << " " << pos[2];
-				std::cout << "\nScale: " << scale[0] << " " << scale[1] << " " << scale[2];
+				//std::cout << "\nName: " + name;
+				//std::cout << "\nPosition: " << pos[0] << " " << pos[1] << " " << pos[2];
+				//std::cout << "\nScale: " << scale[0] << " " << scale[1] << " " << scale[2];
 				std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
 				
 				object->AddComponent<Transform>();
@@ -199,6 +210,20 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 					object->AddComponent<Collider>();
 					object->GetComponent<Collider>()->SetShape(colliderShape);
 					object->GetComponent<Collider>()->isStatic = true;
+				}
+				if (name == "Enemy")
+				{
+					object->AddComponent<Model>();
+
+					object->GetComponent<Model>()->UseModel((FindModelByName(tileModels, name)));
+					object->GetComponent<Mesh>()->SetAll((FindModelByName(tileModels, name))->GetMeshes()[0]);
+					object->GetComponent<Mesh>()->material->SetShader(animShader);
+					object->GetComponent<Mesh>()->setupMeshfBones();
+
+					object->AddComponent<Collider>();
+					object->GetComponent<Collider>()->SetShape(characterCollider);
+					object->GetComponent<Collider>()->isStatic = true;
+					object->AddComponent<Character>();
 				}
 
 				map.push_back(object);
@@ -232,6 +257,8 @@ Model* Game::FindModelByName(Model* array[], std::string name)
 		return array[6];
 	else if (name == "House2")
 		return array[7];
+	else if (name == "Enemy")
+		return array[8];
 }
 
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem)
@@ -260,7 +287,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	camera->AddComponent<Camera>();
 	physics->RegisterEntity(camera);
 	renderer->SetCamera(camera);
-	//renderer->debugMode = true;
+	renderer->debugMode = true;
 
 	//set camera position
 	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));
@@ -309,7 +336,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
-	LoadMap(renderer, assetManager, physics);
+	LoadMap(renderer, assetManager, physics, shadera);
 	//player's weapon ! -> it should be spawned in player's script imo
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();
@@ -326,7 +353,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	character->GetComponent<Player>()->weapon = weapon->GetComponent<Weapon>();
 
-	//nanosuit 2
+	//nanosuit 2 
+	/*
 	std::shared_ptr<Entity> character2 = m_EntityManager->CreateEntity<Entity>();
 	character2->AddComponent<Transform>();
 
@@ -359,8 +387,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(character2);
 	renderer->RegisterEntity(character2);
-
+	*/
 	//nanosuit 3
+	/*
 	std::shared_ptr<Entity> character3 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	character3->AddComponent<Transform>();
 
@@ -425,10 +454,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character4->GetComponent<Collider>()->isStatic = true;
 	character4->AddComponent<Character>();
 
-	//gameLogic->RegisterEntity(character4);
 	physics->RegisterEntity(character4);
 	renderer->RegisterEntity(character4);
-
+	*/
 	//Object for cube
 	std::shared_ptr<Entity> cube = m_EntityManager->CreateEntity<Entity>();
 	cube->AddComponent<Transform>();
@@ -445,7 +473,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(cube);
 
 	renderer->SetCamera(camera);
-	renderer->debugMode = true;
+	//renderer->debugMode = true;
 
 	//testing weapon 1
 	std::shared_ptr<Entity> weaponOnTheGround1 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
