@@ -11,7 +11,7 @@ TextRendering::TextRendering()
 	shadert = new Shader("./res/shaders/text.vert", "./res/shaders/text.frag");
 	glUseProgram(shadert->ID);
 	FT_Face ft_face;
-	if (FT_New_Face(ft_lib, "./res/fonts/comic.ttf", 0, &ft_face)) cout << "font NOT load" << endl;
+	if (FT_New_Face(ft_lib, "./res/fonts/ariali.ttf", 0, &ft_face)) cout << "font NOT load" << endl;
 
 	FT_Set_Pixel_Sizes(ft_face, 0, 48); //width to 0 lets the face dynamically calculate the width based on the given height.
 
