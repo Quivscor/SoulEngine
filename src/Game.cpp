@@ -94,6 +94,7 @@ void Game::Run()
 
 void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader)
 {
+	
 	std::vector<std::shared_ptr<Entity>> map;
 
 	std::vector<glm::vec2> colliderShape;
@@ -267,7 +268,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
-
+	//Shader* light = new Shader("./res/shaders/bassiclight.vert", "./res/shaders/basiclight.frag");
+	
 	Model* testModel = assetManager->LoadModel("./res/models/player/attack.dae");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	Model* testModela = assetManager->LoadModel("./res/models/player/run.dae");
@@ -312,7 +314,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
-	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, -10.0f));
+	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
 	//character->GetComponent<Transform>()->DisplayDebugInfo(true);
 
