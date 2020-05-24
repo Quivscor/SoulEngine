@@ -23,6 +23,13 @@ protected:
 private:
 	void CreateWeapon();
 	void Swap();
+	void Move();
+	void CalculateRotation();
 
 	std::shared_ptr<WeaponOnTheGround> weaponInRange;
+	float rotatingSpeed = 5.0f;
+	bool isMoving = false;
+
+	short movingFB = 0; //moving forward/backward
+	short movingLR = 0; //moving left/right
 };
