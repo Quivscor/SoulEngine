@@ -269,10 +269,12 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 	//Shader* light = new Shader("./res/shaders/bassiclight.vert", "./res/shaders/basiclight.frag");
-	
-	Model* testModel = assetManager->LoadModel("./res/models/player/attack.dae");
+
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
-	Model* testModela = assetManager->LoadModel("./res/models/player/run.dae");
+	
+	//player
+	Model* playerAttack = assetManager->LoadModel("./res/models/player/attack.dae");
+	Model* playerRun = assetManager->LoadModel("./res/models/player/run.dae");
 	
 
 	//Camera object
@@ -322,14 +324,18 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->AddComponent<Mesh>();
 	character->AddComponent<Model>();
 
-	character->GetComponent<Model>()->UseModel(testModela);
-	character->GetComponent<Mesh>()->SetAll(testModela->GetMeshes()[0]);
-	character->GetComponent<Mesh>()->material->SetShader(shadera);
-
+	character->GetComponent<Model>()->UseModel(playerRun);
+	character->GetComponent<Mesh>()->SetAll(playerRun->GetMeshes()[0]);
 	character->GetComponent<Mesh>()->setupMeshfBones();
+
+	character->GetComponent<Mesh>()->material->SetShader(shadera);
 
 	character->AddComponent<Player>();
 	character->GetComponent<Player>()->inputHandler = inputSystem;
+	character->GetComponent<Player>()->animationRun = playerRun;
+	character->GetComponent<Player>()->animationAttack = playerAttack;
+	character->GetComponent<Player>()->shader = shadera;
+
 
 	gameLogic->RegisterEntity(character);
 

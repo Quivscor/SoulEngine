@@ -10,6 +10,7 @@ public:
 	~Weapon();
 
 	void Use();
+	void TurnOffCollider();
 
 	std::shared_ptr<WeaponStats> GetWeapon();
 	void SetWeapon(std::shared_ptr<WeaponStats> newWeapon);
@@ -20,12 +21,8 @@ protected:
 	virtual void OnTriggerStay(std::shared_ptr<Collider> other) override;
 
 private:
-	void TurnOffCollider();
 	std::shared_ptr<WeaponStats> equipedWeapon;
 
-	float attackTime = 0.2f;
-	float currentAttackTime = 0.0f;
 	float damage = 25.0f;
 	std::vector<std::shared_ptr<Entity>> hitObjects;
-	bool isAttacking = false;
 };
