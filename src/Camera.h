@@ -1,12 +1,16 @@
 #pragma once
 #include "Core.h"
 #include "Component.h"
+#include "Entity.h"
 #include "Window.h"
+#include "Frustum.h"
 
 class Camera : public Component
 {
 public:
 	friend class Renderer;
+
+	Frustum m_Frustum;
 
 	Camera();
 	~Camera();
@@ -14,10 +18,12 @@ public:
 	void SetNearClippingPlane(float value);
 	void SetFarClippingPlane(float value);
 	void SetFieldOfView(float value);
+	void SetLookAndUpVectors(std::shared_ptr<Entity> character);
 
 	virtual ComponentType GetComponentType() const override { return ComponentType::CameraComponent; }
 
 	glm::mat4 GetProjection();
+	void CalculateFrustum();
 
 private:
 	void UpdateProjection();
@@ -25,6 +31,8 @@ private:
 	glm::mat4 projection;
 
 	float nearClippingPlane = 0.1f;
-	float farClippingPlane = 1000.0f;
+	float farClippingPlane = 100.0f;
 	float fieldOfView = 60.0f;
+	glm::vec3 cameraTarget;
+	glm::vec3 upVector;
 };

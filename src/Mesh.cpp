@@ -177,3 +177,13 @@ void Mesh::setupMeshfBones()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBindVertexArray(0);
 }
+
+void Mesh::SetDrawRadius(float radius)
+{
+	drawRadius = radius;
+}
+
+float Mesh::GetDrawRadius()
+{
+	return this->drawRadius;
+}

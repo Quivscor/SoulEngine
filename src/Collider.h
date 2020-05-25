@@ -20,6 +20,7 @@ class Collider : public Component
 {
 	friend class Renderer;
 	friend class Physics;
+	friend class Frustum;
 
 public:
 	Collider();

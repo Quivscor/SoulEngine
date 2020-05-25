@@ -287,7 +287,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	camera->AddComponent<Camera>();
 	physics->RegisterEntity(camera);
 	renderer->SetCamera(camera);
-	renderer->debugMode = true;
+	renderer->debugMode = false;
 
 	//set camera position
 	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));
@@ -523,6 +523,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround4);
 	physics->RegisterEntity(weaponOnTheGround4);
 	renderer->RegisterEntity(weaponOnTheGround4);
+	camera->GetComponent<Camera>()->SetLookAndUpVectors(character);
 }
 
 void Game::InitializeWeapons(AssetManager* assetManager)

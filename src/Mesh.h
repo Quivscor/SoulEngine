@@ -53,8 +53,12 @@ public:
 
 	void setupMesh();
 	void setupMeshfBones();
+	void SetDrawRadius(float radius);
+	float GetDrawRadius();
 private:
 	unsigned int VAO, VBO, EBO;
 	GLuint VBO_vertices;
 	GLuint VBO_bones;
+
+	float drawRadius = 0;
 };

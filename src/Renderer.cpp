@@ -21,7 +21,8 @@ void Renderer::Init() const
 
 void Renderer::Update() const
 {
-	
+	mainCamera->GetComponent<Camera>()->CalculateFrustum();
+
 	glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -32,10 +33,6 @@ void Renderer::Update() const
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
 	TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 1.0f), text_matrix_2D);
-
-
-
-
 }
 
 void Renderer::LateUpdate() const
@@ -45,7 +42,7 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawMeshes() const
 {
-	
+	int modelsDrawnCount = 0;
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
 	for (int i = 0; i < m_Entities.size(); i++)
@@ -54,8 +51,15 @@ void Renderer::DrawMeshes() const
 			continue;
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
+		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-		if (m_Entities[i]->GetComponent<Mesh>() != nullptr)
+		if (mainCamera->GetComponent<Camera>()->m_Frustum.Intersects(trns->GetGlobalPosition()) == false)
+		{
+			continue;
+		}
+			
+		modelsDrawnCount++;
+		if (mesh != nullptr)
 		{
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
@@ -158,7 +162,7 @@ void Renderer::DrawMeshes() const
 		
 		}
 	}
-	
+	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 
 void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const

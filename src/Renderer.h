@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "Mesh.h"
 #include "Collider.h"
+#include "Frustum.h"
 
 //#include "Model.h"
 //class Mesh;
@@ -25,7 +26,6 @@ public:
 	static Shader* GetDefualtShader();
 
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
-
 
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
