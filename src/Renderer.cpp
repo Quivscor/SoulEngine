@@ -31,10 +31,10 @@ void Renderer::Update() const
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
-	TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 1.0f), text_matrix_2D);
+	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);
 
-
-
+	//std::shared_ptr<Transform> trns = m_Entities[1]->GetComponent<Transform>();
+	//TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 0.0f), m_Entities[1]->GetComponent<Transform>()->GetGlobalMatrix());
 
 }
 
@@ -54,25 +54,30 @@ void Renderer::DrawMeshes() const
 			continue;
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
+		// text 3D
+		//if (m_Entities[i]->GetComponent<Model>() != nullptr)
+		
+			glm::mat4 scale = glm::scale(glm::mat4(), glm::vec3(0.02f, 0.02f, 0.0f));
+			glm::mat4 set_text_to_origin = glm::translate(glm::mat4(), glm::vec3(-1.8f, -0.4f, 0.0f));
+			glm::mat4 text_rotate_y = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 text_rotate_x = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::mat4 text_translate_to_model_1 = glm::translate(glm::mat4(), glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 10.0f, trns->GetLocalPosition().z));
 
+			glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * text_rotate_y * text_rotate_x * set_text_to_origin * scale;
+
+		//	TextRendering::Instance()->draw("Agent_1", glm::vec3(1.0f, 0.0f, 0.0f)	, text_matrix_3D_model_1);
+		
 		if (m_Entities[i]->GetComponent<Mesh>() != nullptr)
 		{
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
 			int anyTexture = 0;
+		
+			
 			Shader* shader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
 			std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
-			//TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 0.0f), trns->GetGlobalMatrix());
-		// text 3D
-		/*	glm::mat4 scale = glm::scale(glm::mat4(), glm::vec3(0.02f, 0.02f, 0.0f));
-			glm::mat4 set_text_to_origin = glm::translate(glm::mat4(), glm::vec3(0.2f, 0.2f, 0.0f));
-			glm::mat4 text_rotate_y = glm::rotate(glm::mat4(), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 text_rotate_x = glm::rotate(glm::mat4(), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-			glm::mat4 text_translate_to_model_1 = glm::translate(glm::mat4(), trns->GetGlobalPosition());
-			glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * text_rotate_y * text_rotate_x * set_text_to_origin * scale;
-			TextRendering::Instance()->draw("Agent_1", glm::vec3(0.9f, .0f, 1.0f), text_matrix_3D_model_1);*/
-
+		//	TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 0.0f), trns->GetGlobalMatrix());
+	
 			{
 				for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
 				{
@@ -99,6 +104,7 @@ void Renderer::DrawMeshes() const
 				{
 					m_Entities[i]->GetComponent<Model>()->initShaders(shader);
 					m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
+				
 					
 					//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
 				}
@@ -152,8 +158,8 @@ void Renderer::DrawMeshes() const
 			if (collider != nullptr && collider->enabled == true)
 			{
 				DrawColliders(collider, trns);
-				glm::mat4 scale = glm::scale(trns->GetGlobalMatrix(), glm::vec3(0.1f, 0.1f, 0.1f));
-				//TextRendering::Instance()->draw("Agent_1", glm::vec3(1.0f, .0f, 0.0f), scale);
+
+			
 			}
 		
 		}

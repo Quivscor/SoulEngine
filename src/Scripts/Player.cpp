@@ -158,14 +158,17 @@ void Player::ChangeAnimation(AnimationType type)
 	{
 	case PlayerAnimationIdle:
 		model = animationIdle;
+		model->time = 0;
 		break;
 
 	case PlayerAnimationRun:
 		model = animationRun;
+		model->time = 0;
 		break;
 
 	case PlayerAnimationAttack:
 		model = animationAttack;
+		model->time = 0;
 		break;
 	}
 

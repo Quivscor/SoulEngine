@@ -65,31 +65,17 @@ void Model::ChangeBonePositions()
 {
 	std::vector<aiMatrix4x4> transforms;
 	
-	boneTransform((double)TimeCustom::GetTime() , transforms);
-
+	boneTransform(time, transforms);
+	
 	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
 	{
 		
 		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
 	}
+	time += TimeCustom::GetDeltaTime();
 
 }
-void Model::draw(Shader* shaders_program)
-{
-	std::vector<aiMatrix4x4> transforms;
-	boneTransform((double)TimeCustom::GetTime() / 1000.0f, transforms);
 
-
-	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
-	{
-		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
-	}
-
-	for (int i = 0; i < meshes.size(); i++)
-	{
-		meshes[i].Draw(shaders_program);
-	}
-}
 
 
 uint Model::findRotation(float p_animation_time, const aiNodeAnim* p_node_anim)

@@ -28,8 +28,9 @@ public:
 	aiQuaternion nlerp(aiQuaternion a, aiQuaternion b, float blend); // super super n lerp =)
 	void initShaders(Shader *shader_program);
 	void UseModel(Model* model);
-	void draw(Shader* shader_program);
+
 	std::vector<Mesh> meshes;
+	double time = 0;
 private:
 	
 	uint findPosition(float p_animation_time, const aiNodeAnim* p_node_anim);
