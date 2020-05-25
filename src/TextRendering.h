@@ -10,9 +10,15 @@
 #include FT_FREETYPE_H
 
 #include "Shader.h"
-using namespace std;
+#ifndef TextRendering_class
+#define TextRendering_class
 
-struct Character
+
+
+
+class TextRendering
+{
+	struct Character
 {
 	GLuint texture_id;  // glyph texture
 	glm::ivec2 size; // size of glyph
@@ -20,8 +26,6 @@ struct Character
 	GLuint  advance;  // offset to advance to next glyph
 };
 
-class TextRendering
-{
 public:
 	static TextRendering* Instance()
 	{
@@ -29,7 +33,7 @@ public:
 		return &inst;
 	}
 
-	void draw(string text, glm::vec3 color, glm::mat4 matrix);
+	void draw(std::string text, glm::vec3 color, glm::mat4 matrix);
 
 private:
 	TextRendering();
@@ -38,6 +42,7 @@ private:
 	GLuint VAO, VBO;
 	Shader* shadert;
 
-	map<GLchar, Character> characters;
+	std::map<GLchar, Character> characters;
 };
 
+#endif

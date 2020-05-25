@@ -7,11 +7,11 @@
 TextRendering::TextRendering()
 {
 	FT_Library ft_lib;
-	if (FT_Init_FreeType(&ft_lib)) cout << "free type init error" << endl;
+	if (FT_Init_FreeType(&ft_lib))std::cout << "free type init error" << std::endl;
 	shadert = new Shader("./res/shaders/text.vert", "./res/shaders/text.frag");
 	glUseProgram(shadert->ID);
 	FT_Face ft_face;
-	if (FT_New_Face(ft_lib, "./res/fonts/ariali.ttf", 0, &ft_face)) cout << "font NOT load" << endl;
+	if (FT_New_Face(ft_lib, "./res/fonts/viking.ttf", 0, &ft_face)) std::cout << "font NOT load" << std::endl;
 
 	FT_Set_Pixel_Sizes(ft_face, 0, 48); //width to 0 lets the face dynamically calculate the width based on the given height.
 
@@ -24,7 +24,7 @@ TextRendering::TextRendering()
 		// load character glyph
 		if (FT_Load_Char(ft_face, c, FT_LOAD_RENDER))
 		{
-			cout << "error load character: " << (char)c << endl;
+			std::cout << "error load character: " << (char)c << std::endl;
 			continue;
 		}
 		// generate texture
@@ -50,7 +50,7 @@ TextRendering::TextRendering()
 			glm::ivec2(ft_face->glyph->bitmap_left, ft_face->glyph->bitmap_top),
 			ft_face->glyph->advance.x };
 
-		characters.insert(pair<GLchar, Character>(c, character));
+		characters.insert(std::pair<GLchar, Character>(c, character));
 	}
 
 	// clear
@@ -85,7 +85,7 @@ TextRendering::~TextRendering()
 
 }
 
-void TextRendering::draw(string text, glm::vec3 color, glm::mat4 matrix)
+void TextRendering::draw(std::string text, glm::vec3 color, glm::mat4 matrix)
 {
 	glDepthFunc(GL_ALWAYS);
 
@@ -98,7 +98,7 @@ void TextRendering::draw(string text, glm::vec3 color, glm::mat4 matrix)
 	float offset_x = 0.0f; // offset to next char
 	float offset_y = 0.0f; // offset to next char
 
-	string::const_iterator c;
+	std::string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++)
 	{
 		Character ch = characters[*c];

@@ -32,10 +32,19 @@ void Renderer::Update() const
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
 	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);
+	
+		
+		std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
+		glm::mat4 scale = glm::scale(trns->GetGlobalMatrix(), glm::vec3(0.5f, 0.5f, 0.5f));
+		glm::mat4 set_text_to_origin = glm::translate(glm::mat4(), glm::vec3(-1.8f, -0.4f, 0.0f));
+		glm::mat4 text_rotate_y = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 text_rotate_x = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 text_translate_to_model_1 = glm::translate(glm::mat4(), glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 50.0f, trns->GetLocalPosition().z));
 
-	//std::shared_ptr<Transform> trns = m_Entities[1]->GetComponent<Transform>();
-	//TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 0.0f), m_Entities[1]->GetComponent<Transform>()->GetGlobalMatrix());
-
+		glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix()*scale;
+		
+		TextRendering::Instance()->draw("Smiec", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
+	
 }
 
 void Renderer::LateUpdate() const
@@ -57,15 +66,7 @@ void Renderer::DrawMeshes() const
 		// text 3D
 		//if (m_Entities[i]->GetComponent<Model>() != nullptr)
 		
-			glm::mat4 scale = glm::scale(glm::mat4(), glm::vec3(0.02f, 0.02f, 0.0f));
-			glm::mat4 set_text_to_origin = glm::translate(glm::mat4(), glm::vec3(-1.8f, -0.4f, 0.0f));
-			glm::mat4 text_rotate_y = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 text_rotate_x = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 text_translate_to_model_1 = glm::translate(glm::mat4(), glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 10.0f, trns->GetLocalPosition().z));
-
-			glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * text_rotate_y * text_rotate_x * set_text_to_origin * scale;
-
-		//	TextRendering::Instance()->draw("Agent_1", glm::vec3(1.0f, 0.0f, 0.0f)	, text_matrix_3D_model_1);
+		
 		
 		if (m_Entities[i]->GetComponent<Mesh>() != nullptr)
 		{
