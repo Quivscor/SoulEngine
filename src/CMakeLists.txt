@@ -21,6 +21,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${GLM_INCLUDE_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${IMGUI_INCLUDE_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${STB_IMAGE_INCLUDE_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${THIRDPARTY_DIR}/freetype/include")
+target_include_directories(${PROJECT_NAME} PUBLIC "${THIRDPARTY_DIR}/OpenAl/include")
 
 target_link_libraries(${PROJECT_NAME} "${OPENGL_LIBRARY}")
 target_link_libraries(${PROJECT_NAME} "${ASSIMP_LIBRARY}")
@@ -29,6 +30,9 @@ target_link_libraries(${PROJECT_NAME} "${GLAD_LIBRARY}"      "${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} "${IMGUI_LIBRARY}"     "${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} "${STB_IMAGE_LIBRARY}" "${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} "${THIRDPARTY_DIR}/freetype/win64/freetype.lib")
+target_link_libraries(${PROJECT_NAME} "${THIRDPARTY_DIR}/OpenAl/libs/Win64/OpenAL32.lib")
+target_link_libraries(${PROJECT_NAME} "${THIRDPARTY_DIR}/OpenAl/libs/Win64/EFX-Util_MTDLL/EFX-Util.lib")
+target_link_libraries(${PROJECT_NAME} "${THIRDPARTY_DIR}/OpenAl/libs/Win64/EFX-Util_MT/EFX-Util.lib")
 
 add_custom_command(TARGET  ${PROJECT_NAME} POST_BUILD
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory
