@@ -111,18 +111,23 @@ void Renderer::DrawMeshes() const
 					//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
 				}
 				glUniform3f(glGetUniformLocation(shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
-				glUniform1f(glGetUniformLocation(shader->ID, "material.shininess"), 32.0f);
+				glUniform1f(glGetUniformLocation(shader->ID, "material.shininess"), 0.5f);
 				glUniform1f(glGetUniformLocation(shader->ID, "material.transparency"), 1.0f);
 				// Point Light 1
 				glUniform3f(glGetUniformLocation(shader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
 
-				glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"), 0.1f, 0.1f, 0.1f);
-				glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 1.0f, 1.0f, 1.0f);
-				glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 1.0f, 1.0f, 1.0f);
+				glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"),  -0.2f, -1.0f, -0.3f);
+				glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 0.4f, 0.4f, 0.4f);
+				glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 0.5f, 0.5f, 0.5f);
 
 				glUniform1f(glGetUniformLocation(shader->ID, "point_light.constant"), 1.0f);
 				glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
 				glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
+	
+				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
+				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
+				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
+				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
 
 				glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
 

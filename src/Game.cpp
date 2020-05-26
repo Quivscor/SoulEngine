@@ -47,7 +47,7 @@ void Game::Run()
 	//-----------------------------Tests zone------------------------------------------
 	//TO DELETE:
 	//Creating simple shader
-	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
+	Shader* shader = new Shader("./res/shaders/basiclight.vert", "./res/shaders/basiclight.frag");
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
