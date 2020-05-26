@@ -15,6 +15,7 @@
 #include "Scripts/Weapon.h"
 #include "Scripts/Character.h"
 #include "Scripts/WeaponOnTheGround.h"
+#include "Scripts/Water.h"
 #include <time.h>
 
 #include <fstream>
@@ -531,6 +532,16 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround4);
 	physics->RegisterEntity(weaponOnTheGround4);
 	renderer->RegisterEntity(weaponOnTheGround4);
+
+
+	//water
+	std::shared_ptr<Entity> water = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	water->AddComponent<Transform>();
+	water->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+	water->AddComponent<Water>();
+	water->GetComponent<Water>()->CreateShape();
+
+	renderer->RegisterEntity(water);
 }
 
 void Game::InitializeWeapons(AssetManager* assetManager)

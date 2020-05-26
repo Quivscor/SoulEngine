@@ -125,8 +125,13 @@ void Renderer::DrawMeshes() const
 
 				glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
 
+				unsigned int model = glGetUniformLocation(shader->ID, "M_matrix");
+				glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
+
 				unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
 				glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+				glUniform1f(glGetUniformLocation(shader->ID, "waveTime"), (float)TimeCustom::GetTime());
 
 				unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
 				glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
