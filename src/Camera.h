@@ -33,6 +33,9 @@ private:
 	float nearClippingPlane = 0.1f;
 	float farClippingPlane = 100.0f;
 	float fieldOfView = 60.0f;
-	glm::vec3 cameraTarget;
-	glm::vec3 upVector;
+	std::shared_ptr<Transform> cameraTarget;
+
+	bool cameraVectorsSet = false;
+	glm::vec3 upVector = glm::vec3(0);
+	glm::vec3 lookVector = glm::vec3(0);
 };

@@ -33,9 +33,8 @@ void Camera::SetFieldOfView(float value)
 }
 
 void Camera::SetLookAndUpVectors(std::shared_ptr<Entity> character)
-{
-	std::shared_ptr<Transform> playertransform = character->GetComponent<Transform>();
-	cameraTarget = playertransform->GetGlobalPosition();
+{ 
+	cameraTarget = character->GetComponent<Transform>();;
 }
 
 glm::mat4 Camera::GetProjection()
@@ -51,12 +50,18 @@ void Camera::UpdateProjection()
 }
 
 void Camera::CalculateFrustum() {
+	if (cameraVectorsSet == false)
+	{
+		std::shared_ptr<Transform> thistransform = thisEntity->GetComponent<Transform>();
+		glm::vec3 thisPosition = thistransform->GetGlobalPosition();
+		lookVector = cameraTarget->GetGlobalPosition() - thisPosition;
+		upVector = glm::normalize(glm::cross(lookVector, Transform::Right()));
+		lookVector = glm::normalize(lookVector);
+		lookVector = glm::vec3(lookVector.x, lookVector.y, lookVector.z);
 
-	std::shared_ptr<Transform> thistransform = thisEntity->GetComponent<Transform>();
-	glm::vec3 thisPosition = thistransform->GetGlobalPosition();
-	glm::vec3 lookVector = cameraTarget - thisPosition;
-	upVector = glm::normalize(glm::cross(lookVector, Transform::Right()));
-	lookVector = glm::normalize(lookVector);
+		cameraVectorsSet = true;
+	}
+
 
 	Frustum returnFrustum;
 	float fnear = nearClippingPlane;

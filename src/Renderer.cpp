@@ -29,6 +29,7 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 	
 	DrawMeshes();
+	DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
@@ -225,12 +226,113 @@ void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Tran
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
-	glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0, 0.5f, 0.0f)));
+	glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0, 1.0f, 0.0f)));
 
 	unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
 	glUniform1i(hasTexture, 0);
 
 	glDrawArrays(GL_LINE_STRIP, 0, col->polygon.shape.size() + 1);
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+}
+
+void Renderer::DrawFrustum(Frustum frustum) const
+{
+	Shader* shader = defaultShader;
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	int pointsCount = 6 * 3 * 3;
+
+	float* vertices = new float[pointsCount];
+
+	vertices[0] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].x;
+	vertices[1] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].y;
+	vertices[2] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].z;
+	vertices[3] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].x;
+	vertices[4] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].y;
+	vertices[5] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].z;
+	vertices[6] = frustum.fnear[Frustum::COORD_TOPLEFT].x;
+	vertices[7] = frustum.fnear[Frustum::COORD_TOPLEFT].y;
+	vertices[8] = frustum.fnear[Frustum::COORD_TOPLEFT].z;
+	vertices[9] = frustum.ffar[Frustum::COORD_TOPLEFT].x;
+	vertices[10] = frustum.ffar[Frustum::COORD_TOPLEFT].y;
+	vertices[11] = frustum.ffar[Frustum::COORD_TOPLEFT].z;
+	vertices[12] = frustum.ffar[Frustum::COORD_TOPRIGHT].x;
+	vertices[13] = frustum.ffar[Frustum::COORD_TOPRIGHT].y;
+	vertices[14] = frustum.ffar[Frustum::COORD_TOPRIGHT].z;
+	vertices[15] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].x;
+	vertices[16] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].y;
+	vertices[17] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].z;
+	vertices[18] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].x;
+	vertices[19] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].y;
+	vertices[20] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].z;
+	vertices[21] = frustum.fnear[Frustum::COORD_TOPLEFT].x;
+	vertices[22] = frustum.fnear[Frustum::COORD_TOPLEFT].y;
+	vertices[23] = frustum.fnear[Frustum::COORD_TOPLEFT].z;
+	vertices[24] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].x;
+	vertices[25] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].y;
+	vertices[26] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].z;
+	vertices[27] = frustum.ffar[Frustum::COORD_TOPRIGHT].x;
+	vertices[28] = frustum.ffar[Frustum::COORD_TOPRIGHT].y;
+	vertices[29] = frustum.ffar[Frustum::COORD_TOPRIGHT].z;
+	vertices[30] = frustum.fnear[Frustum::COORD_TOPRIGHT].x;
+	vertices[31] = frustum.fnear[Frustum::COORD_TOPRIGHT].y;
+	vertices[32] = frustum.fnear[Frustum::COORD_TOPRIGHT].z;
+	vertices[33] = frustum.ffar[Frustum::COORD_BOTTOMRIGHT].x;
+	vertices[34] = frustum.ffar[Frustum::COORD_BOTTOMRIGHT].y;
+	vertices[35] = frustum.ffar[Frustum::COORD_BOTTOMRIGHT].z;
+	vertices[36] = frustum.ffar[Frustum::COORD_TOPLEFT].x;
+	vertices[37] = frustum.ffar[Frustum::COORD_TOPLEFT].y;
+	vertices[38] = frustum.ffar[Frustum::COORD_TOPLEFT].z;
+	vertices[39] = frustum.ffar[Frustum::COORD_TOPRIGHT].x;
+	vertices[40] = frustum.ffar[Frustum::COORD_TOPRIGHT].y;
+	vertices[41] = frustum.ffar[Frustum::COORD_TOPRIGHT].z;
+	vertices[42] = frustum.fnear[Frustum::COORD_TOPLEFT].x;
+	vertices[43] = frustum.fnear[Frustum::COORD_TOPLEFT].y;
+	vertices[44] = frustum.fnear[Frustum::COORD_TOPLEFT].z;
+	vertices[45] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].x;
+	vertices[46] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].y;
+	vertices[47] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].z;
+	vertices[48] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].x;
+	vertices[49] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].y;
+	vertices[50] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].z;
+	vertices[51] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].x;
+	vertices[52] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].y;
+	vertices[53] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].z;
+	
+	unsigned int VBO, VAO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, pointsCount * sizeof(float), vertices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// texture coord attribute
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	shader->use();
+
+	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix();// *trns->matrix;
+
+	unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+	unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
+	glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0, 0.5f, 0.0f)));
+
+	unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
+	glUniform1i(hasTexture, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 54);
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
