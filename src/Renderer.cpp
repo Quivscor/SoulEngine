@@ -29,7 +29,7 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 
 	DrawMeshes();
-	DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
+	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));

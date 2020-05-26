@@ -227,12 +227,12 @@ void Mesh::setupMeshfBones()
 	glBindVertexArray(0);
 }
 
-void Mesh::SetDrawRadius(float radius)
-{
-	drawRadius = radius;
-}
-
-float Mesh::GetDrawRadius()
-{
-	return this->drawRadius;
-}
+//void Mesh::SetDrawRadius(float radius)
+//{
+//	drawRadius = radius;
+//}
+//
+//float Mesh::GetDrawRadius()
+//{
+//	return this->drawRadius;
+//}
