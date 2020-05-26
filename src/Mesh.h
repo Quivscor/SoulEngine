@@ -13,6 +13,13 @@ struct Vertex {
 	glm::vec2 TexCoords;
 };
 
+struct VertexWithIndicators {
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 TexCoords;
+	glm::vec4 Indicators;
+};
+
 struct BoneMatrix
 {
 	aiMatrix4x4 offset_matrix;
@@ -52,7 +59,10 @@ public:
 	virtual ComponentType GetComponentType() const override { return ComponentType::MeshComponent; }
 
 	void setupMesh();
+	void setupMesh(std::vector<glm::vec4> indicators);
 	void setupMeshfBones();
+
+	bool hasEBO = true;
 private:
 	unsigned int VAO, VBO, EBO;
 	GLuint VBO_vertices;

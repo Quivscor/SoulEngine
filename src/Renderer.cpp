@@ -142,7 +142,16 @@ void Renderer::DrawMeshes() const
 				glUniform1i(hasTexture, anyTexture);
 				// draw mesh
 				glBindVertexArray(mesh->GetVAO());
-				glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+
+				if (mesh->hasEBO)
+				{
+					glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+				}
+				else
+				{
+					glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
+				}
+
 				glBindVertexArray(0);
 
 				glActiveTexture(GL_TEXTURE0);

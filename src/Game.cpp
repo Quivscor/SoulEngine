@@ -537,10 +537,11 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//water
 	std::shared_ptr<Entity> water = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	water->AddComponent<Transform>();
-	water->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+	water->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-20.0f, -2.0f, -25.0f));
 	water->AddComponent<Water>();
 	water->GetComponent<Water>()->CreateShape();
 
+	physics->RegisterEntity(water);
 	renderer->RegisterEntity(water);
 }
 
