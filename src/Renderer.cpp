@@ -34,16 +34,17 @@ void Renderer::Update() const
 	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);
 	
 		
-		std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
-		glm::mat4 scale = glm::scale(trns->GetGlobalMatrix(), glm::vec3(0.5f, 0.5f, 0.5f));
-		glm::mat4 set_text_to_origin = glm::translate(glm::mat4(), glm::vec3(-1.8f, -0.4f, 0.0f));
-		glm::mat4 text_rotate_y = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 text_rotate_x = glm::rotate(glm::mat4(), glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::mat4 text_translate_to_model_1 = glm::translate(glm::mat4(), glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 50.0f, trns->GetLocalPosition().z));
+	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
+	glm::mat4 scale = glm::scale(trns->GetLocalMatrix(), glm::vec3(0.5f, 0.5f, 0.5f));
+	//glm::mat4 set_text_to_origin = glm::translate(trns->GetLocalMatrix(), glm::vec3(-2.f, 20.0f, 0.0f));
 
-		glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix()*scale;
-		
-		TextRendering::Instance()->draw("Smiec", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
+	glm::mat4 text_rotate_y = glm::rotate(glm::mat4(), glm::radians(-trns->GetLocalRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glm::mat4 text_translate_to_model_1 = glm::translate(trns->GetLocalMatrix(), glm::vec3(trns->GetLocalPosition().x - 2.f, trns->GetLocalPosition().y + 20.0f, trns->GetLocalPosition().z));
+
+	glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * scale;
+
+	TextRendering::Instance()->draw("Gracz", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
 	
 }
 
