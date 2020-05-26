@@ -53,6 +53,55 @@ void Mesh::setupMesh()
 	glBindVertexArray(0);
 }
 
+void Mesh::setupMesh(std::vector<glm::vec4> indicators)
+{
+	hasEBO = false;
+
+	std::vector<VertexWithIndicators> verticesWithIndicatos;
+
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		VertexWithIndicators vwi;
+		vwi.Position = vertices[i].Position;
+		vwi.Normal = vertices[i].Normal;
+		vwi.TexCoords = vertices[i].TexCoords;
+		vwi.Indicators = indicators[i];
+
+		verticesWithIndicatos.push_back(vwi);
+	}
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, verticesWithIndicatos.size() * sizeof(VertexWithIndicators), &verticesWithIndicatos[0], GL_STATIC_DRAW);
+
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+	//	&indices[0], GL_STATIC_DRAW);
+
+	// vertex positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexWithIndicators), (void*)0);
+
+	// normal vectors of vertices
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexWithIndicators), (void*)offsetof(VertexWithIndicators, Normal));
+
+	// coordinates of the texture vertices
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexWithIndicators), (void*)offsetof(VertexWithIndicators, TexCoords));
+
+	// normal vectors of vertices
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(VertexWithIndicators), (void*)offsetof(VertexWithIndicators, Indicators));
+
+	glBindVertexArray(0);
+}
+
 void Mesh::SetAll(Mesh m)
 {
 	vertices = m.vertices;

@@ -15,6 +15,7 @@
 #include "Scripts/Weapon.h"
 #include "Scripts/Character.h"
 #include "Scripts/WeaponOnTheGround.h"
+#include "Scripts/Water.h"
 #include <time.h>
 
 #include <fstream>
@@ -46,7 +47,7 @@ void Game::Run()
 	//-----------------------------Tests zone------------------------------------------
 	//TO DELETE:
 	//Creating simple shader
-	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
+	Shader* shader = new Shader("./res/shaders/basiclight.vert", "./res/shaders/basiclight.frag");
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
@@ -94,6 +95,7 @@ void Game::Run()
 
 void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader)
 {
+	
 	std::vector<std::shared_ptr<Entity>> map;
 
 	std::vector<glm::vec2> colliderShape;
@@ -267,10 +269,13 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
+	//Shader* light = new Shader("./res/shaders/bassiclight.vert", "./res/shaders/basiclight.frag");
 
-	Model* testModel = assetManager->LoadModel("./res/models/player/attack.dae");
 	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
-	Model* testModela = assetManager->LoadModel("./res/models/player/run.dae");
+	
+	//player
+	Model* playerAttack = assetManager->LoadModel("./res/models/player/attack.dae");
+	Model* playerRun = assetManager->LoadModel("./res/models/player/run.dae");
 	
 
 	//Camera object
@@ -312,7 +317,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
-	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, -10.0f));
+	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	character->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
 	//character->GetComponent<Transform>()->DisplayDebugInfo(true);
 
@@ -320,14 +325,18 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->AddComponent<Mesh>();
 	character->AddComponent<Model>();
 
-	character->GetComponent<Model>()->UseModel(testModela);
-	character->GetComponent<Mesh>()->SetAll(testModela->GetMeshes()[0]);
-	character->GetComponent<Mesh>()->material->SetShader(shadera);
-
+	character->GetComponent<Model>()->UseModel(playerRun);
+	character->GetComponent<Mesh>()->SetAll(playerRun->GetMeshes()[0]);
 	character->GetComponent<Mesh>()->setupMeshfBones();
+
+	character->GetComponent<Mesh>()->material->SetShader(shadera);
 
 	character->AddComponent<Player>();
 	character->GetComponent<Player>()->inputHandler = inputSystem;
+	character->GetComponent<Player>()->animationRun = playerRun;
+	character->GetComponent<Player>()->animationAttack = playerAttack;
+	character->GetComponent<Player>()->shader = shadera;
+
 
 	gameLogic->RegisterEntity(character);
 
@@ -523,7 +532,17 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround4);
 	physics->RegisterEntity(weaponOnTheGround4);
 	renderer->RegisterEntity(weaponOnTheGround4);
-	camera->GetComponent<Camera>()->SetLookAndUpVectors(character);
+
+
+	//water
+	std::shared_ptr<Entity> water = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	water->AddComponent<Transform>();
+	water->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-20.0f, -2.0f, -25.0f));
+	water->AddComponent<Water>();
+	water->GetComponent<Water>()->CreateShape();
+
+	physics->RegisterEntity(water);
+	renderer->RegisterEntity(water);
 }
 
 void Game::InitializeWeapons(AssetManager* assetManager)

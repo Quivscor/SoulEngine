@@ -11,7 +11,8 @@ enum ComponentType
 	ColliderComponent = 6,
 	ScriptableObjectComponent = 7,
 	CharacterComponent = 8,
-	WeaponOnTheGroundComponent = 9
+	WeaponOnTheGroundComponent = 9,
+	WaterComponent = 10
 };
 
 class Component
