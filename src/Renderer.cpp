@@ -27,18 +27,15 @@ void Renderer::Update() const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
-	
+
 	DrawMeshes();
 	DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
-<<<<<<< HEAD
-	TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 1.0f), text_matrix_2D);
-=======
 	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);
-	
-		
+
+
 	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
 	glm::mat4 scale = glm::scale(trns->GetLocalMatrix(), glm::vec3(0.5f, 0.5f, 0.5f));
 	//glm::mat4 set_text_to_origin = glm::translate(trns->GetLocalMatrix(), glm::vec3(-2.f, 20.0f, 0.0f));
@@ -50,8 +47,6 @@ void Renderer::Update() const
 	glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * scale;
 
 	TextRendering::Instance()->draw("Gracz", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
-	
->>>>>>> 97bcd477afe998ab727e43cfca6119f07a63b797
 }
 
 void Renderer::LateUpdate() const

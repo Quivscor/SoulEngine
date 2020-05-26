@@ -532,7 +532,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround4);
 	physics->RegisterEntity(weaponOnTheGround4);
 	renderer->RegisterEntity(weaponOnTheGround4);
-
+	camera->GetComponent<Camera>()->SetLookAndUpVectors(character);
 
 	//water
 	std::shared_ptr<Entity> water = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
