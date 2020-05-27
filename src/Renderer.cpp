@@ -172,9 +172,7 @@ void Renderer::DrawMeshes() const
 					glActiveTexture(GL_TEXTURE0 + i);
 					glBindTexture(GL_TEXTURE_2D, 0);
 				}
-
 			}
-			
 		}
 
 		if (debugMode)
@@ -184,13 +182,10 @@ void Renderer::DrawMeshes() const
 			if (collider != nullptr && collider->enabled == true)
 			{
 				DrawColliders(collider, trns);
-
-			
 			}
-		
 		}
 	}
-	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
+	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 
 void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const
