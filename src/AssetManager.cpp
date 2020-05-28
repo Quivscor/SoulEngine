@@ -41,10 +41,12 @@ Model* AssetManager::LoadModel(std::string path)
 	}
 	
 	ProcessNode(model->scene->mRootNode, model->scene,model);
-
+	
 	model->setMeshes(meshes);
 	return model;
 }
+
+
 
 void AssetManager::ProcessNode(aiNode *node, const aiScene *scene,Model* model)
 {

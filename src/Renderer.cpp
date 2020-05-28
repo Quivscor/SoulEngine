@@ -1,6 +1,7 @@
 #include "Renderer.h"
  #include "Model.h"
 #include "TextRendering.h"
+#include<Billboard.h>
 Shader* Renderer::defaultShader = nullptr;
 
 Renderer::Renderer(Shader* shader)
@@ -29,12 +30,13 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 
 	DrawMeshes();
+	Billboard::Instance()->drawbill(mainCamera);
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
 	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);
-
+	
 
 	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
 	glm::mat4 scale = glm::scale(trns->GetLocalMatrix(), glm::vec3(0.5f, 0.5f, 0.5f));
@@ -185,7 +187,7 @@ void Renderer::DrawMeshes() const
 			}
 		}
 	}
-	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
+	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 void Renderer::DrawGrass()
 {
