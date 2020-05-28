@@ -24,6 +24,7 @@ public:
 
 	glm::mat4 GetProjection();
 	void CalculateFrustum();
+	float DistanceFromCameraTarget(std::shared_ptr<Transform> transform);
 
 private:
 	void UpdateProjection();
@@ -31,7 +32,7 @@ private:
 	glm::mat4 projection;
 
 	float nearClippingPlane = 0.1f;
-	float farClippingPlane = 100.0f;
+	float farClippingPlane = 1000.0f;
 	float fieldOfView = 60.0f;
 	std::shared_ptr<Transform> cameraTarget;
 

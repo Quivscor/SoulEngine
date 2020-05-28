@@ -67,10 +67,10 @@ void Renderer::DrawMeshes() const
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-		/*if (mainCamera->GetComponent<Camera>()->m_Frustum.Intersects(trns->GetGlobalPosition()) == false)
+		if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
 		{
 			continue;
-		}*/
+		}
 			
 		modelsDrawnCount++;
 
@@ -185,7 +185,7 @@ void Renderer::DrawMeshes() const
 			}
 		}
 	}
-	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
+	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 void Renderer::DrawGrass()
 {
@@ -270,7 +270,7 @@ void Renderer::DrawFrustum(Frustum frustum) const
 {
 	Shader* shader = defaultShader;
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
 	int pointsCount = 6 * 3 * 3;
 
 	float* vertices = new float[pointsCount];
@@ -361,7 +361,7 @@ void Renderer::DrawFrustum(Frustum frustum) const
 	unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
 	glUniform1i(hasTexture, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 54);
+	glDrawArrays(GL_LINE_STRIP, 0, 54);
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);

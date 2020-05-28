@@ -54,14 +54,14 @@ void Camera::CalculateFrustum() {
 	{
 		std::shared_ptr<Transform> thistransform = thisEntity->GetComponent<Transform>();
 		glm::vec3 thisPosition = thistransform->GetGlobalPosition();
-		lookVector = cameraTarget->GetGlobalPosition() - thisPosition;
+		/*lookVector = cameraTarget->GetGlobalPosition() - thisPosition;*/
+		lookVector = glm::vec3(0, 1 / sqrt(2.0f), -1 / sqrt(2.0f));
 		upVector = glm::normalize(glm::cross(lookVector, Transform::Right()));
 		lookVector = glm::normalize(lookVector);
 		lookVector = glm::vec3(lookVector.x, lookVector.y, lookVector.z);
 
 		cameraVectorsSet = true;
 	}
-
 
 	Frustum returnFrustum;
 	float fnear = nearClippingPlane;
@@ -78,7 +78,7 @@ void Camera::CalculateFrustum() {
 
 	// And their centers
 	glm::vec3 cameraPos = transform->GetGlobalPosition();
-	glm::vec3 nearCenter = cameraPos + (lookVector * fnear);
+	glm::vec3 nearCenter = cameraPos/* + (lookVector * fnear)*/;
 	glm::vec3 farCenter = cameraPos + (lookVector * ffar);
 
 	returnFrustum.center = transform->GetGlobalPosition() + (lookVector * (ffar / 2.0f));
@@ -103,4 +103,11 @@ void Camera::CalculateFrustum() {
 	returnFrustum.planes[Frustum::PLANE_BOTTOM].CreateFromPoints(m_Frustum.fnear[Frustum::COORD_BOTTOMLEFT], m_Frustum.ffar[Frustum::COORD_BOTTOMLEFT], m_Frustum.fnear[Frustum::COORD_BOTTOMRIGHT]);
 
 	m_Frustum = returnFrustum;
+}
+
+float Camera::DistanceFromCameraTarget(std::shared_ptr<Transform> transform)
+{
+	glm::vec3 position = transform->GetGlobalPosition();
+	glm::vec3 cameraTarget = this->cameraTarget->GetGlobalPosition();
+	return sqrt((cameraTarget.x - position.x) * (cameraTarget.x - position.x) + ((cameraTarget.z - 7.5f) - position.z) * ((cameraTarget.z - 7.5f) - position.z));
 }
