@@ -187,7 +187,14 @@ void Renderer::DrawMeshes() const
 	}
 	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
+void Renderer::DrawGrass()
+{
 
+}
+void Renderer::RegisterManager(std::shared_ptr<InstanceManager> instanceManager)
+{
+	
+}
 void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const
 {
 	Shader* shader = defaultShader;

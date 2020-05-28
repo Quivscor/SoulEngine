@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include "Model.h"
+
 class Game
 {
 public:

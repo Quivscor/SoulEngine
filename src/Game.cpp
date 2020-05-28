@@ -17,7 +17,7 @@
 #include "Scripts/WeaponOnTheGround.h"
 #include "Scripts/Water.h"
 #include <time.h>
-
+#include "InstanceManager.h"
 #include <fstream>
 #include <iostream>
 
@@ -135,14 +135,14 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
 	tileModels[8] = assetManager->LoadModel("./res/models/player/attack.dae");
 	//std::cout << "\nX: " << x << " Y: " << y << std::endl;
-	x = 2;
-	y = 2;
+	x = 5;
+	y = 5;
 	int random = 0;
 	for (int i = 0; i < x; i++)
 	{
 		for (int j = 0; j < y; j++)
 		{
-			//int random = rand()%4;
+			int random = rand()%4;
 			std::ifstream file;
 			if (random == 0)
 			{
@@ -180,7 +180,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 					std::cout << "Unable to open file txt";
 				}
 			}
-			random++;
+			//random++;
 
 			std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
 			tile->AddComponent<Transform>();
