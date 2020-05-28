@@ -38,7 +38,7 @@ private:
 	//list of meshes?
 	void DrawMeshes() const;
 	void DrawGrass();
-	void RegisterManager(std::shared_ptr<InstanceManager> instanceManager);
+	void RegisterManager();
 	void DrawFrustum(Frustum frustum) const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;

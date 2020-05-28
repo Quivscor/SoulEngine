@@ -191,7 +191,7 @@ void Renderer::DrawGrass()
 {
 
 }
-void Renderer::RegisterManager(std::shared_ptr<InstanceManager> instanceManager)
+void Renderer::RegisterManager()
 {
 	
 }
