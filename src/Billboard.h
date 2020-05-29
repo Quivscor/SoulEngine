@@ -20,6 +20,8 @@ public:
 	~Billboard();
 	void Draw( std::shared_ptr<Entity>  camera, glm::vec3 position);
 	Shader* shaderbil;
+	GLuint loadDDS(const char* imagepath);
+	GLuint Texture;
 private:
 	GLuint texture;
 	GLuint vao;
