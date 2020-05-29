@@ -26,6 +26,8 @@ public:
 	void CalculateFrustum();
 	float DistanceFromCameraTarget(std::shared_ptr<Transform> transform);
 
+	glm::vec3 upVector = glm::vec3(0);
+	glm::vec3 lookVector = glm::vec3(0);
 private:
 	void UpdateProjection();
 
@@ -37,6 +39,5 @@ private:
 	std::shared_ptr<Transform> cameraTarget;
 
 	bool cameraVectorsSet = false;
-	glm::vec3 upVector = glm::vec3(0);
-	glm::vec3 lookVector = glm::vec3(0);
+
 };

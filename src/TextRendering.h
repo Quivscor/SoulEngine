@@ -1,7 +1,6 @@
 #pragma once
 #include "Core.h"
-
-
+#include "Shader.h"
 #include <iostream>
 #include <map>
 #include <string>
@@ -9,7 +8,7 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
-#include "Shader.h"
+
 #ifndef TextRendering_class
 #define TextRendering_class
 
