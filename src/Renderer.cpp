@@ -31,7 +31,7 @@ void Renderer::Update() const
 
 	DrawMeshes();
 	DrawGrass();
-	Billboard::Instance()->drawbill(mainCamera);
+
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
@@ -40,6 +40,7 @@ void Renderer::Update() const
 	
 
 	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
+	Billboard::Instance()->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f));
 	glm::mat4 scale = glm::scale(trns->GetLocalMatrix(), glm::vec3(0.5f, 0.5f, 0.5f));
 	//glm::mat4 set_text_to_origin = glm::translate(trns->GetLocalMatrix(), glm::vec3(-2.f, 20.0f, 0.0f));
 

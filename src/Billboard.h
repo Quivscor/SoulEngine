@@ -1,11 +1,12 @@
+
 #pragma once
-#include "Core.h"
-#include "Shader.h"
-#include <iostream>
+#include <glad/glad.h>
+
 #include <map>
-#include <string>
-#include <AssetManager.h>
-#include<Camera.h>
+#include "Shader.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include "Camera.h"
+#include<TimeCustom.h>
 class Billboard
 {
 public:
@@ -15,22 +16,11 @@ public:
 		return &inst;
 	}
 
-	void drawbill(std::shared_ptr<Entity> cam);
-	GLuint CameraRight_worldspace_ID ;
-	GLuint CameraUp_worldspace_ID ;
-	GLuint ViewProjMatrixID;
-	GLuint BillboardPosID ;
-	GLuint BillboardSizeID ;
-	GLuint LifeLevelID;
-	Shader* shaderbil;
-	GLuint TextureID ;
-	GLuint loadDDS(std::string path);
-	static const GLfloat g_vertex_buffer_data[];
-	GLuint billboard_vertex_buffer;
-	GLuint Texture;
-private:
 	Billboard();
 	~Billboard();
-
+	void Draw( std::shared_ptr<Entity>  camera, glm::vec3 position);
+	Shader* shaderbil;
+private:
+	GLuint texture;
+	GLuint vao;
 };
-
