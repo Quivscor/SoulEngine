@@ -1,8 +1,9 @@
 #pragma once
 #include "Core.h"
 #include "Mesh.h"
-
+#include "InstanceManager.h"
 class Mesh;
+
 struct VertexBoneData;
 class Model : public Component
 {

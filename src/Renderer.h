@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "Collider.h"
 #include "Frustum.h"
+#include "InstanceManager.h"
 //#include "Scripts/Water.h"
 
 //#include "Model.h"
@@ -23,9 +24,9 @@ public:
 	void DebugUpdate();
 	virtual void LateUpdate() const;
 	void DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material);
-	
+	std::vector <std::shared_ptr <InstanceManager>> instanceManagers;
 	static Shader* GetDefualtShader();
-
+	void RegisterManager(std::shared_ptr<InstanceManager> instanceManager);
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
 
 	//Debug
@@ -37,8 +38,8 @@ public:
 private:
 	//list of meshes?
 	void DrawMeshes() const;
-	void DrawGrass();
-	void RegisterManager();
+	void DrawGrass() const;
+	
 	void DrawFrustum(Frustum frustum) const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;

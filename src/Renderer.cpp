@@ -29,6 +29,7 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 
 	DrawMeshes();
+	DrawGrass();
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
@@ -187,13 +188,13 @@ void Renderer::DrawMeshes() const
 	}
 	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
-void Renderer::DrawGrass()
+void Renderer::DrawGrass() const
 {
-
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
-void Renderer::RegisterManager()
+void Renderer::RegisterManager(std::shared_ptr<InstanceManager> instanceManager)
 {
-	
+	instanceManagers.push_back(instanceManager);
 }
 void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const
 {

@@ -16,8 +16,8 @@
 #include "Scripts/Character.h"
 #include "Scripts/WeaponOnTheGround.h"
 #include "Scripts/Water.h"
-#include <time.h>
 #include "InstanceManager.h"
+#include <time.h>
 #include <fstream>
 #include <iostream>
 
@@ -54,6 +54,8 @@ void Game::Run()
 	Physics* physics = new Physics();
 	InputSystem* inputSystem = new InputSystem();
 	GameLogic* gameLogic = new GameLogic();
+
+
 
 	//Input register test
 	std::shared_ptr<Entity> inputHandler = m_EntityManager->CreateEntity<Entity>();
@@ -98,6 +100,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	
 	std::vector<std::shared_ptr<Entity>> map;
 
+
 	std::vector<glm::vec2> colliderShape;
 	colliderShape.push_back({ -2.0f, -1.25f });
 	colliderShape.push_back({ -1.25f, -2.0f });
@@ -134,6 +137,20 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	tileModels[6] = assetManager->LoadModel("./res/models/tiles/Houses/house_1.obj");
 	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
 	tileModels[8] = assetManager->LoadModel("./res/models/player/attack.dae");
+	Model* grassLeaf = assetManager->LoadModel("./res/models/tiles/Grass/Leaf.obj");
+	InstanceManager* grassM = new InstanceManager(grassLeaf);
+	std::shared_ptr <InstanceManager> grassManager(grassM);
+	int numberOfGrass = 100;
+	for (int i = 0; i < numberOfGrass; i++)
+	{
+		int randomX = rand() % x;
+		int randomY = rand() % y;
+		glm::vec3 pos(x, 0, y);
+		glm::vec3 scale(1, 1, 1);
+		glm::vec3 rot(0, 0, 0);
+		grassManager->AddParameters(pos, scale, rot);
+	}
+	renderer->RegisterManager(grassManager);
 	//std::cout << "\nX: " << x << " Y: " << y << std::endl;
 	x = 5;
 	y = 5;
@@ -271,7 +288,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 	//Shader* light = new Shader("./res/shaders/bassiclight.vert", "./res/shaders/basiclight.frag");
 
-	Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
+	//Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	
 	//player
 	Model* playerAttack = assetManager->LoadModel("./res/models/player/attack.dae");
