@@ -3,11 +3,22 @@
 #include "stb_image.h"
 
 
-Billboard::Billboard()
+Billboard::Billboard(const char* imagepath)
 {
 	shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
-	const char* textureName = "./res/textures/ExampleBillboard.png";
-	 Texture = loadDDS("./res/textures/ExampleBillboard.DDS");
+	FILE* fp;
+	char cstr[124];
+
+	/* try to open the file */
+	fp = fopen(imagepath, "rb");
+
+
+
+	/* verify the type of file */
+	char filecode[4];
+	fread(filecode, 1, 4, fp);
+
+	
 	static const GLfloat g_vertex_buffer_data[] = {
 		 -0.5f, -0.5f, 0.0f,
 		  0.5f, -0.5f, 0.0f,
@@ -31,35 +42,43 @@ Billboard::Billboard()
 		0,                  // stride
 		(void*)0            // array buffer offset
 	);
-
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	int width, height, nrChannels;
-
-	unsigned char* data = stbi_load(textureName, &width, &height, &nrChannels, 0);
-	if (data)
+	if (strncmp(filecode, "DDS ", 4) == 0)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		Texture = loadDDS(imagepath);
 	}
-	stbi_image_free(data);
+
+	else
+	{
+		glGenTextures(1, &Texture);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		int width, height, nrChannels;
+
+		unsigned char* data = stbi_load(imagepath, &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		stbi_image_free(data);
+	}
+	
 }
 //const char* imagepath = "./res/textures/ExampleBillboard.DDS";
 Billboard::~Billboard()
 {
 }
 
-void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position)
+void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size = glm::vec2(1.f, 0.125f))
 {
 	glDepthFunc(GL_ALWAYS);
 
 	int w = 1280, h = 720; //fix later
-	glm::vec2 size = glm::vec2(1.f, 0.125f);
+//	glm::vec2 size = glm::vec2(1.f, 0.125f);
 
 	
 		// Vertex shader

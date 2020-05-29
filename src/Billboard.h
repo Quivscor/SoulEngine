@@ -10,19 +10,19 @@
 class Billboard
 {
 public:
-	static Billboard* Instance()
+	static Billboard* Instance(const char* imagepath)
 	{
-		static Billboard inst;
-		return &inst;
+		static Billboard* inst =  new Billboard( imagepath);
+		return inst;
 	}
 
-	Billboard();
+	Billboard(const char* imagepath);
 	~Billboard();
-	void Draw( std::shared_ptr<Entity>  camera, glm::vec3 position);
+	void Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size);
 	Shader* shaderbil;
 	GLuint loadDDS(const char* imagepath);
 	GLuint Texture;
 private:
-	GLuint texture;
+	// texture;
 	GLuint vao;
 };
