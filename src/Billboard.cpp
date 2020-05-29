@@ -3,32 +3,32 @@
 #include "stb_image.h"
 
 
-Billboard::Billboard(const char* imagepath)
+Billboard::Billboard()
 {
-	shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
-	FILE* fp;
-	char cstr[124];
-
-	/* try to open the file */
-	fp = fopen(imagepath, "rb");
-
-
-
-	/* verify the type of file */
-	char filecode[4];
-	fread(filecode, 1, 4, fp);
 
 	
+}
+//const char* imagepath = "./res/textures/ExampleBillboard.DDS";
+Billboard::~Billboard()
+{
+	
+}
+
+void Billboard::Draw(char* imagepath, std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size ,bool x)
+{
+
+	shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
+
 	static const GLfloat g_vertex_buffer_data[] = {
-		 -0.5f, -0.5f, 0.0f,
-		  0.5f, -0.5f, 0.0f,
-		 -0.5f,  0.5f, 0.0f,
-		  0.5f,  0.5f, 0.0f,
+ -0.5f, -0.5f, 0.0f,
+  0.5f, -0.5f, 0.0f,
+ -0.5f,  0.5f, 0.0f,
+  0.5f,  0.5f, 0.0f,
 	};
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	GLuint billboard_vertex_buffer;
+
 	glGenBuffers(1, &billboard_vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
@@ -42,7 +42,7 @@ Billboard::Billboard(const char* imagepath)
 		0,                  // stride
 		(void*)0            // array buffer offset
 	);
-	if (strncmp(filecode, "DDS ", 4) == 0)
+	if (x)
 	{
 		Texture = loadDDS(imagepath);
 	}
@@ -66,15 +66,6 @@ Billboard::Billboard(const char* imagepath)
 		}
 		stbi_image_free(data);
 	}
-	
-}
-//const char* imagepath = "./res/textures/ExampleBillboard.DDS";
-Billboard::~Billboard()
-{
-}
-
-void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size = glm::vec2(1.f, 0.125f))
-{
 	glDepthFunc(GL_ALWAYS);
 
 	int w = 1280, h = 720; //fix later
@@ -119,6 +110,9 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDeleteBuffers(1, &billboard_vertex_buffer);
+	glDeleteVertexArrays(1, &vao);
+	glDeleteProgram(shaderbil->ID);
 	glDepthFunc(GL_LESS);
 }
 GLuint Billboard::loadDDS(const char* imagepath)
