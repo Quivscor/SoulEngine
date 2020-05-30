@@ -204,7 +204,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	{
 		for (int j = 0; j < y; j++)
 		{
-			int random = 0;
+			int random = rand()%4;
 			std::ifstream file;
 			if (random == 0)
 			{
@@ -300,21 +300,6 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 
 		}
 	}
-	std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
-
-	object->AddComponent<Transform>();
-	object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0, 0));
-	object->GetComponent<Transform>()->SetLocalScale(glm::vec3(1, 1, 1));
-
-
-	object->AddComponent<Mesh>();
-	object->GetComponent<Mesh>()->indices = (grassLeaf)->GetMeshes()[0].indices;
-	object->GetComponent<Mesh>()->vertices = (grassLeaf)->GetMeshes()[0].vertices;
-	object->GetComponent<Mesh>()->material = (grassLeaf)->GetMeshes()[0].material;
-	object->GetComponent<Mesh>()->setupMesh();
-	physics->RegisterEntity(object);
-	renderer->RegisterEntity(object);
-	//land->GetComponent<Transform>()->SetLocalRotation(glm::vec3(90, 0, 0));
 }
 Model* Game::FindModelByName(Model* array[], std::string name)
 {
