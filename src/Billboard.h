@@ -1,36 +1,30 @@
+
 #pragma once
-#include "Core.h"
-#include "Shader.h"
-#include <iostream>
+#include <glad/glad.h>
+
 #include <map>
-#include <string>
-#include <AssetManager.h>
-#include<Camera.h>
+#include "Shader.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include "Camera.h"
+#include<TimeCustom.h>
 class Billboard
 {
 public:
-	static Billboard* Instance()
+	static Billboard* Instance( )
 	{
-		static Billboard inst;
+		static Billboard inst ;
 		return &inst;
 	}
 
-	void drawbill(std::shared_ptr<Entity> cam);
-	GLuint CameraRight_worldspace_ID ;
-	GLuint CameraUp_worldspace_ID ;
-	GLuint ViewProjMatrixID;
-	GLuint BillboardPosID ;
-	GLuint BillboardSizeID ;
-	GLuint LifeLevelID;
-	Shader* shaderbil;
-	GLuint TextureID ;
-	GLuint loadDDS(std::string path);
-	static const GLfloat g_vertex_buffer_data[];
-	GLuint billboard_vertex_buffer;
-	GLuint Texture;
-private:
-	Billboard();
+	Billboard( );
 	~Billboard();
-
+	void Draw(char* imagepath, std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size, bool x);
+	Shader* shaderbil;
+	GLuint loadDDS(const char* imagepath);
+	//char* imagepath;
+	GLuint Texture;
+	GLuint billboard_vertex_buffer;
+private:
+	// texture;
+	GLuint vao;
 };
-

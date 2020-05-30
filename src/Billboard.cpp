@@ -1,76 +1,37 @@
+
 #include "Billboard.h"
+#include "stb_image.h"
+
 
 Billboard::Billboard()
 {
-	shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
 
-	// Vertex shader
-	 CameraRight_worldspace_ID = glGetUniformLocation(shaderbil->ID, "CameraRight_worldspace");
-	 CameraUp_worldspace_ID = glGetUniformLocation(shaderbil->ID, "CameraUp_worldspace");
-	 ViewProjMatrixID = glGetUniformLocation(shaderbil->ID, "VP");
-	 BillboardPosID = glGetUniformLocation(shaderbil->ID, "BillboardPos");
-	 BillboardSizeID = glGetUniformLocation(shaderbil->ID, "BillboardSize");
-	 LifeLevelID = glGetUniformLocation(shaderbil->ID, "LifeLevel");
-
-	 TextureID = glGetUniformLocation(shaderbil->ID, "myTextureSampler");
-
-
-	 Texture = loadDDS("./res/textures/ExampleBillboard.DDS");
-
-	// The VBO containing the 4 vertices of the particles.
-
+	
 }
-
+//const char* imagepath = "./res/textures/ExampleBillboard.DDS";
 Billboard::~Billboard()
 {
+	
 }
 
-void Billboard::drawbill(std::shared_ptr<Entity> cam)
+void Billboard::Draw(char* imagepath, std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size ,bool x)
 {
+
+	shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
+
 	static const GLfloat g_vertex_buffer_data[] = {
-	 -0.5f, -0.5f, 0.0f,
-	  0.5f, -0.5f, 0.0f,
-	 -0.5f,  0.5f, 0.0f,
-	  0.5f,  0.5f, 0.0f,
+ -0.5f, -0.5f, 0.0f,
+  0.5f, -0.5f, 0.0f,
+ -0.5f,  0.5f, 0.0f,
+  0.5f,  0.5f, 0.0f,
 	};
-	GLuint billboard_vertex_buffer;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+
 	glGenBuffers(1, &billboard_vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
-	glm::mat4 ViewMatrix = glm::lookAt(
-			cam->GetComponent<Transform>()->GetGlobalPosition(),           // Camera is here
-		cam->GetComponent<Transform>()->GetGlobalPosition() + cam->GetComponent<Camera>()->lookVector, // and looks here : at the same position, plus "direction"
-		cam->GetComponent<Camera>()->upVector                // Head is up (set to 0,-1,0 to look upside-down)
-		);
-
-	glm::vec3 CameraPosition(glm::inverse(ViewMatrix)[3]);
-	// Use our shader
-	glUseProgram(shaderbil->ID);
-
-	// Bind our texture in Texture Unit 0
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Texture);
-	// Set our "myTextureSampler" sampler to use Texture Unit 0
-	glUniform1i(TextureID, 0);
-
-	// This is the only interesting part of the tutorial.
-	// This is equivalent to mlutiplying (1,0,0) and (0,1,0) by inverse(ViewMatrix).
-	// ViewMatrix is orthogonal (it was made this way), 
-	// so its inverse is also its transpose, 
-	// and transposing a matrix is "free" (inversing is slooow)
-	glUniform3f(CameraRight_worldspace_ID, ViewMatrix[0][0], ViewMatrix[1][0], ViewMatrix[2][0]);
-	glUniform3f(CameraUp_worldspace_ID, ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
-
-	glUniform3f(BillboardPosID, 0.0f, 0.5f, 0.0f); // The billboard will be just above the cube
-	glUniform2f(BillboardSizeID, 1.0f, 0.125f);     // and 1m*12cm, because it matches its 256*32 resolution =)
-
-	// Generate some fake life level and send it to glsl
-	float LifeLevel =  0.1f + 0.7f;
-	glUniform1f(LifeLevelID, LifeLevel);
-	glm::mat4 ViewProjectionMatrix= cam->GetComponent<Camera>()->GetProjection()* cam->GetComponent<Transform>()->GetGlobalMatrix();
-	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
-
-	// 1rst attribute buffer : vertices
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
 	glVertexAttribPointer(
@@ -81,30 +42,91 @@ void Billboard::drawbill(std::shared_ptr<Entity> cam)
 		0,                  // stride
 		(void*)0            // array buffer offset
 	);
+	if (x)
+	{
+		Texture = loadDDS(imagepath);
+	}
 
+	else
+	{
+		glGenTextures(1, &Texture);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// Draw the billboard !
-	// This draws a triangle_strip which looks like a quad.
+		int width, height, nrChannels;
+
+		unsigned char* data = stbi_load(imagepath, &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		stbi_image_free(data);
+	}
+	glDepthFunc(GL_ALWAYS);
+
+	int w = 1280, h = 720; //fix later
+//	glm::vec2 size = glm::vec2(1.f, 0.125f);
+
+	
+		// Vertex shader
+		 glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.01f, 10000.0f);
+
+	glm::vec3 cameraUp = camera->GetComponent<Camera>()->upVector;
+	glm::vec3 cameraRight = camera->GetComponent<Transform>()->Right();
+	glm::vec3 cameraPos = camera->GetComponent<Transform>()->GetGlobalPosition();
+	glm::mat4 ViewMatrix = camera->GetComponent<Transform>()->GetGlobalMatrix();
+	glm::mat4 ViewProjectionMatrix = Projection * ViewMatrix;
+
+	GLuint CameraRight_worldspace_ID = glGetUniformLocation(shaderbil->ID, "CameraRight_worldspace");
+	GLuint CameraUp_worldspace_ID = glGetUniformLocation(shaderbil->ID, "CameraUp_worldspace");
+	GLuint ViewProjMatrixID = glGetUniformLocation(shaderbil->ID, "VP");
+	GLuint BillboardPosID = glGetUniformLocation(shaderbil->ID, "BillboardPos");
+	GLuint BillboardSizeID = glGetUniformLocation(shaderbil->ID, "BillboardSize");
+	GLuint LifeLevelID = glGetUniformLocation(shaderbil->ID, "LifeLevel");
+	// Use our shader
+	shaderbil->use();
+	glBindVertexArray(vao);
+
+	//// Bind our texture in Texture Unit 0w
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D,Texture);
+
+	// This is the only interesting part of the tutorial.
+		// This is equivalent to mlutiplying (1,0,0) and (0,1,0) by inverse(ViewMatrix).
+		// ViewMatrix is orthogonal (it was made this way), 
+		// so its inverse is also its transpose, 
+		// and transposing a matrix is "free" (inversing is slooow)
+	glUniform3f(CameraRight_worldspace_ID, ViewMatrix[0][0], ViewMatrix[1][0], ViewMatrix[2][0]);
+	glUniform3f(CameraUp_worldspace_ID, ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
+
+	glUniform3f(BillboardPosID, position.x, position.y, position.z); // The billboard will be just above the cube
+	glUniform2f(BillboardSizeID, size.x, size.y);     // and 1m*12cm, because it matches its 256*32 resolution =)
+	float LifeLevel = sin(TimeCustom::GetTime()) * 0.1f + 0.7f;
+	glUniform1f(LifeLevelID, LifeLevel);
+	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
+
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-	glDisableVertexAttribArray(0);
-	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
-
+	glDeleteBuffers(1, &billboard_vertex_buffer);
+	glDeleteVertexArrays(1, &vao);
+	glDeleteProgram(shaderbil->ID);
+	glDepthFunc(GL_LESS);
 }
-
-GLuint Billboard::loadDDS(std::string path)
+GLuint Billboard::loadDDS(const char* imagepath)
 {
 	unsigned char header[124];
-
+	
 	FILE* fp;
 	char cstr[124];
-	strcpy(cstr, path.c_str());
+	
 	/* try to open the file */
-	fp = fopen(cstr, "rb");
+	fp = fopen(imagepath, "rb");
+	
 	if (fp == NULL) {
-		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", cstr); getchar();
+		std::cout << cstr << std::endl;
 		return 0;
 	}
 
@@ -113,6 +135,7 @@ GLuint Billboard::loadDDS(std::string path)
 	fread(filecode, 1, 4, fp);
 	if (strncmp(filecode, "DDS ", 4) != 0) {
 		fclose(fp);
+		std::cout << cstr << std::endl;
 		return 0;
 	}
 
