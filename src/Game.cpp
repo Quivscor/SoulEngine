@@ -339,6 +339,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	
 	//player
+	Model* playerIdle = assetManager->LoadModel("./res/models/player/player_idle.dae");
 	Model* playerAttack = assetManager->LoadModel("./res/models/player/attack.dae");
 	Model* playerRun = assetManager->LoadModel("./res/models/player/run.dae");
 
@@ -399,6 +400,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->inputHandler = inputSystem;
 	character->GetComponent<Player>()->animationRun = playerRun;
 	character->GetComponent<Player>()->animationAttack = playerAttack;
+	character->GetComponent<Player>()->animationIdle = playerIdle;
 	character->GetComponent<Player>()->shader = shadera;
 
 

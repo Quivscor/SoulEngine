@@ -14,7 +14,7 @@ void Player::Start()
 {
 	thisEntity->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0, 0, 0));
 
-	currentAnimation = animationRun;
+	currentAnimation = animationIdle;
 }
 
 void Player::Update()
@@ -85,7 +85,13 @@ void Player::Update()
 void Player::Move()
 {
 	if (!isMoving)
+	{
+		if (!isAttacking)
+			ChangeAnimation(PlayerAnimationIdle);
+
 		return;
+	}
+
 
 	CalculateRotation();
 
@@ -171,6 +177,9 @@ void Player::ChangeAnimation(AnimationType type)
 		model->time = 0;
 		break;
 	}
+
+	if (currentAnimation == model)
+		return;
 
 	currentAnimation = model;
 
