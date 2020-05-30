@@ -340,8 +340,10 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	
 	//player
 	Model* playerIdle = assetManager->LoadModel("./res/models/player/player_idle.dae");
-	Model* playerAttack = assetManager->LoadModel("./res/models/player/attack.dae");
-	Model* playerRun = assetManager->LoadModel("./res/models/player/run.dae");
+	Model* playerAttack = assetManager->LoadModel("./res/models/player/player_attack.dae");
+	Model* playerRun = assetManager->LoadModel("./res/models/player/player_run.dae");
+	Model* playerRoll = assetManager->LoadModel("./res/models/player/player_roll.dae");
+	Model* playerDeath = assetManager->LoadModel("./res/models/player/player_death.dae");
 
 	//Camera object
 	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
@@ -401,6 +403,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->animationRun = playerRun;
 	character->GetComponent<Player>()->animationAttack = playerAttack;
 	character->GetComponent<Player>()->animationIdle = playerIdle;
+	character->GetComponent<Player>()->animationRoll = playerRoll;
+	character->GetComponent<Player>()->animationDeath = playerDeath;
 	character->GetComponent<Player>()->shader = shadera;
 
 

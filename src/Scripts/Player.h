@@ -8,7 +8,9 @@ enum AnimationType
 {
 	PlayerAnimationIdle,
 	PlayerAnimationRun,
-	PlayerAnimationAttack
+	PlayerAnimationAttack,
+	PlayerAnimationRoll,
+	PlayerAnimationDeath
 };
 
 class Player : public ScriptableObject
@@ -26,6 +28,8 @@ public:
 	Model* animationIdle;
 	Model* animationRun;
 	Model* animationAttack;
+	Model* animationRoll;
+	Model* animationDeath;
 
 protected:
 	virtual void Start();
@@ -48,8 +52,14 @@ private:
 
 	//weapon
 	bool isAttacking = false;
+	bool isRolling = false;
+
 	float attackTime = 1.0f;
 	float currentAttackTime = 0.0f;
+
+	float rollTime = 1.0f;
+	float currentRollTime = 0.0f;
+	bool canRoll = true;
 
 	short movingFB = 0; //moving forward/backward
 	short movingLR = 0; //moving left/right

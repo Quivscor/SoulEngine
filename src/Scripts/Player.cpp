@@ -34,6 +34,17 @@ void Player::Update()
 		}
 	}
 
+	if (isRolling)
+	{
+		currentRollTime += TimeCustom::GetDeltaTime();
+
+		if (currentRollTime >= rollTime)
+		{
+			isRolling = false;
+			canRoll = true;
+		}
+	}
+
 	isMoving = false;
 	movingFB = 0;
 	movingLR = 0;
@@ -60,13 +71,24 @@ void Player::Update()
 			isMoving = true;
 			movingLR = 1;
 		}
+
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_K))
+		{
+			if (canRoll && !isAttacking)
+			{
+				isRolling = true;
+				currentRollTime = 0.0f;
+				ChangeAnimation(PlayerAnimationRoll);
+			}
+
+		}
 	}
 
 	Move();
 
 	if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_J))
 	{
-		if (!isAttacking)
+		if (!isAttacking && !isRolling)
 		{
 			currentAttackTime = 0.0f;
 			isAttacking = true;
@@ -86,7 +108,7 @@ void Player::Move()
 {
 	if (!isMoving)
 	{
-		if (!isAttacking)
+		if (!isAttacking && !isRolling)
 			ChangeAnimation(PlayerAnimationIdle);
 
 		return;
@@ -95,10 +117,10 @@ void Player::Move()
 
 	CalculateRotation();
 
-	if (currentAnimation != animationRun)
+	if (currentAnimation != animationRun && !isRolling)
 		ChangeAnimation(PlayerAnimationRun);
 
-	thisEntity->GetComponent<Transform>()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 25.0f);
+	thisEntity->GetComponent<Transform>()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 25.0f * (isRolling == true ? 1.5f : 1.0f));
 }
 
 void Player::CalculateRotation()
@@ -164,22 +186,29 @@ void Player::ChangeAnimation(AnimationType type)
 	{
 	case PlayerAnimationIdle:
 		model = animationIdle;
-		model->time = 0;
 		break;
 
 	case PlayerAnimationRun:
 		model = animationRun;
-		model->time = 0;
 		break;
 
 	case PlayerAnimationAttack:
 		model = animationAttack;
-		model->time = 0;
+		break;
+
+	case PlayerAnimationRoll:
+		model = animationRoll;
+		break;
+
+	case PlayerAnimationDeath:
+		model = animationDeath;
 		break;
 	}
 
 	if (currentAnimation == model)
 		return;
+
+	model->time = 0;
 
 	currentAnimation = model;
 
