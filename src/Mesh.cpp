@@ -49,7 +49,7 @@ void Mesh::setupMesh()
 	// coordinates of the texture vertices
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-
+	
 	glBindVertexArray(0);
 }
 

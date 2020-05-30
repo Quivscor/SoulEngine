@@ -85,97 +85,94 @@ void Renderer::DrawMeshes() const
 		
 			
 			Shader* shader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
-			std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
-		//	TextRendering::Instance()->draw("Agent_1", glm::vec3(0.1f, 1.0f, 0.0f), trns->GetGlobalMatrix());
-	
+
+			for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
+			{		
+				anyTexture = 1;
+				//defaultShader->setInt("material.diffuse", i);
+				glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
+
+				std::string number;
+				std::string name = mesh->material->GetTextures()[j].type;
+				if (name == "texture_diffuse")
+					number = std::to_string(diffuseNr++);
+				else if (name == "texture_specular")
+					number = std::to_string(specularNr++);
+
+				//defaultShader->setFloat(("material." + name + number).c_str(), i);
+
+				glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
+				glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
+			}
+
+			shader->use();
+			if (m_Entities[i]->GetComponent<Model>() != nullptr)
 			{
-				for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
-				{
-						
-					anyTexture = 1;
-					//defaultShader->setInt("material.diffuse", i);
-					glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
-
-					std::string number;
-					std::string name = mesh->material->GetTextures()[j].type;
-					if (name == "texture_diffuse")
-						number = std::to_string(diffuseNr++);
-					else if (name == "texture_specular")
-						number = std::to_string(specularNr++);
-
-					//defaultShader->setFloat(("material." + name + number).c_str(), i);
-
-					glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
-					glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
-				}
-
-				shader->use();
-				if (m_Entities[i]->GetComponent<Model>() != nullptr)
-				{
-					m_Entities[i]->GetComponent<Model>()->initShaders(shader);
-					m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
+				m_Entities[i]->GetComponent<Model>()->initShaders(shader);
+				m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
 				
 					
-					//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
-				}
-				glUniform3f(glGetUniformLocation(shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
-				glUniform1f(glGetUniformLocation(shader->ID, "material.shininess"), 0.5f);
-				glUniform1f(glGetUniformLocation(shader->ID, "material.transparency"), 1.0f);
-				// Point Light 1
-				glUniform3f(glGetUniformLocation(shader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
-
-				glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"),  -0.2f, -1.0f, -0.3f);
-				glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 0.4f, 0.4f, 0.4f);
-				glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 0.5f, 0.5f, 0.5f);
-
-				glUniform1f(glGetUniformLocation(shader->ID, "point_light.constant"), 1.0f);
-				glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
-				glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
-	
-				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
-				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
-				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
-				glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
-
-				glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
-
-				unsigned int model = glGetUniformLocation(shader->ID, "M_matrix");
-				glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
-
-				unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
-				glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
-
-				glUniform1f(glGetUniformLocation(shader->ID, "waveTime"), (float)TimeCustom::GetTime());
-
-				unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
-				glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
-				glUniformMatrix4fv(glGetUniformLocation(shader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
-				glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->GetGlobalMatrix())));
-				glUniformMatrix4fv(glGetUniformLocation(shader->ID, "normals_matrix"), 1, GL_FALSE, glm::value_ptr(matr_normals_cube));
-				unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
-				glUniform1i(hasTexture, anyTexture);
-				// draw mesh
-				glBindVertexArray(mesh->GetVAO());
-
-				if (mesh->hasEBO)
-				{
-					glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
-				}
-				else
-				{
-					glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
-				}
-
-				glBindVertexArray(0);
-
-				glActiveTexture(GL_TEXTURE0);
-				//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
-				for (int i = 0; i < mesh->material->GetTextures().size(); i++)
-				{
-					glActiveTexture(GL_TEXTURE0 + i);
-					glBindTexture(GL_TEXTURE_2D, 0);
-				}
+				//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
 			}
+			glUniform3f(glGetUniformLocation(shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
+			glUniform1f(glGetUniformLocation(shader->ID, "material.shininess"), 0.5f);
+			glUniform1f(glGetUniformLocation(shader->ID, "material.transparency"), 1.0f);
+
+			// Point Light 1
+			glUniform3f(glGetUniformLocation(shader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
+
+			glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"),  -0.2f, -1.0f, -0.3f);
+			glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 0.4f, 0.4f, 0.4f);
+			glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 0.5f, 0.5f, 0.5f);
+
+			glUniform1f(glGetUniformLocation(shader->ID, "point_light.constant"), 1.0f);
+			glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
+			glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
+	
+			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
+			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
+			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
+			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
+
+			glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
+
+			unsigned int model = glGetUniformLocation(shader->ID, "M_matrix");
+			glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
+
+			unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
+			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+			glUniform1f(glGetUniformLocation(shader->ID, "waveTime"), (float)TimeCustom::GetTime());
+
+			unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
+			glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
+			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
+			glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->GetGlobalMatrix())));
+			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "normals_matrix"), 1, GL_FALSE, glm::value_ptr(matr_normals_cube));
+			unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
+			glUniform1i(hasTexture, anyTexture);
+			// draw mesh
+			glBindVertexArray(mesh->GetVAO());
+
+			if (mesh->hasEBO)
+			{
+				glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+			}
+			else
+			{
+				glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
+			}
+
+			glBindVertexArray(0);
+
+			glActiveTexture(GL_TEXTURE0);
+			//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
+			for (int i = 0; i < mesh->material->GetTextures().size(); i++)
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
 		}
 
 		if (debugMode)
@@ -192,7 +189,20 @@ void Renderer::DrawMeshes() const
 }
 void Renderer::DrawGrass() const
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glm::mat4 view = camera.GetViewMatrix();
+	instanceManagers[0]->m_shader->use();
+	instanceManagers[0]->m_shader->setMat4("projection", mainCamera->GetComponent<Camera>()->GetProjection());
+	instanceManagers[0]->m_shader->setMat4("view", mainCamera->GetComponent<Transform>()->GetGlobalMatrix());
+	instanceManagers[0]->m_shader->setInt("texture_diffuse1", 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, instanceManagers[0]->m_mesh->material->GetTextures()[0].id);
+
+	glBindVertexArray(instanceManagers[0]->m_model->meshes[0].GetVAO());
+	glDrawElementsInstanced(GL_TRIANGLES, instanceManagers[0]->m_model->meshes[0].indices.size(), GL_UNSIGNED_INT, 0, instanceManagers[0]->amount);
+	glBindVertexArray(0);
+	//glBindTexture(GL_TEXTURE_2D, instanceManagers.at[0]->m_model.get
+
 }
 void Renderer::RegisterManager(std::shared_ptr<InstanceManager> instanceManager)
 {

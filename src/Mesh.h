@@ -63,8 +63,9 @@ public:
 	void setupMeshfBones();
 
 	bool hasEBO = true;
+	unsigned int VAO;
 private:
-	unsigned int VAO, VBO, EBO;
+	unsigned int VBO, EBO;
 	GLuint VBO_vertices;
 	GLuint VBO_bones;
 };

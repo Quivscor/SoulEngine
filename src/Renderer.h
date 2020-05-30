@@ -25,9 +25,12 @@ public:
 	void DebugUpdate();
 	virtual void LateUpdate() const;
 	void DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material);
-	std::vector <std::shared_ptr <InstanceManager>> instanceManagers;
+	
 	static Shader* GetDefualtShader();
 	void RegisterManager(std::shared_ptr<InstanceManager> instanceManager);
+	std::vector <std::shared_ptr <InstanceManager>> instanceManagers;
+	std::vector <int> test;
+
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
 
 	//Debug

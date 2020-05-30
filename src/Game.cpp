@@ -48,6 +48,7 @@ void Game::Run()
 	//TO DELETE:
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basiclight.vert", "./res/shaders/basiclight.frag");
+	
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
 	Renderer* renderer = new Renderer(shader);
@@ -95,11 +96,9 @@ void Game::Run()
 	}
 }
 
-void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader)
+void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader)
 {
-	
 	std::vector<std::shared_ptr<Entity>> map;
-
 
 	std::vector<glm::vec2> colliderShape;
 	colliderShape.push_back({ -2.0f, -1.25f });
@@ -137,19 +136,65 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	tileModels[6] = assetManager->LoadModel("./res/models/tiles/Houses/house_1.obj");
 	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
 	tileModels[8] = assetManager->LoadModel("./res/models/player/attack.dae");
+
 	Model* grassLeaf = assetManager->LoadModel("./res/models/tiles/Grass/Leaf.obj");
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
-	int numberOfGrass = 100;
+	name = "GrassLeaf";
+	int numberOfGrass = grassManager->amount;
+	srand(time(NULL));
+	//grassManager->instanceModels = new glm::mat4[numberOfGrass];
 	for (int i = 0; i < numberOfGrass; i++)
 	{
-		int randomX = rand() % x;
-		int randomY = rand() % y;
-		glm::vec3 pos(x, 0, y);
-		glm::vec3 scale(1, 1, 1);
+		float randomX = rand() % 40 + (rand()% 100)/100.f;
+		if (rand() % 2 == 0)
+			randomX *= -1;
+		float randomY = rand() % 40 + (rand() % 100)/100.f;
+		if (rand() % 2 == 0)
+			randomY *= -1;
+		glm::vec3 pos(randomX, 0, randomY);
+		glm::vec3 scale(0.3, 0.3, 0.3);
 		glm::vec3 rot(0, 0, 0);
-		grassManager->AddParameters(pos, scale, rot);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(pos));
+		model = glm::scale(model, glm::vec3(scale));
+		//grassManager->AddParameters(pos, scale, rot, model);
+		std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+		grassManager->instanceModels[i] = model;
+
+		object->AddComponent<Mesh>();
+		object->GetComponent<Mesh>()->indices = (grassLeaf)->GetMeshes()[0].indices;
+		object->GetComponent<Mesh>()->vertices = (grassLeaf)->GetMeshes()[0].vertices;
+		object->GetComponent<Mesh>()->material = (grassLeaf)->GetMeshes()[0].material;
+		object->GetComponent<Mesh>()->setupMesh();
+		grassManager->m_mesh = object->GetComponent<Mesh>().get();
+		//object->GetComponent<Mesh>()->material->SetShader(grassShader);
+		
 	}
+	std::cout << sizeof(grassManager->instanceModels);
+	grassManager->m_shader = grassShader;
+	glGenBuffers(1, &grassManager->buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, grassManager->buffer);
+	glBufferData(GL_ARRAY_BUFFER, numberOfGrass * sizeof(glm::mat4), &grassManager->instanceModels[0], GL_STATIC_DRAW);
+	unsigned int VAO = grassLeaf->meshes[0].GetVAO();
+	glBindVertexArray(VAO);
+	// set attribute pointers for matrix (4 times vec4)
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
+	glVertexAttribDivisor(6, 1);
+
+	glBindVertexArray(0);
+
 	renderer->RegisterManager(grassManager);
 	//std::cout << "\nX: " << x << " Y: " << y << std::endl;
 	x = 5;
@@ -159,7 +204,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	{
 		for (int j = 0; j < y; j++)
 		{
-			int random = rand()%4;
+			int random = 0;
 			std::ifstream file;
 			if (random == 0)
 			{
@@ -167,7 +212,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				file.open("./res/maps/TileForest.txt");
 				if (!file)
 				{
-					std::cout << "Unable to open file txt";
+					std::cout << "Unable to open TileForest.txt";
 				}
 			}
 			if(random == 1)
@@ -176,7 +221,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				file.open("./res/maps/TileForest2.txt");
 				if (!file)
 				{
-					std::cout << "Unable to open file txt";
+					std::cout << "Unable to open file Forest2.txt";
 				}
 			}
 			if (random == 2)
@@ -185,7 +230,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				file.open("./res/maps/TileVillage.txt");
 				if (!file)
 				{
-					std::cout << "Unable to open file txt";
+					std::cout << "Unable to open file TileVillage.txt";
 				}
 			}
 			if (random == 3)
@@ -194,7 +239,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				file.open("./res/maps/TileMountain.txt");
 				if (!file)
 				{
-					std::cout << "Unable to open file txt";
+					std::cout << "Unable to open file TileMountain.txt";
 				}
 			}
 			//random++;
@@ -255,7 +300,20 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 
 		}
 	}
+	std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
 
+	object->AddComponent<Transform>();
+	object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0, 0));
+	object->GetComponent<Transform>()->SetLocalScale(glm::vec3(1, 1, 1));
+
+
+	object->AddComponent<Mesh>();
+	object->GetComponent<Mesh>()->indices = (grassLeaf)->GetMeshes()[0].indices;
+	object->GetComponent<Mesh>()->vertices = (grassLeaf)->GetMeshes()[0].vertices;
+	object->GetComponent<Mesh>()->material = (grassLeaf)->GetMeshes()[0].material;
+	object->GetComponent<Mesh>()->setupMesh();
+	physics->RegisterEntity(object);
+	renderer->RegisterEntity(object);
 	//land->GetComponent<Transform>()->SetLocalRotation(glm::vec3(90, 0, 0));
 }
 Model* Game::FindModelByName(Model* array[], std::string name)
@@ -278,6 +336,8 @@ Model* Game::FindModelByName(Model* array[], std::string name)
 		return array[7];
 	else if (name == "Enemy")
 		return array[8];
+	else if (name == "GrassLeaf")
+		return array[9];
 }
 
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem)
@@ -286,6 +346,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
+	Shader* grassShader = new Shader("./res/shaders/grass.vert", "./res/shaders/grass.frag");
 	//Shader* light = new Shader("./res/shaders/bassiclight.vert", "./res/shaders/basiclight.frag");
 
 	//Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
@@ -293,7 +354,6 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//player
 	Model* playerAttack = assetManager->LoadModel("./res/models/player/attack.dae");
 	Model* playerRun = assetManager->LoadModel("./res/models/player/run.dae");
-	
 
 	//Camera object
 	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
@@ -362,7 +422,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
-	LoadMap(renderer, assetManager, physics, shadera);
+	LoadMap(renderer, assetManager, physics, shadera, grassShader);
 	//player's weapon ! -> it should be spawned in player's script imo
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();
@@ -375,6 +435,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	gameLogic->RegisterEntity(weapon);
 	physics->RegisterEntity(weapon);
+
+
 	//renderer->RegisterEntity(weapon);
 
 	character->GetComponent<Player>()->weapon = weapon->GetComponent<Weapon>();
