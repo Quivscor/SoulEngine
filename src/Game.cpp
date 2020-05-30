@@ -472,12 +472,20 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();
 	weapon->GetComponent<Transform>()->SetParent(character->GetComponent<Transform>());
-	weapon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 11.0f));
+	weapon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 6.0f));
+
+	colliderShape.clear();
+	colliderShape.push_back({ -6.0f, -5.0f });
+	colliderShape.push_back({ -6.0f, 18.0f });
+	colliderShape.push_back({ 6.0f, 18.0f });
+	colliderShape.push_back({ 6.0f, -5.0f });
+
 	weapon->AddComponent<Collider>();
 	weapon->GetComponent<Collider>()->SetShape(colliderShape);
 	weapon->GetComponent<Collider>()->isTrigger = true;
 	weapon->AddComponent<Weapon>();
 
+	renderer->RegisterEntity(weapon);
 	gameLogic->RegisterEntity(weapon);
 	physics->RegisterEntity(weapon);
 
