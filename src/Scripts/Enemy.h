@@ -34,8 +34,10 @@ protected:
 
 private:
 	void Move();
+	void Attack();
 	void ChangeAnimation(EnemyAnimationType type);
 	void CalculateRotation();
 
 	bool isTriggered = false;
+	float minimumDistanceToPlayer = 2.0f;
 };

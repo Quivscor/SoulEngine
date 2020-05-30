@@ -13,15 +13,25 @@ void Enemy::Update()
 {
 	if (isTriggered)
 	{
-		Move();
+		float distance = glm::sqrt(glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().x - playerPosition->GetGlobalPosition().x, 2) + glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().z - playerPosition->GetGlobalPosition().z, 2));
+
+		CalculateRotation();
+
+		if (distance > minimumDistanceToPlayer)
+			Move();
+		else
+			Attack();
 	}
+}
+
+void Enemy::Attack()
+{
+	ChangeAnimation(EnemyAnimationAttack);
 }
 
 void Enemy::Move()
 {
 	ChangeAnimation(EnemyAnimationRun);
-
-	CalculateRotation();
 
 	thisEntity->GetComponent<Transform>()->GetParent()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 22.0f);
 }
