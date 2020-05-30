@@ -16,6 +16,7 @@
 #include "Scripts/Character.h"
 #include "Scripts/WeaponOnTheGround.h"
 #include "Scripts/Water.h"
+#include "Scripts/Village.h"
 #include "InstanceManager.h"
 #include <time.h>
 #include <fstream>
@@ -97,7 +98,7 @@ void Game::Run()
 	}
 }
 
-void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader)
+void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader, GameLogic* gameLogic)
 {
 	std::vector<std::shared_ptr<Entity>> map;
 
@@ -127,7 +128,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	int x = rand() % 7 + 5;
 	int y = rand() % 7 + 5;
 	std::string name;
-	Model* tileModels[9];
+	Model* tileModels[13];
 	tileModels[0] = assetManager->LoadModel("./res/models/tiles/Grass/Grass.obj");
 	tileModels[1] = assetManager->LoadModel("./res/models/tiles/Tree/Tree.obj");
 	tileModels[2] = assetManager->LoadModel("./res/models/tiles/Tree/Birch.obj");
@@ -136,9 +137,16 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	tileModels[5] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock3.obj");
 	tileModels[6] = assetManager->LoadModel("./res/models/tiles/Houses/house_1.obj");
 	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
-	tileModels[8] = assetManager->LoadModel("./res/models/player/attack.dae");
+	tileModels[8] = assetManager->LoadModel("./res/models/player/player_idle.dae");
+	tileModels[9] = assetManager->LoadModel("./res/models/player/player_idle.dae");
+	tileModels[10] = assetManager->LoadModel("./res/models/player/player_run.dae");
+	tileModels[11] = assetManager->LoadModel("./res/models/player/player_attack.dae");
+	tileModels[12] = assetManager->LoadModel("./res/models/player/player_death.dae");
+
+	Shader* shaderForEnemy = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 
 	Model* grassLeaf = assetManager->LoadModel("./res/models/tiles/Grass/Leaf.obj");
+
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
 	name = "GrassLeaf";
@@ -252,6 +260,20 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 			renderer->RegisterEntity(tile);
 			physics->RegisterEntity(tile);
 
+			if (random == 2)
+			{
+				//std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+
+				//object->AddComponent<Transform>();
+				//object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
+				//object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+				//object->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+				tile->AddComponent<Village>();
+				//physics->RegisterEntity(object);
+				gameLogic->RegisterEntity(tile);
+			}
+
 			while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])
 			{
 				//std::cout << "\nName: " + name;
@@ -290,6 +312,27 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 					object->GetComponent<Collider>()->SetShape(characterCollider);
 					object->GetComponent<Collider>()->isStatic = true;
 					object->AddComponent<Character>();
+
+					object->layer = EnemyLayer;
+					
+					//container for Enemy script
+					std::shared_ptr<Entity> enemy = m_EntityManager->CreateEntity<Entity>();
+					enemy->AddComponent<Transform>();
+					enemy->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
+					enemy->AddComponent<Enemy>();
+					enemy->GetComponent<Enemy>()->animationIdle = FindModelByName(tileModels, "EnemyIdle");
+					enemy->GetComponent<Enemy>()->animationRun = FindModelByName(tileModels, "EnemyRun");
+					enemy->GetComponent<Enemy>()->animationAttack = FindModelByName(tileModels, "EnemyAttack");
+					enemy->GetComponent<Enemy>()->animationDeath = FindModelByName(tileModels, "EnemyDeath");
+					enemy->GetComponent<Enemy>()->shader = shaderForEnemy;
+
+					gameLogic->RegisterEntity(enemy);
+					physics->RegisterEntity(enemy);
+
+					if (random == 2)
+					{
+						tile->GetComponent<Village>()->enemiesInVillage.push_back(enemy->GetComponent<Enemy>());
+					}
 				}
 
 				map.push_back(object);
@@ -297,6 +340,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				renderer->RegisterEntity(object);
 				
 			}
+
 			file.close();
 			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(i*16,0,j*16));
 
@@ -323,8 +367,16 @@ Model* Game::FindModelByName(Model* array[], std::string name)
 		return array[7];
 	else if (name == "Enemy")
 		return array[8];
-	else if (name == "GrassLeaf")
+	else if (name == "EnemyIdle")
 		return array[9];
+	else if (name == "EnemyRun")
+		return array[10];
+	else if (name == "EnemyAttack")
+		return array[11];
+	else if (name == "EnemyDeath")
+		return array[12];
+	else if (name == "GrassLeaf")
+		return array[13];
 }
 
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem)
@@ -406,6 +458,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->animationRoll = playerRoll;
 	character->GetComponent<Player>()->animationDeath = playerDeath;
 	character->GetComponent<Player>()->shader = shadera;
+	character->layer = PlayerLayer;
 
 
 	gameLogic->RegisterEntity(character);
@@ -415,7 +468,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
-	LoadMap(renderer, assetManager, physics, shadera, grassShader);
+	LoadMap(renderer, assetManager, physics, shadera, grassShader, gameLogic);
 	//player's weapon ! -> it should be spawned in player's script imo
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();

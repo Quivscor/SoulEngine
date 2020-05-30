@@ -197,6 +197,14 @@ void Transform::SetParent(std::shared_ptr<Transform> parent)
 	m_Parent = parent;
 }
 
+std::shared_ptr<Transform> Transform::GetParent()
+{
+	if (m_Parent != NULL)
+		return m_Parent;
+	else
+		return nullptr;
+}
+
 glm::vec3 Transform::GetMoveVector()
 {
 	return moveVector;

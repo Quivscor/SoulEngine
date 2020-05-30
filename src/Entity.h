@@ -1,6 +1,13 @@
 #pragma once
 #include "ComponentManager.h"
 
+enum Layer
+{
+	DefaultLayer,
+	PlayerLayer,
+	EnemyLayer
+};
+
 class Entity
 {
 public:
@@ -23,6 +30,7 @@ public:
 	}
 
 	bool isActive = true;
+	Layer layer = DefaultLayer;
 
 	/*template <typename T>
 	std::vector<std::shared_ptr<T>> GetComponents()

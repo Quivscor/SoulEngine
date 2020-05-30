@@ -147,6 +147,9 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 	if (!col1->enabled || !col2->enabled)
 		return true;
 
+	if (EntityManager::GetInstance()->GetEntity(col1->GetOwnerID())->layer == EntityManager::GetInstance()->GetEntity(col2->GetOwnerID())->layer == EnemyLayer)
+		return true;
+
 	Collider* col1ref = col1.get();
 	Collider* col2ref = col2.get();
 
