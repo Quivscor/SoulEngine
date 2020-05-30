@@ -21,7 +21,50 @@ void Enemy::Move()
 {
 	ChangeAnimation(EnemyAnimationRun);
 
+	CalculateRotation();
+
 	thisEntity->GetComponent<Transform>()->GetParent()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 22.0f);
+}
+
+void Enemy::CalculateRotation()
+{
+	int diffUD = thisEntity->GetComponent<Transform>()->GetGlobalPosition().z - playerPosition->GetGlobalPosition().z;
+	int diffLR = thisEntity->GetComponent<Transform>()->GetGlobalPosition().x - playerPosition->GetGlobalPosition().x;
+
+	if (diffLR < 0)
+		diffLR = 1;
+	else if (diffLR > 0)
+		diffLR = -1;
+	else
+		diffLR = 0;
+
+	if (diffUD < 0)
+		diffUD = -1;
+	else if (diffUD > 0)
+		diffUD = 1;
+	else
+		diffUD = 0;
+
+	float finalRotation = 0;
+
+	if (diffUD != 0)
+	{
+		finalRotation = 90 + 90 * diffUD;
+
+		if (diffLR != 0)
+		{
+			if (finalRotation == 180)
+				finalRotation -= 45 * diffLR;
+			else
+				finalRotation += 45 * diffLR;
+		}
+	}
+	else if (diffLR != 0)
+	{
+		finalRotation = 90 * diffLR;
+	}
+
+	thisEntity->GetComponent<Transform>()->GetParent()->SetLocalRotation(glm::vec3(0, finalRotation, 0));
 }
 
 void Enemy::ChangeAnimation(EnemyAnimationType type)

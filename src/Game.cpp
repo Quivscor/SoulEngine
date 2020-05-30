@@ -310,7 +310,6 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 
 					object->AddComponent<Collider>();
 					object->GetComponent<Collider>()->SetShape(characterCollider);
-					object->GetComponent<Collider>()->isStatic = true;
 					object->AddComponent<Character>();
 
 					object->layer = EnemyLayer;

@@ -35,6 +35,7 @@ protected:
 private:
 	void Move();
 	void ChangeAnimation(EnemyAnimationType type);
+	void CalculateRotation();
 
 	bool isTriggered = false;
 };
