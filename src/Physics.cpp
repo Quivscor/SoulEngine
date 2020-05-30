@@ -150,6 +150,11 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 	if (EntityManager::GetInstance()->GetEntity(col1->GetOwnerID())->layer == EnemyLayer && EntityManager::GetInstance()->GetEntity(col2->GetOwnerID())->layer == EnemyLayer)
 		return true;
 
+	float distance = glm::sqrt(glm::pow(trns1->GetGlobalPosition().x - trns2->GetGlobalPosition().x, 2) + glm::pow(trns1->GetGlobalPosition().z - trns2->GetGlobalPosition().z, 2));
+
+	if (distance > 10.0f)
+		return true;
+
 	Collider* col1ref = col1.get();
 	Collider* col2ref = col2.get();
 
