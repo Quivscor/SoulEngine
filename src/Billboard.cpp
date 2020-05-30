@@ -3,22 +3,9 @@
 #include "stb_image.h"
 
 
-Billboard::Billboard()
+Billboard::Billboard(char* imagepath, bool x)
 {
-
-	
-}
-//const char* imagepath = "./res/textures/ExampleBillboard.DDS";
-Billboard::~Billboard()
-{
-	
-}
-
-void Billboard::Draw(char* imagepath, std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size ,bool x)
-{
-
 	shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
-
 	static const GLfloat g_vertex_buffer_data[] = {
  -0.5f, -0.5f, 0.0f,
   0.5f, -0.5f, 0.0f,
@@ -44,9 +31,9 @@ void Billboard::Draw(char* imagepath, std::shared_ptr<Entity>  camera, glm::vec3
 	);
 	if (x)
 	{
+
 		Texture = loadDDS(imagepath);
 	}
-
 	else
 	{
 		glGenTextures(1, &Texture);
@@ -66,6 +53,26 @@ void Billboard::Draw(char* imagepath, std::shared_ptr<Entity>  camera, glm::vec3
 		}
 		stbi_image_free(data);
 	}
+	// char* imagepath = "./res/textures/stone.jpg";
+	//
+	
+}
+//const char* imagepath = "./res/textures/ExampleBillboard.DDS";
+Billboard::~Billboard()
+{
+	
+	glDeleteBuffers(1, &billboard_vertex_buffer);
+	glDeleteVertexArrays(1, &vao);
+	glDeleteProgram(shaderbil->ID);
+	Texture = NULL;
+}
+
+void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size )
+{
+
+	
+	
+	
 	glDepthFunc(GL_ALWAYS);
 
 	int w = 1280, h = 720; //fix later
@@ -110,10 +117,11 @@ void Billboard::Draw(char* imagepath, std::shared_ptr<Entity>  camera, glm::vec3
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glDeleteBuffers(1, &billboard_vertex_buffer);
-	glDeleteVertexArrays(1, &vao);
-	glDeleteProgram(shaderbil->ID);
+	
 	glDepthFunc(GL_LESS);
+
+	//delete this; //freed memory
+	
 }
 GLuint Billboard::loadDDS(const char* imagepath)
 {

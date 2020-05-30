@@ -13,6 +13,7 @@
 
 //#include "Model.h"
 //class Mesh;
+class Billboard;
 class Collider;
 //class Model;
 class Renderer : public System
@@ -32,7 +33,8 @@ public:
 	std::vector <int> test;
 
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
-
+	Billboard *box, *box2;
+	
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
 	bool debugMode = false;

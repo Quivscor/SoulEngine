@@ -20,6 +20,7 @@
 #include <time.h>
 #include <fstream>
 #include <iostream>
+#include<Billboard.h>
 
 Game::Game() {}
 
@@ -250,6 +251,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 			map.push_back(tile);
 			renderer->RegisterEntity(tile);
 			physics->RegisterEntity(tile);
+
 			while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])
 			{
 				//std::cout << "\nName: " + name;
