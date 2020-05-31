@@ -138,7 +138,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
 	tileModels[8] = assetManager->LoadModel("./res/models/player/attack.dae");
 
-	Model* grassLeaf = assetManager->LoadModel("./res/models/tiles/Grass/Leaf.obj");
+	Model* grassLeaf = assetManager->LoadModel("./res/models/tiles/Grass/GrassFromGalapagos.obj");
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
 	name = "GrassLeaf";
@@ -154,7 +154,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 		if (rand() % 2 == 0)
 			randomY *= -1;
 		glm::vec3 pos(randomX, 0, randomY);
-		glm::vec3 scale(0.3, 0.3, 0.3);
+		glm::vec3 scale(0.05, 0.3, 0.05);
 		glm::vec3 rot(0, 0, 0);
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(pos));
@@ -298,6 +298,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				
 			}
 			file.close();
+			
 			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(i*16,0,j*16));
 
 		}
