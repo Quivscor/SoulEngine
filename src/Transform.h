@@ -33,6 +33,7 @@ public:
 	glm::vec3 GetLocalRight();
 
 	void SetParent(std::shared_ptr<Transform> parent);
+	std::shared_ptr<Transform> GetParent();
 
 	virtual ComponentType GetComponentType() const override { return ComponentType::TransformComponent; }
 

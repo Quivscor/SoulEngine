@@ -1,6 +1,7 @@
 #pragma once
 #include "ScriptableObject.h"
 #include "WeaponOnTheGround.h"
+#include "Enemy.h"
 
 class Weapon : public ScriptableObject
 {

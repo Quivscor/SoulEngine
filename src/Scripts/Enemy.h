@@ -1,12 +1,43 @@
 #pragma once
-#include "Character.h"
+#include "ScriptableObject.h"
+#include "Model.h"
 
-class Enemy : public Character
+enum EnemyAnimationType
 {
+	EnemyAnimationIdle,
+	EnemyAnimationRun,
+	EnemyAnimationAttack,
+	EnemyAnimationDeath
+};
+
+class Enemy : public ScriptableObject
+{
+	friend class Village;
+
 public:
 	Enemy();
 	~Enemy();
 
-protected:
+	std::shared_ptr<Transform> playerPosition;
 
+	Shader* shader;
+
+	Model* currentAnimation;
+	Model* animationIdle;
+	Model* animationAttack;
+	Model* animationRun;
+	Model* animationDeath;
+
+protected:
+	virtual void Start() override;
+	virtual void Update() override;
+
+private:
+	void Move();
+	void Attack();
+	void ChangeAnimation(EnemyAnimationType type);
+	void CalculateRotation();
+
+	bool isTriggered = false;
+	float minimumDistanceToPlayer = 2.0f;
 };
