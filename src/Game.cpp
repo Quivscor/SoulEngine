@@ -398,10 +398,22 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	
 	//player
-	Model* playerIdle = assetManager->LoadModel("./res/models/player/player_idle.dae");
-	Model* playerAttack = assetManager->LoadModel("./res/models/player/player_attack.dae");
-	Model* playerRun = assetManager->LoadModel("./res/models/player/player_run.dae");
-	Model* playerRoll = assetManager->LoadModel("./res/models/player/player_roll.dae");
+	//sword
+	Model* playerSwordIdle = assetManager->LoadModel("./res/models/player/sword/player_idle_sword.dae");
+	Model* playerSwordAttack = assetManager->LoadModel("./res/models/player/sword/player_attack_sword.dae");
+	Model* playerSwordRun = assetManager->LoadModel("./res/models/player/sword/player_run_sword.dae");
+	Model* playerSwordRoll = assetManager->LoadModel("./res/models/player/sword/player_roll_sword.dae");
+	//axe
+	Model* playerAxeIdle = assetManager->LoadModel("./res/models/player/axe/player_idle_axe.dae");
+	Model* playerAxeAttack = assetManager->LoadModel("./res/models/player/axe/player_attack_axe.dae");
+	Model* playerAxeRun = assetManager->LoadModel("./res/models/player/axe/player_run_axe.dae");
+	Model* playerAxeRoll = assetManager->LoadModel("./res/models/player/axe/player_roll_axe.dae");
+	//mace
+	Model* playerMaceIdle = assetManager->LoadModel("./res/models/player/mace/player_idle_mace.dae");
+	Model* playerMaceAttack = assetManager->LoadModel("./res/models/player/mace/player_attack_mace.dae");
+	Model* playerMaceRun = assetManager->LoadModel("./res/models/player/mace/player_run_mace.dae");
+	Model* playerMaceRoll = assetManager->LoadModel("./res/models/player/mace/player_roll_mace.dae");
+
 	Model* playerDeath = assetManager->LoadModel("./res/models/player/player_death.dae");
 
 	//Camera object
@@ -451,18 +463,26 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->AddComponent<Mesh>();
 	character->AddComponent<Model>();
 
-	character->GetComponent<Model>()->UseModel(playerRun);
-	character->GetComponent<Mesh>()->SetAll(playerRun->GetMeshes()[0]);
+	character->GetComponent<Model>()->UseModel(playerSwordIdle);
+	character->GetComponent<Mesh>()->SetAll(playerSwordIdle->GetMeshes()[0]);
 	character->GetComponent<Mesh>()->setupMeshfBones();
 
 	character->GetComponent<Mesh>()->material->SetShader(shadera);
 
 	character->AddComponent<Player>();
 	character->GetComponent<Player>()->inputHandler = inputSystem;
-	character->GetComponent<Player>()->animationRun = playerRun;
-	character->GetComponent<Player>()->animationAttack = playerAttack;
-	character->GetComponent<Player>()->animationIdle = playerIdle;
-	character->GetComponent<Player>()->animationRoll = playerRoll;
+	character->GetComponent<Player>()->animationSwordRun = playerSwordRun;
+	character->GetComponent<Player>()->animationSwordAttack = playerSwordAttack;
+	character->GetComponent<Player>()->animationSwordIdle = playerSwordIdle;
+	character->GetComponent<Player>()->animationSwordRoll = playerSwordRoll;
+	character->GetComponent<Player>()->animationAxeRun = playerAxeRun;
+	character->GetComponent<Player>()->animationAxeAttack = playerAxeAttack;
+	character->GetComponent<Player>()->animationAxeIdle = playerAxeIdle;
+	character->GetComponent<Player>()->animationAxeRoll = playerAxeRoll;
+	character->GetComponent<Player>()->animationMaceRun = playerMaceRun;
+	character->GetComponent<Player>()->animationMaceAttack = playerMaceAttack;
+	character->GetComponent<Player>()->animationMaceIdle = playerMaceIdle;
+	character->GetComponent<Player>()->animationMaceRoll = playerMaceRoll;
 	character->GetComponent<Player>()->animationDeath = playerDeath;
 	character->GetComponent<Player>()->shader = shadera;
 	character->layer = PlayerLayer;

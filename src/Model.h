@@ -30,6 +30,8 @@ public:
 	void initShaders(Shader *shader_program);
 	void UseModel(Model* model);
 
+	float animSpeedModifier = 1.0f;
+
 	std::vector<Mesh> meshes;
 	double time = 0;
 private:

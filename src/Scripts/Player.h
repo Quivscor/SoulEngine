@@ -25,10 +25,24 @@ public:
 
 	Shader* shader;
 
-	Model* animationIdle;
-	Model* animationRun;
-	Model* animationAttack;
-	Model* animationRoll;
+	//sword
+	Model* animationSwordIdle;
+	Model* animationSwordRun;
+	Model* animationSwordAttack;
+	Model* animationSwordRoll;
+
+	//axe
+	Model* animationAxeIdle;
+	Model* animationAxeRun;
+	Model* animationAxeAttack;
+	Model* animationAxeRoll;
+
+	//mace
+	Model* animationMaceIdle;
+	Model* animationMaceRun;
+	Model* animationMaceAttack;
+	Model* animationMaceRoll;
+
 	Model* animationDeath;
 
 protected:
@@ -54,7 +68,7 @@ private:
 	bool isAttacking = false;
 	bool isRolling = false;
 
-	float attackTime = 1.0f;
+	float attackTime = 0.5f;
 	float currentAttackTime = 0.0f;
 
 	float rollTime = 1.0f;

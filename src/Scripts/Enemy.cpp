@@ -15,10 +15,11 @@ void Enemy::Update()
 	{
 		float distance = glm::sqrt(glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().x - playerPosition->GetGlobalPosition().x, 2) + glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().z - playerPosition->GetGlobalPosition().z, 2));
 
-		CalculateRotation();
-
 		if (distance > minimumDistanceToPlayer)
+		{
+			CalculateRotation();
 			Move();
+		}
 		else
 			Attack();
 	}

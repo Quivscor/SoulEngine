@@ -59,6 +59,7 @@ void Model::UseModel(Model* model)
 	this->m_num_bones = model->m_num_bones;
 	this->ticks_per_second = model->ticks_per_second;
 	this->time = model->time;
+	this->animSpeedModifier = model->animSpeedModifier;
 	
 }
 
@@ -73,7 +74,8 @@ void Model::ChangeBonePositions()
 		
 		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
 	}
-	time += TimeCustom::GetDeltaTime();
+
+	time += TimeCustom::GetDeltaTime() * animSpeedModifier;
 
 }
 
