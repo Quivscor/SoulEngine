@@ -210,6 +210,12 @@ void Player::ChangeAnimation(AnimationType type)
 
 	model->time = 0;
 
+	if (model == animationAttack)
+		model->animSpeedModifier = 2.0f;
+	else
+		model->animSpeedModifier = 1.0f;
+
+
 	currentAnimation = model;
 
 	thisEntity->GetComponent<Model>()->UseModel(model);
