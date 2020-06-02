@@ -7,7 +7,11 @@
 #include "TimeCustom.h"
 #include "InputHandler.h"
 #include "Collider.h"
+#include "AudioMaster.h"
+#include "Listener.h"
+#include "Source.h"
 #include "MapLoader.h"
+
 #include "Scripts/ColorChanger.h"
 #include "Scripts/HelloTriggers.h"
 #include "Scripts/CameraFollow.h"
@@ -57,9 +61,10 @@ void Game::Run()
 	Physics* physics = new Physics();
 	InputSystem* inputSystem = new InputSystem();
 	GameLogic* gameLogic = new GameLogic();
-
-
-
+	AudioMaster audioMaster;
+	Source source;
+	
+	Listener listener;
 	//Input register test
 	std::shared_ptr<Entity> inputHandler = m_EntityManager->CreateEntity<Entity>();
 	inputHandler->AddComponent<InputHandler>();
@@ -68,11 +73,12 @@ void Game::Run()
 	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler);
 
 	gameLogic->Start();
-
+	source.Play(audioMaster.GenBuffer("./res/sound/drunken_sailor.wav"));
 	//---------------------------------------------------------------------------------
 
 	while (true)
 	{
+		
 		//physics->FixedUpdate();
 		TimeCustom::RunTimer();
 		//double start = glfwGetTime();
