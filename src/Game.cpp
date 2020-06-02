@@ -73,7 +73,9 @@ void Game::Run()
 	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler);
 
 	gameLogic->Start();
-	source.Play(audioMaster.GenBuffer("./res/sound/drunken_sailor.wav"));
+	
+	source.Play(audioMaster.GenBuffer("./res/sound/VikingMusic.wav"));
+	source.SetVolume(0.1f);
 	//---------------------------------------------------------------------------------
 
 	while (true)
