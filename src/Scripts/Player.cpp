@@ -14,7 +14,7 @@ void Player::Start()
 {
 	thisEntity->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0, 0, 0));
 
-	currentAnimation = animationIdle;
+	currentAnimation = animationSwordIdle;
 }
 
 void Player::Update()
@@ -117,7 +117,7 @@ void Player::Move()
 
 	CalculateRotation();
 
-	if (currentAnimation != animationRun && !isRolling)
+	if (currentAnimation != animationSwordRun && currentAnimation != animationAxeRun && currentAnimation != animationMaceRun && !isRolling)
 		ChangeAnimation(PlayerAnimationRun);
 
 	thisEntity->GetComponent<Transform>()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 25.0f * (isRolling == true ? 1.5f : 1.0f));
@@ -164,6 +164,19 @@ void Player::Swap()
 	weaponTmp.reset();
 
 	weaponInRange->UpdateWeapon();
+
+	AnimationType animToSet;
+
+	if (isAttacking)
+		animToSet = PlayerAnimationAttack;
+	else if (isRolling)
+		animToSet = PlayerAnimationRoll;
+	else if (isMoving)
+		animToSet = PlayerAnimationRun;
+	else
+		animToSet = PlayerAnimationIdle;
+
+	ChangeAnimation(animToSet);
 }
 
 void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
@@ -182,35 +195,89 @@ void Player::ChangeAnimation(AnimationType type)
 {
 	Model* model = nullptr;
 
-	switch (type)
+	if (weapon->GetWeapon()->model.type == Sword)
 	{
-	case PlayerAnimationIdle:
-		model = animationIdle;
-		break;
+		switch (type)
+		{
+		case PlayerAnimationIdle:
+			model = animationSwordIdle;
+			break;
 
-	case PlayerAnimationRun:
-		model = animationRun;
-		break;
+		case PlayerAnimationRun:
+			model = animationSwordRun;
+			break;
 
-	case PlayerAnimationAttack:
-		model = animationAttack;
-		break;
+		case PlayerAnimationAttack:
+			model = animationSwordAttack;
+			break;
 
-	case PlayerAnimationRoll:
-		model = animationRoll;
-		break;
+		case PlayerAnimationRoll:
+			model = animationSwordRoll;
+			break;
 
-	case PlayerAnimationDeath:
-		model = animationDeath;
-		break;
+		case PlayerAnimationDeath:
+			model = animationDeath;
+			break;
+		}
 	}
+	else if (weapon->GetWeapon()->model.type == Axe)
+	{
+		switch (type)
+		{
+		case PlayerAnimationIdle:
+			model = animationAxeIdle;
+			break;
+
+		case PlayerAnimationRun:
+			model = animationAxeRun;
+			break;
+
+		case PlayerAnimationAttack:
+			model = animationAxeAttack;
+			break;
+
+		case PlayerAnimationRoll:
+			model = animationAxeRoll;
+			break;
+
+		case PlayerAnimationDeath:
+			model = animationDeath;
+			break;
+		}
+	}
+	else if (weapon->GetWeapon()->model.type == Mace)
+	{
+		switch (type)
+		{
+		case PlayerAnimationIdle:
+			model = animationMaceIdle;
+			break;
+
+		case PlayerAnimationRun:
+			model = animationMaceRun;
+			break;
+
+		case PlayerAnimationAttack:
+			model = animationMaceAttack;
+			break;
+
+		case PlayerAnimationRoll:
+			model = animationMaceRoll;
+			break;
+
+		case PlayerAnimationDeath:
+			model = animationDeath;
+			break;
+		}
+	}
+
 
 	if (currentAnimation == model)
 		return;
 
 	model->time = 0;
 
-	if (model == animationAttack)
+	if (model == animationSwordAttack || model == animationAxeAttack || model == animationMaceAttack)
 		model->animSpeedModifier = 2.0f;
 	else
 		model->animSpeedModifier = 1.0f;
