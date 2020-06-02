@@ -78,5 +78,7 @@ private:
 	short movingFB = 0; //moving forward/backward
 	short movingLR = 0; //moving left/right
 
+	float attackSpeed = 2.0f;
+
 	Model* currentAnimation;
 };

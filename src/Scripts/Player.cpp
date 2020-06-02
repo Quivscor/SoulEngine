@@ -165,6 +165,12 @@ void Player::Swap()
 
 	weaponInRange->UpdateWeapon();
 
+	attackSpeed = weapon->GetWeapon()->bonusSpeed;
+	attackTime = 0.5f - ((attackSpeed - 2.0f) / 4.0f);
+
+	std::cout << "Attack speed: " << attackSpeed << std::endl;
+	std::cout << "Attack time: " << attackTime << std::endl;
+
 	AnimationType animToSet;
 
 	if (isAttacking)
@@ -278,7 +284,7 @@ void Player::ChangeAnimation(AnimationType type)
 	model->time = 0;
 
 	if (model == animationSwordAttack || model == animationAxeAttack || model == animationMaceAttack)
-		model->animSpeedModifier = 2.0f;
+		model->animSpeedModifier = attackSpeed;
 	else
 		model->animSpeedModifier = 1.0f;
 

@@ -29,7 +29,7 @@ std::shared_ptr<WeaponStats> WeaponFactory::GetWeapon()
 	WeaponStats newWeapon;
 	newWeapon.model = weapons[rand() % weapons.size()];
 	newWeapon.bonusDamage = rand() % 50;
-	newWeapon.bonusOther = rand() % 50;
+	newWeapon.bonusSpeed = ((rand() % 100) / 100.0f) + 2.0f;
 
 	return std::make_shared<WeaponStats>(newWeapon);
 }
@@ -46,7 +46,7 @@ std::shared_ptr<WeaponStats> WeaponFactory::GetDefaultWeapon()
 			newWeapon.model = weapons[i];
 	
 	newWeapon.bonusDamage = 0;
-	newWeapon.bonusOther = 0;
+	newWeapon.bonusSpeed = 2.0f;
 
 	return std::make_shared<WeaponStats>(newWeapon);
 }
