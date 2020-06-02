@@ -73,7 +73,7 @@ void Game::Run()
 	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler);
 
 	gameLogic->Start();
-	
+	source.SetLooping(true);
 	source.Play(audioMaster.GenBuffer("./res/sound/VikingMusic.wav"));
 	source.SetVolume(0.1f);
 	//---------------------------------------------------------------------------------

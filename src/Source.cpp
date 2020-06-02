@@ -25,8 +25,15 @@ void Source::Pause()
 	paused = !paused;
 }
 
+void Source::SetLooping(bool isLooped)
+{
+	// defualt is not looping
+	alSourcei(sourceId, AL_LOOPING, isLooped);
+}
+
 void Source::SetVolume(float volume)
 {
+	// 1.0 is default, 0 is silence
 	alSourcef(sourceId, AL_GAIN, volume);
 }
 
