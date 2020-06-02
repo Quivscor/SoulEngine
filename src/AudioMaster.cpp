@@ -3,8 +3,8 @@
 
 AudioMaster::AudioMaster()
 {
-	device = alcOpenDevice(NULL);
-	if (device)
+	device = alcOpenDevice(NULL); // defualt implementation 
+	if(device)
 	{
 		context = alcCreateContext(device, NULL);
 		alcMakeContextCurrent(context);
@@ -26,7 +26,7 @@ void AudioMaster::Init()
 ALuint AudioMaster::GenBuffer(const char *name)
 {
 	FILE *fp = NULL;
-	fp = fopen(name, "rb");
+	fp = fopen(name, "rb"); //  r - read, b - binary mode
 	if (fp == NULL)
 		return -1;
 
@@ -37,10 +37,10 @@ ALuint AudioMaster::GenBuffer(const char *name)
 	short bytesPerSample, bitsPerSample;
 	DWORD dataSize;
 
-	fread(type, sizeof(char), 4, fp); //RIFF
+	fread(type, sizeof(char), 4, fp); //RIFF header
 	fread(&size, sizeof(DWORD), 1, fp);
-	fread(type, sizeof(char), 4, fp); //WAVE
-	fread(type, sizeof(char), 4, fp); //fmt
+	fread(type, sizeof(char), 4, fp); //WAVE 
+	fread(type, sizeof(char), 4, fp); //fmt - sub chunk of WAVE, specyfing the data
 
 	fread(&chunkSize, sizeof(DWORD), 1, fp);
 	fread(&formatType, sizeof(short), 1, fp);
@@ -79,7 +79,6 @@ ALuint AudioMaster::GenBuffer(const char *name)
 		else if (channels == 2)
 			format = AL_FORMAT_STEREO16;
 	}
-	//format = AL_FORMAT_MONO16;
 
 	alBufferData(buffer, format, buf, dataSize, frequency);
 

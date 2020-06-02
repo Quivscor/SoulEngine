@@ -9,7 +9,7 @@ public:
 	void Play(ALuint);
 	void SetVolume(float);
 	void Pause();
-
+	void SetLooping(bool);
 	bool paused;
 private:
 	ALuint sourceId;
