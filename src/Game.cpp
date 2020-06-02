@@ -398,10 +398,10 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
 	
 	//player
-	Model* playerIdle = assetManager->LoadModel("./res/models/player/player_idle.dae");
-	Model* playerAttack = assetManager->LoadModel("./res/models/player/player_attack.dae");
-	Model* playerRun = assetManager->LoadModel("./res/models/player/player_run.dae");
-	Model* playerRoll = assetManager->LoadModel("./res/models/player/player_roll.dae");
+	Model* playerIdle = assetManager->LoadModel("./res/models/player/axe/player_idle_axe.dae");
+	Model* playerAttack = assetManager->LoadModel("./res/models/player/axe/player_attack_axe.dae");
+	Model* playerRun = assetManager->LoadModel("./res/models/player/axe/player_run_axe.dae");
+	Model* playerRoll = assetManager->LoadModel("./res/models/player/axe/player_roll_axe.dae");
 	Model* playerDeath = assetManager->LoadModel("./res/models/player/player_death.dae");
 
 	//Camera object
