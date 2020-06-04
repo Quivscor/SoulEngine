@@ -75,7 +75,22 @@ void Enemy::CalculateRotation()
 		finalRotation = 90 * diffLR;
 	}
 
-	thisEntity->GetComponent<Transform>()->GetParent()->SetLocalRotation(glm::vec3(0, finalRotation, 0));
+	glm::vec3 currentRotation = thisEntity->GetComponent<Transform>()->GetParent()->GetGlobalRotation();
+
+	float distanceIncreased = glm::abs(currentRotation.y + 360 - finalRotation);
+	float distanceDecreased = glm::abs(currentRotation.y - 360 - finalRotation);
+	float originalDistanse = glm::abs(currentRotation.y - finalRotation);
+
+	if (distanceIncreased < originalDistanse || distanceDecreased < originalDistanse)
+	{
+		if (distanceDecreased < distanceIncreased)
+			currentRotation.y -= 360;
+		else
+			currentRotation.y += 360;
+	}
+
+	glm::vec3 rotation = glm::mix(currentRotation, glm::vec3(0, finalRotation, 0), TimeCustom::GetDeltaTime() * 5.0f);
+	thisEntity->GetComponent<Transform>()->GetParent()->SetLocalRotation(rotation);
 }
 
 void Enemy::ChangeAnimation(EnemyAnimationType type)
