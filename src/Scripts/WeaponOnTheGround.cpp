@@ -44,6 +44,12 @@ void WeaponOnTheGround::Start()
 	thisEntity->GetComponent<Mesh>()->setupMesh();
 }
 
+void WeaponOnTheGround::Update()
+{
+	std::cout << "Rotate" << std::endl;
+	thisEntity->GetComponent<Transform>()->Rotate(glm::vec3(0.0f, TimeCustom::GetDeltaTime() * rotatingSpeed, 0.0f));
+}
+
 void WeaponOnTheGround::UpdateWeapon()
 {
 	thisEntity->GetComponent<Mesh>()->indices = weapon->model.model->indices;

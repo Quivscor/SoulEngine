@@ -144,7 +144,22 @@ void Player::CalculateRotation()
 		finalRotation = 90 * movingLR;
 	}
 
-	thisEntity->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0, finalRotation, 0));
+	glm::vec3 currentRotation = thisEntity->GetComponent<Transform>()->GetGlobalRotation();
+
+	float distanceIncreased = glm::abs(currentRotation.y + 360 - finalRotation);
+	float distanceDecreased = glm::abs(currentRotation.y - 360 - finalRotation);
+	float originalDistanse = glm::abs(currentRotation.y - finalRotation);
+
+	if (distanceIncreased < originalDistanse || distanceDecreased < originalDistanse)
+	{
+		if (distanceDecreased < distanceIncreased)
+			currentRotation.y -= 360;
+		else
+			currentRotation.y += 360;
+	}
+
+	glm::vec3 rotation = glm::mix(currentRotation, glm::vec3(0, finalRotation, 0), TimeCustom::GetDeltaTime() * 7.5f);
+	thisEntity->GetComponent<Transform>()->SetLocalRotation(rotation);
 }
 
 void Player::CreateWeapon()

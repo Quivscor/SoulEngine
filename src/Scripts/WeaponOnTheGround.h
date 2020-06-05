@@ -12,6 +12,8 @@ public:
 
 	virtual ComponentType GetComponentType() const override { return ComponentType::WeaponOnTheGroundComponent; }
 	virtual void Start() override;
+	virtual void Update() override;
+
 	std::shared_ptr<WeaponStats> weapon;
 
 	void UpdateWeapon();
