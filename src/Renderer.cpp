@@ -28,7 +28,7 @@ Renderer::Renderer(Shader* shader)
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	lightPos = glm::vec3(25.0f, 2.0f, 25.f);
+	lightPos = glm::vec3(25.0f, 1.0f, 25.f);
 
 }
 
@@ -95,9 +95,9 @@ void Renderer::DrawMeshes() const
 	glm::mat4 lightProjection, lightView;
 	glm::mat4 lightSpaceMatrix;
 	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	lightProjection = glm::ortho(-10.0f, 50.0f, -10.0f, 50.0f, near_plane, far_plane);
+	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
 	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
 
 	lightSpaceMatrix = lightProjection * lightView;
 
@@ -109,16 +109,16 @@ void Renderer::DrawMeshes() const
 	glClear(GL_DEPTH_BUFFER_BIT);
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
-		if (!m_Entities[i]->isActive)
-			continue;
+		/*if (!m_Entities[i]->isActive)
+			continue;*/
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-		if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
+	/*	if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
 		{
 			continue;
-		}
+		}*/
 
 		
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());

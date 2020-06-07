@@ -58,7 +58,7 @@ private:
 	
 	 GLuint depthMap=0;
 	const  float near_plane = 1.0f;
-	const  float far_plane = 15.5f;
+	const  float far_plane = 100.5f;
 
 	//Debug
 	std::shared_ptr<Entity> mainCamera;
