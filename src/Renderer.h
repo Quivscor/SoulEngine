@@ -34,7 +34,10 @@ public:
 
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
 	Billboard *box, *box2;
-	
+	//Shader* shader;
+	glm::vec3 lightPos;
+	Shader* simpleDepthShader;
+	Shader* debugDepthQuad;
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
 	bool debugMode = false;
@@ -49,6 +52,13 @@ private:
 	void DrawFrustum(Frustum frustum) const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
+	const static unsigned int SHADOW_WIDTH = 1024 ;
+	const static unsigned int SHADOW_HEIGHT = 1024;
+	unsigned   int depthMapFBO = 0;
+	
+	 GLuint depthMap=0;
+	const  float near_plane = 1.0f;
+	const  float far_plane = 15.5f;
 
 	//Debug
 	std::shared_ptr<Entity> mainCamera;

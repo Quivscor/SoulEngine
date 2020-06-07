@@ -9,6 +9,26 @@ Renderer::Renderer(Shader* shader)
 	defaultShader = shader;
 	box = new Billboard("./res/textures/ExampleBillboard.DDS", true);
 	box2 = new Billboard("./res/textures/stone.jpg", false);
+	simpleDepthShader = new Shader("./res/shaders/3.1.3.shadow_mapping_depth.vs", "./res/shaders/3.1.3.shadow_mapping_depth.fs");
+	debugDepthQuad = new Shader("./res/shaders/3.1.3.shadow_mapping_depth.vs", "./res/shaders/3.1.3.shadow_mapping_depth.fs");
+	glGenFramebuffers(1, &depthMapFBO);
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	// attach depth texture as FBO's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	// glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthMap, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	lightPos = glm::vec3(25.0f, 2.0f, 25.f);
 
 }
 
@@ -32,7 +52,7 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 
 	DrawMeshes();
-	DrawGrass();
+	//DrawGrass();
 
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
@@ -40,8 +60,9 @@ void Renderer::Update() const
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
 	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);
 	
-
+	
 	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
+	//std::cout << trns->GetLocalPosition().x << std::endl;
 	box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	/*Billboard::Instance("./res/textures/ExampleBillboard.DDS", true,mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
@@ -68,9 +89,80 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawMeshes() const
 {
+	
 	int modelsDrawnCount = 0;
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	
+	glm::mat4 lightProjection, lightView;
+	glm::mat4 lightSpaceMatrix;
+	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	lightProjection = glm::ortho(-10.0f, 50.0f, -10.0f, 50.0f, near_plane, far_plane);
+	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
+	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+
+	lightSpaceMatrix = lightProjection * lightView;
+
+
+	simpleDepthShader->use();
+	simpleDepthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	for (int i = 0; i < m_Entities.size(); i++)
+	{
+		if (!m_Entities[i]->isActive)
+			continue;
+
+		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
+		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
+
+		if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
+		{
+			continue;
+		}
+
+		
+		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
+		if (mesh != nullptr)
+		{
+			unsigned int diffuseNr = 1;
+			unsigned int specularNr = 1;
+			int anyTexture = 0;
+
+
+			// render scene from light's point of view
+
+		
+			//  glActiveTexture(GL_TEXTURE0);
+			 // glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[0].id);
+			
+			modelsDrawnCount++;
+
+			glBindVertexArray(mesh->GetVAO());
+
+			if (mesh->hasEBO)
+			{
+				glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+			}
+			else
+			{
+				glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
+			}
+
+			glBindVertexArray(0);
+
+
+
+
+
+		}
+		
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// reset viewport
+	glViewport(0, 0, 1280, 720);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		if (!m_Entities[i]->isActive)
@@ -94,7 +186,7 @@ void Renderer::DrawMeshes() const
 		
 			
 			Shader* shader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
-
+			
 			for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
 			{		
 				anyTexture = 1;
@@ -114,7 +206,17 @@ void Renderer::DrawMeshes() const
 				glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
 			}
 
+		
+			glActiveTexture(GL_TEXTURE2);
+					glBindTexture(GL_TEXTURE_2D, depthMap);
+			/*		glUniform1i(glGetUniformLocation(shader->ID, "material.shadowMap"), mesh->material->GetTextures().size());
+
+					unsigned int xd = glGetUniformLocation(shader->ID, "lightSpaceMatrix");
+					glUniformMatrix4fv(xd, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));*/
 			shader->use();
+			shader->setVec3("dir_light.direction", lightPos);
+			shader->setInt("material.shadowMap", 2);
+					shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 			if (m_Entities[i]->GetComponent<Model>() != nullptr)
 			{
 				m_Entities[i]->GetComponent<Model>()->initShaders(shader);
@@ -138,7 +240,7 @@ void Renderer::DrawMeshes() const
 			glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
 			glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
 	
-			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
+			//glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
@@ -174,17 +276,11 @@ void Renderer::DrawMeshes() const
 
 			glBindVertexArray(0);
 
-			glActiveTexture(GL_TEXTURE0);
-			//glDrawArrays(GL_TRIANGLES, 0, meshes[i].vertices.size());
-			for (int i = 0; i < mesh->material->GetTextures().size(); i++)
-			{
-				glActiveTexture(GL_TEXTURE0 + i);
-				glBindTexture(GL_TEXTURE_2D, 0);
-			}
 
 		}
+		
 
-		if (debugMode)
+		/*if (debugMode)
 		{
 			std::shared_ptr<Collider> collider = m_Entities[i]->GetComponent<Collider>();
 
@@ -192,8 +288,63 @@ void Renderer::DrawMeshes() const
 			{
 				DrawColliders(collider, trns);
 			}
-		}
+		}*/
 	}
+	//    // --------------------
+		//debugDepthQuad->use();
+		//debugDepthQuad->setFloat("near_plane", near_plane);
+		//debugDepthQuad->setFloat("far_plane", far_plane);
+		//debugDepthQuad->setInt("depthMap", 0);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, depthMap);
+		//for (int i = 0; i < m_Entities.size(); i++)
+		//{
+		//	if (!m_Entities[i]->isActive)
+		//		continue;
+
+		//	std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
+		//	std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
+
+		//	if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
+		//	{
+		//		continue;
+		//	}
+
+		//	modelsDrawnCount++;
+		//	debugDepthQuad->setMat4("model", trns->GetGlobalMatrix());
+		//	if (mesh != nullptr)
+		//	{
+		//		unsigned int diffuseNr = 1;
+		//		unsigned int specularNr = 1;
+		//		int anyTexture = 0;
+
+
+		//		// render scene from light's point of view
+
+		//		
+		//		
+
+
+		//		glBindVertexArray(mesh->GetVAO());
+
+		//		if (mesh->hasEBO)
+		//		{
+		//			glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+		//		}
+		//		else
+		//		{
+		//			glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
+		//		}
+
+		//		glBindVertexArray(0);
+
+
+
+
+
+		//	}
+		//}
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 void Renderer::DrawGrass() const

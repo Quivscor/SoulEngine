@@ -151,7 +151,7 @@ Mesh AssetManager::ProcessMesh(aiMesh *mesh, const aiScene *scene, Model* model)
 
 			
 
-			if (model->m_bone_mapping.find(bone_name) == model->m_bone_mapping.end()) // ��������� ��� �� � ������� ��������
+			if (model->m_bone_mapping.find(bone_name) == model->m_bone_mapping.end())
 			{
 				// Allocate an index for a new bone
 				bone_index = model->m_num_bones;
@@ -170,12 +170,9 @@ Mesh AssetManager::ProcessMesh(aiMesh *mesh, const aiScene *scene, Model* model)
 
 			for (uint j = 0; j < mesh->mBones[i]->mNumWeights; j++)
 			{
-				uint vertex_id = mesh->mBones[i]->mWeights[j].mVertexId; // �� ������� �� ������ ����� �������� �����
+				uint vertex_id = mesh->mBones[i]->mWeights[j].mVertexId;
 				float weight = mesh->mBones[i]->mWeights[j].mWeight;
-				bones_id_weights_for_each_vertex[vertex_id].addBoneData(bone_index, weight); // � ������ ������� ����� ����� � �� ���
-
-				// ������ ������� vertex_id �� ������ ����� � �������� bone_index  ����� ��� weight
-				//cout << " vertex_id: " << vertex_id << "	bone_index: " << bone_index << "		weight: " << weight << endl;
+				bones_id_weights_for_each_vertex[vertex_id].addBoneData(bone_index, weight); 	
 			}
 		}
 	if (mesh->mNumBones > 0)

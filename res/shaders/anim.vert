@@ -12,11 +12,11 @@ out vec3 Color;
 out vec2 TexCoords;
 out vec3 normal;
 out vec3 frag_pos;
-
+out vec4 FragPosLightSpace;
 uniform mat4 M_matrix;
 uniform mat4 normals_matrix;
 uniform mat4 transform;
-
+uniform mat4 lightSpaceMatrix;
 uniform vec3 color;
 const int MAX_BONES = 100;
 uniform mat4 bones[MAX_BONES];
@@ -34,6 +34,6 @@ void main()
 	Color =color;
 	frag_pos = vec3(M_matrix * boned_position);
 	TexCoords = aTexCoords;
-
+ FragPosLightSpace = lightSpaceMatrix * vec4(frag_pos, 1.0);
 	gl_Position = transform * boned_position;
 }
