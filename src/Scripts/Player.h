@@ -3,6 +3,7 @@
 #include "InputHandler.h"
 #include "Weapon.h"
 #include "Model.h"
+#include "WeaponComparator.h"
 
 enum AnimationType
 {
@@ -44,6 +45,8 @@ public:
 	Model* animationMaceRoll;
 
 	Model* animationDeath;
+
+	std::shared_ptr<WeaponComparator> weaponComparator;
 
 protected:
 	virtual void Start();

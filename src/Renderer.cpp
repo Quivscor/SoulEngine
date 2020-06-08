@@ -94,6 +94,9 @@ void Renderer::DrawGUI() const
 
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
+		if (!m_Entities[i]->isActive)
+			continue;
+
 		if (m_Entities[i]->GetComponent<Text>() != nullptr)
 		{
 			std::shared_ptr<Text> text = m_Entities[i]->GetComponent<Text>();

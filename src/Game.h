@@ -25,6 +25,7 @@ public:
 private:
 	void InitializeWeapons(AssetManager* assetManager);
 	void InitializeBasicGUI(Renderer* renderer, Physics* physics);
+	void InitializeWeaponCompareGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic);
 
 	std::shared_ptr<Window> m_Window;
 
