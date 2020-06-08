@@ -25,18 +25,20 @@ vec3 calcNormal(vec3 vertex0, vec3 vertex1, vec3 vertex2)
 	return normalize(cross(tangent, bitangent));
 }
 
-float generateOffset(float x, float z)
+float generateOffset(float x, float z, float val1, float val2)
 {
-	float radiansX = (x / waveLength + waveTime) * 2.0 * PI;
-	float radiansZ = (z / waveLength + waveTime) * 2.0 * PI;
-	return 0.5 * (sin(radiansZ) + cos(radiansX));
+	//float radiansX = (x / waveLength + waveTime) * 2.0 * PI;
+	//float radiansZ = (z / waveLength + waveTime) * 2.0 * PI;
+	float radiansX = ((mod(x+z*x*val1, waveLength)/waveLength) + waveTime * mod(x * 0.8 + z, 1.5)) * 2.0 * PI;
+	float radiansZ = ((mod(val2 * (z*x + z*x), waveLength)/waveLength) + waveTime * 2.0 * mod(x, 2.0)) * 2.0 * PI;
+	return 0.5 * 0.5 * (sin(radiansZ) + cos(radiansX));
 }
 
 vec3 applyDistortion(vec3 vertex) 
 {
-	float xDistortion = generateOffset(vertex.x, vertex.z);
-	float yDistortion = generateOffset(vertex.x, vertex.z);
-	float zDistortion = generateOffset(vertex.x, vertex.z);
+	float xDistortion = generateOffset(vertex.x, vertex.z, 0.2, 0.1);
+	float yDistortion = generateOffset(vertex.x, vertex.z, 0.1, 0.3);
+	float zDistortion = generateOffset(vertex.x, vertex.z, 0.15, 0.2);
 	return vertex + vec3(xDistortion, yDistortion, zDistortion);
 }
 

@@ -24,6 +24,7 @@ public:
 	Model * FindModelByName(Model* [], std::string name);
 private:
 	void InitializeWeapons(AssetManager* assetManager);
+	void InitializeBasicGUI(Renderer* renderer, Physics* physics);
 
 	std::shared_ptr<Window> m_Window;
 

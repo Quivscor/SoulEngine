@@ -25,6 +25,7 @@
 #include <time.h>
 #include <fstream>
 #include <iostream>
+#include "GUI/Text.h"
 #include<Billboard.h>
 
 Game::Game() {}
@@ -71,6 +72,8 @@ void Game::Run()
 	inputSystem->RegisterEntity(inputHandler);
 
 	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler);
+
+	InitializeBasicGUI(renderer, physics);
 
 	gameLogic->Start();
 	source.SetLooping(true);
@@ -733,4 +736,51 @@ void Game::InitializeWeapons(AssetManager* assetManager)
 	swordMesh->vertices = sword->GetMeshes()[0].vertices;
 	swordMesh->material = sword->GetMeshes()[0].material;
 	WeaponFactory::SetWeapon(swordMesh, Sword);
+}
+
+void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
+{
+	std::shared_ptr<Entity> movement = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	movement->AddComponent<Transform>();
+	movement->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 680, 0));
+	movement->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	movement->AddComponent<Text>();
+	movement->GetComponent<Text>()->text = "WSAD - movement";
+	movement->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(movement);
+	renderer->RegisterEntity(movement);
+
+	std::shared_ptr<Entity> interaction = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	interaction->AddComponent<Transform>();
+	interaction->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 660, 0));
+	interaction->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	interaction->AddComponent<Text>();
+	interaction->GetComponent<Text>()->text = "E - use";
+	interaction->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(interaction);
+	renderer->RegisterEntity(interaction);
+
+	std::shared_ptr<Entity> attack = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	attack->AddComponent<Transform>();
+	attack->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 640, 0));
+	attack->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	attack->AddComponent<Text>();
+	attack->GetComponent<Text>()->text = "J - attack";
+	attack->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(attack);
+	renderer->RegisterEntity(attack);
+
+	std::shared_ptr<Entity> roll = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	roll->AddComponent<Transform>();
+	roll->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 620, 0));
+	roll->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	roll->AddComponent<Text>();
+	roll->GetComponent<Text>()->text = "K - roll";
+	roll->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(roll);
+	renderer->RegisterEntity(roll);
 }

@@ -8,6 +8,7 @@
 #include "Collider.h"
 #include "Frustum.h"
 #include "InstanceManager.h"
+#include "GUI/Text.h"
 
 //#include "Scripts/Water.h"
 
@@ -48,7 +49,7 @@ private:
 	//list of meshes?
 	void DrawMeshes() const;
 	void DrawGrass() const;
-	
+	void DrawGUI() const;
 	void DrawFrustum(Frustum frustum) const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
