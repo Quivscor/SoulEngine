@@ -29,5 +29,8 @@ void Character::CheckDeathCondition()
 	if (health <= 0)
 	{
 		thisEntity->isActive = false;
+
+		if (playerReference->GetComponent<PlayerEnemyCommunicator>() != nullptr)
+			playerReference->GetComponent<PlayerEnemyCommunicator>()->EnemyDied();
 	}
 }

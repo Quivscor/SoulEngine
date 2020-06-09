@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "Model.h"
 #include "WeaponComparator.h"
+#include "PlayerEnemyCommunicator.h"
 
 enum AnimationType
 {
@@ -47,6 +48,10 @@ public:
 	Model* animationDeath;
 
 	std::shared_ptr<WeaponComparator> weaponComparator;
+	std::shared_ptr<Entity> berserkerModeText;
+	std::shared_ptr<PlayerEnemyCommunicator> pec;
+
+	void EnemyKilled();
 
 protected:
 	virtual void Start();
@@ -84,4 +89,19 @@ private:
 	float attackSpeed = 2.0f;
 
 	Model* currentAnimation;
+
+	bool berserkerModeActive = false;
+	float berserkerModeDuration = 10.0f;
+	float berserkerCurrentTime = 0.0f;
+	int killedEnemies = 0;
+	int enemiesRequiredToStartBerserkerMode = 3;
+
+	void RunBerserkerMode();
+	void DisableBerserkerMode();
+
+	bool killstreakCounterActive = false;
+	float killstreakTimer = 10.0f;
+	float killstreakCurrentTime = 0.0f;
+
+	int lastEnemyCounter = 0;
 };

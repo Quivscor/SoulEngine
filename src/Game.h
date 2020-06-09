@@ -11,6 +11,7 @@
 #include <iostream>
 #include "Model.h"
 
+
 class Game
 {
 public:
@@ -20,12 +21,12 @@ public:
 	void Init();
 	void Run();
 	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem);
-	void LoadMap(Renderer*, AssetManager*, Physics*, Shader*, Shader*, GameLogic*);
+	void LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader, GameLogic* gameLogic, std::shared_ptr<Entity> player);
 	Model * FindModelByName(Model* [], std::string name);
 private:
 	void InitializeWeapons(AssetManager* assetManager);
 	void InitializeBasicGUI(Renderer* renderer, Physics* physics);
-	void InitializeWeaponCompareGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic);
+	void InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic);
 
 	std::shared_ptr<Window> m_Window;
 
