@@ -198,18 +198,32 @@ void Player::Swap()
 		animToSet = PlayerAnimationIdle;
 
 	ChangeAnimation(animToSet);
+
+	weaponComparator->UpdateStats(25, this->weapon->GetWeapon()->bonusDamage, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
+	weaponComparator->UpdateStats(2, this->weapon->GetWeapon()->bonusSpeed - 2, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
+	weaponComparator->UpdateStats(1, 0, 0, weaponComparator->oldDurability, weaponComparator->newDurability);
 }
 
 void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
 {
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>() != nullptr)
+	{
 		weaponInRange = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>();
+		weaponComparator->Show(true);
+
+		weaponComparator->UpdateStats(25, this->weapon->GetWeapon()->bonusDamage, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
+		weaponComparator->UpdateStats(2, this->weapon->GetWeapon()->bonusSpeed - 2, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
+		weaponComparator->UpdateStats(1, 0, 0, weaponComparator->oldDurability, weaponComparator->newDurability);
+	}
 }
 
 void Player::OnTriggerExit(std::shared_ptr<Collider> other)
 {
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>() != nullptr)
+	{
 		weaponInRange = nullptr;
+		weaponComparator->Show(false);
+	}
 }
 
 void Player::ChangeAnimation(AnimationType type)

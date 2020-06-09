@@ -12,7 +12,8 @@ enum ComponentType
 	ScriptableObjectComponent = 7,
 	CharacterComponent = 8,
 	WeaponOnTheGroundComponent = 9,
-	WaterComponent = 10
+	WaterComponent = 10,
+	TextComponent = 11
 };
 
 class Component

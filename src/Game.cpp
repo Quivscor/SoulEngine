@@ -25,6 +25,8 @@
 #include <time.h>
 #include <fstream>
 #include <iostream>
+#include "GUI/Text.h"
+#include "Scripts/WeaponComparator.h"
 #include<Billboard.h>
 
 Game::Game() {}
@@ -71,6 +73,8 @@ void Game::Run()
 	inputSystem->RegisterEntity(inputHandler);
 
 	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler);
+
+	InitializeBasicGUI(renderer, physics);
 
 	gameLogic->Start();
 	source.SetLooping(true);
@@ -496,6 +500,12 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
+
+	//Weapons gui 
+	InitializeWeaponCompareGUI(renderer, physics, character, gameLogic);
+
+
+
 	LoadMap(renderer, assetManager, physics, shadera, grassShader, gameLogic);
 	//player's weapon ! -> it should be spawned in player's script imo
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
@@ -735,4 +745,215 @@ void Game::InitializeWeapons(AssetManager* assetManager)
 	swordMesh->vertices = sword->GetMeshes()[0].vertices;
 	swordMesh->material = sword->GetMeshes()[0].material;
 	WeaponFactory::SetWeapon(swordMesh, Sword);
+}
+
+void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
+{
+	std::shared_ptr<Entity> movement = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	movement->AddComponent<Transform>();
+	movement->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 680, 0));
+	movement->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	movement->AddComponent<Text>();
+	movement->GetComponent<Text>()->text = "WSAD - movement";
+	movement->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(movement);
+	renderer->RegisterEntity(movement);
+
+	std::shared_ptr<Entity> interaction = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	interaction->AddComponent<Transform>();
+	interaction->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 660, 0));
+	interaction->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	interaction->AddComponent<Text>();
+	interaction->GetComponent<Text>()->text = "E - use";
+	interaction->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(interaction);
+	renderer->RegisterEntity(interaction);
+
+	std::shared_ptr<Entity> attack = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	attack->AddComponent<Transform>();
+	attack->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 640, 0));
+	attack->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	attack->AddComponent<Text>();
+	attack->GetComponent<Text>()->text = "J - attack";
+	attack->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(attack);
+	renderer->RegisterEntity(attack);
+
+	std::shared_ptr<Entity> roll = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	roll->AddComponent<Transform>();
+	roll->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 620, 0));
+	roll->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	roll->AddComponent<Text>();
+	roll->GetComponent<Text>()->text = "K - roll";
+	roll->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(roll);
+	renderer->RegisterEntity(roll);
+}
+
+void Game::InitializeWeaponCompareGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic)
+{
+	std::shared_ptr<Entity> damageDesc = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	damageDesc->AddComponent<Transform>();
+	damageDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(930, 60, 0));
+	damageDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	damageDesc->AddComponent<Text>();
+	damageDesc->GetComponent<Text>()->text = "Damage (+%)";
+	damageDesc->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(damageDesc);
+	renderer->RegisterEntity(damageDesc);
+
+	std::shared_ptr<Entity> oldDamage = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	oldDamage->AddComponent<Transform>();
+	oldDamage->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 60, 0));
+	oldDamage->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	oldDamage->AddComponent<Text>();
+	oldDamage->GetComponent<Text>()->text = "XX";
+	oldDamage->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	physics->RegisterEntity(oldDamage);
+	renderer->RegisterEntity(oldDamage);
+
+	std::shared_ptr<Entity> damageCompare = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	damageCompare->AddComponent<Transform>();
+	damageCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 60, 0));
+	damageCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	damageCompare->AddComponent<Text>();
+	damageCompare->GetComponent<Text>()->text = "->";
+	damageCompare->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(damageCompare);
+	renderer->RegisterEntity(damageCompare);
+
+	std::shared_ptr<Entity> newDamage = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	newDamage->AddComponent<Transform>();
+	newDamage->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 60, 0));
+	newDamage->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	newDamage->AddComponent<Text>();
+	newDamage->GetComponent<Text>()->text = "XX";
+	newDamage->GetComponent<Text>()->color = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	physics->RegisterEntity(newDamage);
+	renderer->RegisterEntity(newDamage);
+
+	// ATTACK SPEED
+
+	std::shared_ptr<Entity> speedDesc = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	speedDesc->AddComponent<Transform>();
+	speedDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(930, 40, 0));
+	speedDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	speedDesc->AddComponent<Text>();
+	speedDesc->GetComponent<Text>()->text = "Att. Speed (+%)";
+	speedDesc->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(speedDesc);
+	renderer->RegisterEntity(speedDesc);
+
+	std::shared_ptr<Entity> oldSpeed = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	oldSpeed->AddComponent<Transform>();
+	oldSpeed->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 40, 0));
+	oldSpeed->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	oldSpeed->AddComponent<Text>();
+	oldSpeed->GetComponent<Text>()->text = "XX";
+	oldSpeed->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	physics->RegisterEntity(oldSpeed);
+	renderer->RegisterEntity(oldSpeed);
+
+	std::shared_ptr<Entity> speedCompare = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	speedCompare->AddComponent<Transform>();
+	speedCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 40, 0));
+	speedCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	speedCompare->AddComponent<Text>();
+	speedCompare->GetComponent<Text>()->text = "->";
+	speedCompare->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(speedCompare);
+	renderer->RegisterEntity(speedCompare);
+
+	std::shared_ptr<Entity> newSpeed = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	newSpeed->AddComponent<Transform>();
+	newSpeed->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 40, 0));
+	newSpeed->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	newSpeed->AddComponent<Text>();
+	newSpeed->GetComponent<Text>()->text = "XX";
+	newSpeed->GetComponent<Text>()->color = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	physics->RegisterEntity(newSpeed);
+	renderer->RegisterEntity(newSpeed);
+
+	// DURABILITY
+
+	std::shared_ptr<Entity> durDesc = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	durDesc->AddComponent<Transform>();
+	durDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(930, 20, 0));
+	durDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	durDesc->AddComponent<Text>();
+	durDesc->GetComponent<Text>()->text = "Durability";
+	durDesc->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(durDesc);
+	renderer->RegisterEntity(durDesc);
+
+	std::shared_ptr<Entity> oldDur = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	oldDur->AddComponent<Transform>();
+	oldDur->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 20, 0));
+	oldDur->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	oldDur->AddComponent<Text>();
+	oldDur->GetComponent<Text>()->text = "XX";
+	oldDur->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	physics->RegisterEntity(oldDur);
+	renderer->RegisterEntity(oldDur);
+
+	std::shared_ptr<Entity> durCompare = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	durCompare->AddComponent<Transform>();
+	durCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 20, 0));
+	durCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	durCompare->AddComponent<Text>();
+	durCompare->GetComponent<Text>()->text = "->";
+	durCompare->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+	physics->RegisterEntity(durCompare);
+	renderer->RegisterEntity(durCompare);
+
+	std::shared_ptr<Entity> newDur = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	newDur->AddComponent<Transform>();
+	newDur->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 20, 0));
+	newDur->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	newDur->AddComponent<Text>();
+	newDur->GetComponent<Text>()->text = "XX";
+	newDur->GetComponent<Text>()->color = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	physics->RegisterEntity(newDur);
+	renderer->RegisterEntity(newDur);
+
+
+	//WEAPON COMPARATOR
+
+	std::shared_ptr<Entity> weaponComparator = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	weaponComparator->AddComponent<WeaponComparator>();
+
+	weaponComparator->GetComponent<WeaponComparator>()->damageTitle = damageDesc;
+	weaponComparator->GetComponent<WeaponComparator>()->oldDamage = oldDamage;
+	weaponComparator->GetComponent<WeaponComparator>()->damageCompare = damageCompare;
+	weaponComparator->GetComponent<WeaponComparator>()->newDamage = newDamage;
+
+	weaponComparator->GetComponent<WeaponComparator>()->speedTitle = speedDesc;
+	weaponComparator->GetComponent<WeaponComparator>()->oldASpeed = oldSpeed;
+	weaponComparator->GetComponent<WeaponComparator>()->speedCompare = speedCompare;
+	weaponComparator->GetComponent<WeaponComparator>()->newASpeed = newSpeed;
+
+	weaponComparator->GetComponent<WeaponComparator>()->durabilityTitle = durDesc;
+	weaponComparator->GetComponent<WeaponComparator>()->oldDurability = oldDur;
+	weaponComparator->GetComponent<WeaponComparator>()->durabilityCompare = durCompare;
+	weaponComparator->GetComponent<WeaponComparator>()->newDurability = newDur;
+
+	weaponComparator->GetComponent<WeaponComparator>()->Show(false);
+
+	player->GetComponent<Player>()->weaponComparator = weaponComparator->GetComponent<WeaponComparator>();
 }

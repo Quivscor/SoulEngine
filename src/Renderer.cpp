@@ -52,13 +52,14 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 
 	DrawMeshes();
+	DrawGUI();
 	//DrawGrass();
 
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
-	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
-	glm::mat4 translate_2d_text = glm::translate(glm::mat4(), glm::vec3(20.0f, 65.0f, .0f));
+	/*glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
+	glm::mat4 translate_2d_text = glm::translate(text_matrix_2D, glm::vec3(20.0f, 65.0f, .0f));
 	glm::mat4 scale_2d_text = glm::scale(glm::mat4(), glm::vec3(0.5f, 0.5f, 0.5f));
-	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);
+	TextRendering::Instance()->draw("Poruszanie - WASD", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_2D);*/
 	
 	
 	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
@@ -85,6 +86,24 @@ void Renderer::Update() const
 void Renderer::LateUpdate() const
 {
 	glfwSwapBuffers(Window::GetInstance()->GetMWindow());
+}
+
+void Renderer::DrawGUI() const
+{
+	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
+
+	for (int i = 0; i < m_Entities.size(); i++)
+	{
+		if (!m_Entities[i]->isActive)
+			continue;
+
+		if (m_Entities[i]->GetComponent<Text>() != nullptr)
+		{
+			std::shared_ptr<Text> text = m_Entities[i]->GetComponent<Text>();
+
+			TextRendering::Instance()->draw(text->text, text->color, text_matrix_2D * EntityManager::GetInstance()->GetEntity(text->GetOwnerID())->GetComponent<Transform>()->GetGlobalMatrix());
+		}
+	}
 }
 
 void Renderer::DrawMeshes() const
@@ -259,7 +278,7 @@ void Renderer::DrawMeshes() const
 			unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
 			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
-			glUniform1f(glGetUniformLocation(shader->ID, "waveTime"), (float)TimeCustom::GetTime());
+			glUniform1f(glGetUniformLocation(shader->ID, "waveTime"), (float)TimeCustom::GetTime() * 0.1f);
 
 			unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
 			glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
