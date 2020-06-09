@@ -44,6 +44,8 @@ public:
 	bool debugMode = false;
 	//void DebugSetProjectionView(Transform* projection, Camera* view);
 	//std::vector<Mesh> meshes;
+
+	bool berserkerModeActive = false;
 	
 private:
 	//list of meshes?

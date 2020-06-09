@@ -47,6 +47,8 @@ public:
 
 	Model* animationDeath;
 
+	Renderer* renderer;
+
 	std::shared_ptr<WeaponComparator> weaponComparator;
 	std::shared_ptr<Entity> berserkerModeText;
 	std::shared_ptr<PlayerEnemyCommunicator> pec;

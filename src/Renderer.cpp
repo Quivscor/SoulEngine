@@ -229,16 +229,19 @@ void Renderer::DrawMeshes() const
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	glEnable(GL_DEPTH_TEST);
-
-	glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (berserkerModeActive == true)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
 
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		if (!m_Entities[i]->isActive)
 			continue;
+
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
@@ -350,19 +353,6 @@ void Renderer::DrawMeshes() const
 
 
 		}
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glDisable(GL_DEPTH_TEST);
-
-		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		screenShader->use();
-		screenShader->setInt("screenTexture", 0);
-		glBindVertexArray(quadVAO);
-		glDisable(GL_DEPTH_TEST);
-		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
 		
 		/*if (debugMode)
 		{
@@ -375,7 +365,22 @@ void Renderer::DrawMeshes() const
 		}*/
 	}
 
+	if (berserkerModeActive == true)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
 
+		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glActiveTexture(GL_TEXTURE0);
+		screenShader->use();
+		screenShader->setInt("screenTexture", 0);
+		glBindVertexArray(quadVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
 
 
 	//    // --------------------

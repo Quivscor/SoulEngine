@@ -491,6 +491,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->animationMaceRoll = playerMaceRoll;
 	character->GetComponent<Player>()->animationDeath = playerDeath;
 	character->GetComponent<Player>()->shader = shadera;
+	character->GetComponent<Player>()->renderer = renderer;
 	character->layer = PlayerLayer;
 
 
