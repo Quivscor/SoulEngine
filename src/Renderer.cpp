@@ -115,10 +115,16 @@ void Renderer::DrawMeshes() const
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-	/*	if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
+		float renderingRange = 10.0f;
+		if (m_Entities[i]->layer == Layer::GroundLayer)
 		{
-			continue;
-		}*/
+			renderingRange = 40.0f;
+		}
+		if (m_Entities[i]->layer != Layer::WaterLayer)
+		{
+			if(mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > renderingRange)
+				continue;
+		}
 
 		
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
@@ -345,7 +351,7 @@ void Renderer::DrawMeshes() const
 		//	}
 		//}
 		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
+	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 void Renderer::DrawGrass() const
 {

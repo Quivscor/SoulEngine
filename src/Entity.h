@@ -5,7 +5,9 @@ enum Layer
 {
 	DefaultLayer,
 	PlayerLayer,
-	EnemyLayer
+	EnemyLayer,
+	GroundLayer,
+	WaterLayer
 };
 
 class Entity

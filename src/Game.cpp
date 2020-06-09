@@ -261,6 +261,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 			//random++;
 
 			std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
+			tile->layer == Layer::GroundLayer;
 			tile->AddComponent<Transform>();
 
 			map.push_back(tile);
@@ -696,6 +697,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	//water
 	std::shared_ptr<Entity> water = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	water->layer = Layer::WaterLayer;
 	water->AddComponent<Transform>();
 	water->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-20.0f, -2.0f, -25.0f));
 	water->AddComponent<Water>();
