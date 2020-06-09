@@ -20,7 +20,7 @@ class Collider;
 class Renderer : public System
 {
 public:
-	Renderer(Shader* shader, Shader* screenShader);
+	Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader*refractorShader, Model * crystal);
 	~Renderer();
 	void Init() const;
 	virtual void Update() const;
@@ -39,6 +39,8 @@ public:
 	glm::vec3 lightPos;
 	Shader* simpleDepthShader;
 	Shader* debugDepthQuad;
+	Shader* skyBoxShader;
+	Shader* refractorShader;
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
 	bool debugMode = false;
@@ -68,9 +70,13 @@ private:
 	unsigned int textureColorBuffer;
 	unsigned int rbo;
 	unsigned int quadVAO, quadVBO;
-
+	unsigned int skyboxVAO, skyboxVBO;
+	unsigned int cubemapTexture;
+	Model* crystal;
 	//Debug
 	std::shared_ptr<Entity> mainCamera;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
 };
+
+unsigned int loadCubemap(std::vector<std::string> faces);

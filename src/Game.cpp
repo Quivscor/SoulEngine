@@ -57,10 +57,13 @@ void Game::Run()
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basiclight.vert", "./res/shaders/basiclight.frag");
 	Shader* screenShader = new Shader("./res/shaders/screen.vert", "./res/shaders/screen.frag");
+	Shader* skyBoxShader = new Shader("./res/shaders/skyboxShader.vert", "./res/shaders/skyboxShader.frag");
+	Shader* refractorShader = new Shader("./res/shaders/refractorShader.vert", "./res/shaders/refractorShader.frag");
 	
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
-	Renderer* renderer = new Renderer(shader, screenShader);
+	Model* crystal = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
+	Renderer* renderer = new Renderer(shader, screenShader, skyBoxShader, refractorShader, crystal);
 	Physics* physics = new Physics();
 	InputSystem* inputSystem = new InputSystem();
 	GameLogic* gameLogic = new GameLogic();
