@@ -20,7 +20,7 @@ class Collider;
 class Renderer : public System
 {
 public:
-	Renderer(Shader* shader);
+	Renderer(Shader* shader, Shader* screenShader);
 	~Renderer();
 	void Init() const;
 	virtual void Update() const;
@@ -53,13 +53,19 @@ private:
 	void DrawFrustum(Frustum frustum) const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
+	static Shader* screenShader;
 	const static unsigned int SHADOW_WIDTH = 1024 ;
 	const static unsigned int SHADOW_HEIGHT = 1024;
 	unsigned   int depthMapFBO = 0;
 	
-	 GLuint depthMap=0;
+	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
 	const  float far_plane = 100.5f;
+
+	unsigned int frameBuffer;
+	unsigned int textureColorBuffer;
+	unsigned int rbo;
+	unsigned int quadVAO, quadVBO;
 
 	//Debug
 	std::shared_ptr<Entity> mainCamera;

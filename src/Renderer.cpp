@@ -3,10 +3,12 @@
 #include "TextRendering.h"
 #include<Billboard.h>
 Shader* Renderer::defaultShader = nullptr;
+Shader* Renderer::screenShader = nullptr;
 
-Renderer::Renderer(Shader* shader)
+Renderer::Renderer(Shader* shader, Shader* screenShader)
 {
 	defaultShader = shader;
+	this->screenShader = screenShader;
 	box = new Billboard("./res/textures/ExampleBillboard.DDS", true);
 	box2 = new Billboard("./res/textures/stone.jpg", false);
 	simpleDepthShader = new Shader("./res/shaders/3.1.3.shadow_mapping_depth.vs", "./res/shaders/3.1.3.shadow_mapping_depth.fs");
@@ -30,6 +32,48 @@ Renderer::Renderer(Shader* shader)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	lightPos = glm::vec3(25.0f, 1.0f, 25.f);
 
+	//framebuffer configuration
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	//create a color attachment texture
+	glGenTextures(1, &textureColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
+
+	//create a renderebuffer object for depth and stencil attachment 
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1280, 720);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+	// positions   // texCoords
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	-1.0f, -1.0f,  0.0f, 0.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+	 1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
 Renderer::~Renderer()
@@ -39,7 +83,8 @@ Renderer::~Renderer()
 
 void Renderer::Init() const
 {
-	
+
+
 }
 
 void Renderer::Update() const
@@ -52,6 +97,8 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 
 	DrawMeshes();
+
+
 	DrawGUI();
 	//DrawGrass();
 
@@ -182,6 +229,12 @@ void Renderer::DrawMeshes() const
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glEnable(GL_DEPTH_TEST);
+
+	glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		if (!m_Entities[i]->isActive)
@@ -297,8 +350,20 @@ void Renderer::DrawMeshes() const
 
 
 		}
-		
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
+
+		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		screenShader->use();
+		screenShader->setInt("screenTexture", 0);
+		glBindVertexArray(quadVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		
 		/*if (debugMode)
 		{
 			std::shared_ptr<Collider> collider = m_Entities[i]->GetComponent<Collider>();
@@ -309,6 +374,10 @@ void Renderer::DrawMeshes() const
 			}
 		}*/
 	}
+
+
+
+
 	//    // --------------------
 		//debugDepthQuad->use();
 		//debugDepthQuad->setFloat("near_plane", near_plane);

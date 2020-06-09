@@ -56,10 +56,11 @@ void Game::Run()
 	//TO DELETE:
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basiclight.vert", "./res/shaders/basiclight.frag");
+	Shader* screenShader = new Shader("./res/shaders/screen.vert", "./res/shaders/screen.frag");
 	
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
-	Renderer* renderer = new Renderer(shader);
+	Renderer* renderer = new Renderer(shader, screenShader);
 	Physics* physics = new Physics();
 	InputSystem* inputSystem = new InputSystem();
 	GameLogic* gameLogic = new GameLogic();
