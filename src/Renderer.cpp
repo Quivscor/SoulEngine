@@ -235,6 +235,24 @@ void Renderer::Update() const
 	glBindVertexArray(0);
 	glDepthFunc(GL_LESS); // set depth function back to default
 
+	if (berserkerModeActive == true)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
+
+		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glActiveTexture(GL_TEXTURE0);
+		screenShader->use();
+		screenShader->setInt("screenTexture", 0);
+		glBindVertexArray(quadVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
+
 }
 
 void Renderer::LateUpdate() const
@@ -320,12 +338,7 @@ void Renderer::DrawMeshes() const
 			{
 				glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
 			}
-
 			glBindVertexArray(0);
-
-
-
-
 
 		}
 		
@@ -472,23 +485,7 @@ void Renderer::DrawMeshes() const
 		}*/
 	}
 
-	if (berserkerModeActive == true)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glDisable(GL_DEPTH_TEST);
-
-		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glActiveTexture(GL_TEXTURE0);
-		screenShader->use();
-		screenShader->setInt("screenTexture", 0);
-		glBindVertexArray(quadVAO);
-		glDisable(GL_DEPTH_TEST);
-		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
-
+	
 
 	//    // --------------------
 		//debugDepthQuad->use();
