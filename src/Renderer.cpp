@@ -137,7 +137,7 @@ void Renderer::DrawMeshes() const
 		float renderingRange = 10.0f;
 		if (m_Entities[i]->layer == Layer::GroundLayer)
 		{
-			renderingRange = 40.0f;
+			renderingRange = 400.0f;
 		}
 		if (m_Entities[i]->layer != Layer::WaterLayer)
 		{
@@ -187,6 +187,8 @@ void Renderer::DrawMeshes() const
 	// reset viewport
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
@@ -196,9 +198,15 @@ void Renderer::DrawMeshes() const
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-		if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
+		float renderingRange = 10.0f;
+		if (m_Entities[i]->layer == Layer::GroundLayer)
 		{
-			continue;
+			renderingRange = 400.0f;
+		}
+		if (m_Entities[i]->layer != Layer::WaterLayer)
+		{
+			if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > renderingRange)
+				continue;
 		}
 			
 		modelsDrawnCount++;
@@ -269,6 +277,10 @@ void Renderer::DrawMeshes() const
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
+
+			//player position
+			glm::vec3 playerPosition = mainCamera->GetComponent<Camera>()->cameraTarget->GetGlobalPosition();
+			glUniform3f(glGetUniformLocation(shader->ID, "playerPosition"), playerPosition.x, playerPosition.y, playerPosition.z);
 
 			glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
 

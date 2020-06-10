@@ -265,7 +265,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 			//random++;
 
 			std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
-			tile->layer == Layer::GroundLayer;
+			tile->layer = Layer::GroundLayer;
 			tile->AddComponent<Transform>();
 
 			map.push_back(tile);

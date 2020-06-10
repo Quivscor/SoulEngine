@@ -8,10 +8,12 @@ out vec3 Color;
 out vec2 TexCoords;
 out vec3 normal;
 out vec4 FragPosLightSpace;
+out vec3 pPos;
 uniform mat4 M_matrix;
 uniform mat4 transform;
 uniform vec3 color;
 uniform mat4 lightSpaceMatrix;
+uniform vec3 playerPosition;
 void main()
 {
   
@@ -21,4 +23,5 @@ void main()
     Color = color;
 	TexCoords = aTexCoords;
 	  gl_Position = transform * vec4(aPos, 1.0);
+	  pPos = playerPosition;
 }
