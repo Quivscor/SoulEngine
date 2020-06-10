@@ -19,7 +19,7 @@ public:
 
 	std::vector <parameters> m_instanceObjects;
 	
-	const static int amount = 100000;
+	const static int amount = 5000;
 	glm::mat4 instanceModels[amount];
 	Shader* m_shader;
 	Model* m_model;

@@ -22,6 +22,16 @@ void Player::Update()
 	if (inputHandler == nullptr)
 		return;
 
+	if (pec->killedEnemiesCounter > lastEnemyCounter)
+	{
+		for (int i = 0; i < pec->killedEnemiesCounter - lastEnemyCounter; i++)
+			EnemyKilled();
+
+		lastEnemyCounter = pec->killedEnemiesCounter;
+	}
+
+	//-----------------------TIMERS---------------
+
 	if (isAttacking)
 	{
 		currentAttackTime += TimeCustom::GetDeltaTime();
@@ -44,6 +54,36 @@ void Player::Update()
 			canRoll = true;
 		}
 	}
+
+	if (killstreakCounterActive)
+	{
+		std::cout << "KillstreakCounterActive" << std::endl;
+
+		killstreakCurrentTime += TimeCustom::GetDeltaTime();
+
+		if (killstreakCurrentTime >= killstreakTimer)
+		{
+			std::cout << "KillstreakCounter Time END" << std::endl;
+			
+			killstreakCounterActive = false;
+			killstreakCurrentTime = 0.0f;
+		}
+	}
+
+	if (berserkerModeActive)
+	{
+		std::cout << "BerserkerCounterActive" << std::endl;
+
+		berserkerCurrentTime += TimeCustom::GetDeltaTime();
+
+		if (berserkerCurrentTime >= berserkerModeDuration)
+		{
+			berserkerModeActive = false;
+			DisableBerserkerMode();
+		}
+	}
+
+	//-----------------------MOVEMENT-------------
 
 	isMoving = false;
 	movingFB = 0;
@@ -324,4 +364,38 @@ void Player::ChangeAnimation(AnimationType type)
 	thisEntity->GetComponent<Mesh>()->SetAll(model->GetMeshes()[0]);
 	thisEntity->GetComponent<Mesh>()->setupMeshfBones();
 	thisEntity->GetComponent<Mesh>()->material->SetShader(shader);
+}
+
+void Player::EnemyKilled()
+{
+	if (killstreakCounterActive)
+	{
+		killedEnemies++;
+
+		if (killedEnemies >= enemiesRequiredToStartBerserkerMode && berserkerModeActive == false)
+		{
+			RunBerserkerMode();
+			killstreakCounterActive = false;
+		}
+	}
+	else
+	{
+		killstreakCounterActive = true;
+		killedEnemies = 0;
+		killstreakCurrentTime = 0.0f;
+	}
+}
+
+void Player::RunBerserkerMode()
+{
+	renderer->berserkerModeActive = true;
+	berserkerModeActive = true;
+	berserkerModeText->isActive = true;
+	berserkerCurrentTime = 0.0f;
+}
+
+void Player::DisableBerserkerMode()
+{
+	renderer->berserkerModeActive = false;
+	berserkerModeText->isActive = false;
 }

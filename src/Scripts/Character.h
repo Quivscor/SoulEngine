@@ -1,5 +1,6 @@
 #pragma once
 #include "ScriptableObject.h"
+#include "PlayerEnemyCommunicator.h"
 
 class Character : public ScriptableObject
 {
@@ -10,6 +11,8 @@ public:
 	void GetHit(float damage);
 
 	virtual ComponentType GetComponentType() const override { return ComponentType::CharacterComponent; }
+
+	std::shared_ptr<Entity> playerReference = nullptr;
 
 protected:
 	//virtual void Start();

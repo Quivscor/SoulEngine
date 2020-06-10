@@ -2,11 +2,17 @@
  #include "Model.h"
 #include "TextRendering.h"
 #include<Billboard.h>
+#include <stb_image.h>
 Shader* Renderer::defaultShader = nullptr;
+Shader* Renderer::screenShader = nullptr;
 
-Renderer::Renderer(Shader* shader)
+Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader* refractorShader, Model* crystal)
 {
 	defaultShader = shader;
+	this->screenShader = screenShader;
+	this->skyBoxShader = skyBoxShader;
+	this->refractorShader = refractorShader;
+	this->crystal = crystal;
 	box = new Billboard("./res/textures/ExampleBillboard.DDS", true);
 	box2 = new Billboard("./res/textures/stone.jpg", false);
 	simpleDepthShader = new Shader("./res/shaders/3.1.3.shadow_mapping_depth.vs", "./res/shaders/3.1.3.shadow_mapping_depth.fs");
@@ -30,6 +36,114 @@ Renderer::Renderer(Shader* shader)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	lightPos = glm::vec3(25.0f, 1.0f, 25.f);
 
+	//framebuffer configuration
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	//create a color attachment texture
+	glGenTextures(1, &textureColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
+
+	//create a renderebuffer object for depth and stencil attachment 
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1280, 720);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+	// positions   // texCoords
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	-1.0f, -1.0f,  0.0f, 0.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+
+	-1.0f,  1.0f,  0.0f, 1.0f,
+	 1.0f, -1.0f,  1.0f, 0.0f,
+	 1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+	// skybox VAO
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+	
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	std::vector<std::string> faces
+	{
+		"./res/textures/skybox/right.jpg",
+		"./res/textures/skybox/left.jpg",
+		"./res/textures/skybox/top.jpg",
+		"./res/textures/skybox/bottom.jpg",
+		"./res/textures/skybox/front.jpg",
+		"./res/textures/skybox/back.jpg",
+	};
+	cubemapTexture = loadCubemap(faces);
+	skyBoxShader->use();
+	skyBoxShader->setInt("skybox", 0);
 }
 
 Renderer::~Renderer()
@@ -39,7 +153,8 @@ Renderer::~Renderer()
 
 void Renderer::Init() const
 {
-	
+
+
 }
 
 void Renderer::Update() const
@@ -81,6 +196,45 @@ void Renderer::Update() const
 	glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * scale;
 
 	TextRendering::Instance()->draw("Gracz", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
+
+	// drawing crystal object
+	refractorShader->use();
+	refractorShader->setMat4("projection", mainCamera->GetComponent<Camera>()->GetProjection());
+	refractorShader->setMat4("view", mainCamera->GetComponent<Transform>()->GetGlobalMatrix());
+	glm::mat4 model = glm::mat4(1.0f);
+	//model = glm::translate(model, glm::vec3(3.0f, 5.0f, 1.5f));
+	model = glm::scale(model, glm::vec3(1.0f, 3.0f, 1.0f));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	refractorShader->setMat4("model", model);
+	refractorShader->setVec3("cameraPos", mainCamera->GetComponent<Transform>()->GetGlobalPosition());
+
+	refractorShader->setInt("texture_diffuse1", 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, instanceManagers[0]->m_mesh->material->GetTextures()[0].id);
+
+	glBindVertexArray(crystal->meshes[0].GetVAO());
+	glDrawElements(GL_TRIANGLES, crystal->meshes[0].indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	// draw skybox last
+	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+	skyBoxShader->use();
+	model = glm::mat4(1.0f);
+	glm::mat4 view = mainCamera->GetComponent<Transform>()->GetGlobalMatrix();
+	view = glm::mat4(glm::mat3(mainCamera->GetComponent<Transform>()->GetGlobalMatrix())); // remove translation from the view matrix
+	skyBoxShader->setMat4("view", view);
+	skyBoxShader->setMat4("model", model);
+	glm::mat4 projection = mainCamera->GetComponent<Camera>()->GetProjection();
+	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	skyBoxShader->setMat4("projection", projection);
+	// skybox cube
+	glBindVertexArray(skyboxVAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	glDepthFunc(GL_LESS); // set depth function back to default
+
 }
 
 void Renderer::LateUpdate() const
@@ -190,10 +344,19 @@ void Renderer::DrawMeshes() const
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	if (berserkerModeActive == true)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		if (!m_Entities[i]->isActive)
 			continue;
+
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
@@ -316,7 +479,6 @@ void Renderer::DrawMeshes() const
 
 		}
 		
-
 		/*if (debugMode)
 		{
 			std::shared_ptr<Collider> collider = m_Entities[i]->GetComponent<Collider>();
@@ -327,6 +489,25 @@ void Renderer::DrawMeshes() const
 			}
 		}*/
 	}
+
+	if (berserkerModeActive == true)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
+
+		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glActiveTexture(GL_TEXTURE0);
+		screenShader->use();
+		screenShader->setInt("screenTexture", 0);
+		glBindVertexArray(quadVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
+
 	//    // --------------------
 		//debugDepthQuad->use();
 		//debugDepthQuad->setFloat("near_plane", near_plane);
@@ -678,3 +859,33 @@ void Renderer::SetCamera(std::shared_ptr<Entity> camera)
 	camProjection = projection;
 	camView = view;
 }*/
+
+unsigned int loadCubemap(std::vector<std::string> faces)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return textureID;
+}

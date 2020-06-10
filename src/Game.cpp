@@ -11,12 +11,11 @@
 #include "Listener.h"
 #include "Source.h"
 #include "MapLoader.h"
-
 #include "Scripts/ColorChanger.h"
 #include "Scripts/HelloTriggers.h"
 #include "Scripts/CameraFollow.h"
-#include "Scripts/Player.h"
 #include "Scripts/Weapon.h"
+#include "Scripts/Player.h"
 #include "Scripts/Character.h"
 #include "Scripts/WeaponOnTheGround.h"
 #include "Scripts/Water.h"
@@ -28,6 +27,7 @@
 #include "GUI/Text.h"
 #include "Scripts/WeaponComparator.h"
 #include<Billboard.h>
+#include "Scripts/PlayerEnemyCommunicator.h"
 
 Game::Game() {}
 
@@ -56,10 +56,14 @@ void Game::Run()
 	//TO DELETE:
 	//Creating simple shader
 	Shader* shader = new Shader("./res/shaders/basiclight.vert", "./res/shaders/basiclight.frag");
+	Shader* screenShader = new Shader("./res/shaders/screen.vert", "./res/shaders/screen.frag");
+	Shader* skyBoxShader = new Shader("./res/shaders/skyboxShader.vert", "./res/shaders/skyboxShader.frag");
+	Shader* refractorShader = new Shader("./res/shaders/refractorShader.vert", "./res/shaders/refractorShader.frag");
 	
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
-	Renderer* renderer = new Renderer(shader);
+	Model* crystal = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
+	Renderer* renderer = new Renderer(shader, screenShader, skyBoxShader, refractorShader, crystal);
 	Physics* physics = new Physics();
 	InputSystem* inputSystem = new InputSystem();
 	GameLogic* gameLogic = new GameLogic();
@@ -110,7 +114,7 @@ void Game::Run()
 	}
 }
 
-void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader, GameLogic* gameLogic)
+void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader, GameLogic* gameLogic, std::shared_ptr<Entity> player)
 {
 	std::vector<std::shared_ptr<Entity>> map;
 
@@ -323,6 +327,7 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 					object->AddComponent<Collider>();
 					object->GetComponent<Collider>()->SetShape(characterCollider);
 					object->AddComponent<Character>();
+					object->GetComponent<Character>()->playerReference = player;
 
 					object->layer = EnemyLayer;
 					
@@ -490,6 +495,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->animationMaceRoll = playerMaceRoll;
 	character->GetComponent<Player>()->animationDeath = playerDeath;
 	character->GetComponent<Player>()->shader = shadera;
+	character->GetComponent<Player>()->renderer = renderer;
 	character->layer = PlayerLayer;
 
 
@@ -502,11 +508,14 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	renderer->RegisterEntity(character);
 
 	//Weapons gui 
-	InitializeWeaponCompareGUI(renderer, physics, character, gameLogic);
+	InitializePlayerGUI(renderer, physics, character, gameLogic);
 
+	std::shared_ptr<Entity> pec = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	pec->AddComponent<PlayerEnemyCommunicator>();
 
+	character->GetComponent<Player>()->pec = pec->GetComponent<PlayerEnemyCommunicator>();
 
-	LoadMap(renderer, assetManager, physics, shadera, grassShader, gameLogic);
+	LoadMap(renderer, assetManager, physics, shadera, grassShader, gameLogic, pec);
 	//player's weapon ! -> it should be spawned in player's script imo
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();
@@ -794,7 +803,7 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 	renderer->RegisterEntity(roll);
 }
 
-void Game::InitializeWeaponCompareGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic)
+void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic)
 {
 	std::shared_ptr<Entity> damageDesc = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	damageDesc->AddComponent<Transform>();
@@ -956,4 +965,23 @@ void Game::InitializeWeaponCompareGUI(Renderer* renderer, Physics* physics, std:
 	weaponComparator->GetComponent<WeaponComparator>()->Show(false);
 
 	player->GetComponent<Player>()->weaponComparator = weaponComparator->GetComponent<WeaponComparator>();
+
+
+
+	// others
+
+	std::shared_ptr<Entity> berserkerMode = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	berserkerMode->AddComponent<Transform>();
+	berserkerMode->GetComponent<Transform>()->SetLocalPosition(glm::vec3(550, 650, 0));
+	berserkerMode->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	berserkerMode->AddComponent<Text>();
+	berserkerMode->GetComponent<Text>()->text = "BERSERKER!";
+	berserkerMode->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
+
+	physics->RegisterEntity(berserkerMode);
+	renderer->RegisterEntity(berserkerMode);
+
+	berserkerMode->isActive = false;
+
+	player->GetComponent<Player>()->berserkerModeText = berserkerMode;
 }
