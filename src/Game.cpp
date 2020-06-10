@@ -269,7 +269,6 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 			//random++;
 
 			std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
-			tile->layer = Layer::GroundLayer;
 			tile->AddComponent<Transform>();
 
 			map.push_back(tile);
@@ -309,6 +308,10 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
 				object->GetComponent<Mesh>()->setupMesh();
 
+				if (name == "Grass")
+				{
+					object->layer = Layer::GroundLayer;
+				}
 				if (name == "Tree" || name == "Birch")
 				{
 					object->AddComponent<Collider>();

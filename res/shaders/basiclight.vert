@@ -23,5 +23,5 @@ void main()
     Color = color;
 	TexCoords = aTexCoords;
 	  gl_Position = transform * vec4(aPos, 1.0);
-	  pPos = playerPosition;
+	  pPos = vec3(M_matrix * vec4(playerPosition, 1.0));
 }
