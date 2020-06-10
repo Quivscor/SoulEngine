@@ -169,7 +169,7 @@ void Renderer::Update() const
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	DrawMeshes();
-	DrawGUI();
+
 	DrawGrass();
 
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
@@ -181,8 +181,7 @@ void Renderer::Update() const
 	
 	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
 	//std::cout << trns->GetLocalPosition().x << std::endl;
-	box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
-	box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
+
 	/*Billboard::Instance("./res/textures/ExampleBillboard.DDS", true,mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	Billboard::Instance("./res/textures/stone.jpg", false, mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));*/
 	/*Billboard::Instance("./res/textures/ExampleBillboard.DDS", true)->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f),glm::vec2(1.0f,0.125f));
@@ -197,7 +196,7 @@ void Renderer::Update() const
 
 	glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * scale;
 
-	TextRendering::Instance()->draw("Gracz", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
+	//TextRendering::Instance()->draw("Gracz", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
 
 	// drawing crystal object
 	refractorShader->use();
@@ -236,7 +235,8 @@ void Renderer::Update() const
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 	glDepthFunc(GL_LESS); // set depth function back to default
-
+	box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
+	box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	if (berserkerModeActive == true)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -253,7 +253,7 @@ void Renderer::Update() const
 		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
-
+	DrawGUI();
 
 }
 

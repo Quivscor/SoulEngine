@@ -9,6 +9,7 @@
 #include "Frustum.h"
 #include "InstanceManager.h"
 #include "GUI/Text.h"
+//#include <HUD.h>
 
 //#include "Scripts/Water.h"
 
@@ -38,8 +39,9 @@ public:
 	//Shader* shader;
 	glm::vec3 lightPos;
 	Shader* simpleDepthShader;
-	Shader* debugDepthQuad;
+
 	Shader* skyBoxShader;
+
 	Shader* refractorShader;
 	//Debug
 	void SetCamera(std::shared_ptr<Entity> camera);
@@ -65,7 +67,7 @@ private:
 	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
 	const  float far_plane = 100.5f;
-
+//	HUD* hud;
 	unsigned int frameBuffer;
 	unsigned int textureColorBuffer;
 	unsigned int rbo;
