@@ -15,8 +15,8 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	this->crystal = crystal;
 	box = new Billboard("./res/textures/ExampleBillboard.DDS", true);
 	box2 = new Billboard("./res/textures/stone.jpg", false);
-	simpleDepthShader = new Shader("./res/shaders/3.1.3.shadow_mapping_depth.vs", "./res/shaders/3.1.3.shadow_mapping_depth.fs");
-	debugDepthQuad = new Shader("./res/shaders/3.1.3.shadow_mapping_depth.vs", "./res/shaders/3.1.3.shadow_mapping_depth.fs");
+	simpleDepthShader = new Shader("./res/shaders/shadow_mapping_depth.vs", "./res/shaders/shadow_mapping_depth.fs");
+
 	glGenFramebuffers(1, &depthMapFBO);
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -170,7 +170,7 @@ void Renderer::Update() const
 
 	DrawMeshes();
 	DrawGUI();
-	//DrawGrass();
+	DrawGrass();
 
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	/*glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
