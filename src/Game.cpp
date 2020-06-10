@@ -228,7 +228,10 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 	{
 		for (int j = 0; j < y; j++)
 		{
-			int random = rand()%4;
+			if (i == 0 && j == 0)
+				random = 0;
+			else
+				random = rand()%4;
 			std::ifstream file;
 			if (random == 0)
 			{
