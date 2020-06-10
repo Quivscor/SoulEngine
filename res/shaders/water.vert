@@ -39,7 +39,7 @@ vec3 applyDistortion(vec3 vertex)
 	float xDistortion = generateOffset(vertex.x, vertex.z, 0.2, 0.1);
 	float yDistortion = generateOffset(vertex.x, vertex.z, 0.1, 0.3);
 	float zDistortion = generateOffset(vertex.x, vertex.z, 0.15, 0.2);
-	return vertex + vec3(xDistortion, yDistortion, zDistortion);
+	return vertex + vec3(0, yDistortion, 0);
 }
 
 void main()
