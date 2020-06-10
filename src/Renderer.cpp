@@ -165,6 +165,8 @@ void Renderer::Update() const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	DrawMeshes();
 	DrawGUI();
@@ -306,10 +308,16 @@ void Renderer::DrawMeshes() const
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-	/*	if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
+		float renderingRange = 12.0f;
+		if (m_Entities[i]->layer == Layer::GroundLayer)
 		{
-			continue;
-		}*/
+			renderingRange = 28.0f;
+		}
+		if (m_Entities[i]->layer != Layer::WaterLayer && m_Entities[i]->layer != Layer::GroundLayer)
+		{
+			if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > renderingRange)
+				continue;
+		}
 
 		
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
@@ -366,9 +374,15 @@ void Renderer::DrawMeshes() const
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-		if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > 14.0f)
+		float renderingRange = 12.0f;
+		if (m_Entities[i]->layer == Layer::GroundLayer)
 		{
-			continue;
+			renderingRange = 28.0f;
+		}
+		if (m_Entities[i]->layer != Layer::WaterLayer)
+		{
+			if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > renderingRange)
+				continue;
 		}
 			
 		modelsDrawnCount++;
@@ -378,8 +392,7 @@ void Renderer::DrawMeshes() const
 			unsigned int diffuseNr = 1;
 			unsigned int specularNr = 1;
 			int anyTexture = 0;
-		
-			
+
 			Shader* shader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
 			
 			for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
@@ -408,10 +421,14 @@ void Renderer::DrawMeshes() const
 
 					unsigned int xd = glGetUniformLocation(shader->ID, "lightSpaceMatrix");
 					glUniformMatrix4fv(xd, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));*/
+			
+					glm::vec3 playerPosition = mainCamera->GetComponent<Camera>()->cameraTarget->GetGlobalPosition();
+
 			shader->use();
 			shader->setVec3("dir_light.direction", lightPos);
 			shader->setInt("material.shadowMap", 2);
 					shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+					shader->setVec3("playerPosition", playerPosition);
 			if (m_Entities[i]->GetComponent<Model>() != nullptr)
 			{
 				m_Entities[i]->GetComponent<Model>()->initShaders(shader);
@@ -439,6 +456,9 @@ void Renderer::DrawMeshes() const
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
+
+			//player position
+			//glUniform3f(glGetUniformLocation(shader->ID, "playerPosition"), playerPosition.x, playerPosition.y, playerPosition.z);
 
 			glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
 
@@ -542,7 +562,7 @@ void Renderer::DrawMeshes() const
 		//	}
 		//}
 		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
+	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 void Renderer::DrawGrass() const
 {

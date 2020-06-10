@@ -5,6 +5,7 @@ in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 normal;
 in vec4 FragPosLightSpace;
+in vec3 pPos;
 struct Material
 {
 	sampler2D texture_diffuse1;
@@ -117,10 +118,14 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 view_dir, vec3 WorldPos)
 
 void main()
 {
- 
+    float transparency = 1.0;
+    //if((WorldPos.z > pPos.z) && (WorldPos.y > 0.5))
+    //{
+    //    transparency = 0.2;//smoothstep(pPos.z, pPos.z + 2.0, WorldPos.z);
+    //}
 	vec3 view_dir = normalize(view_pos - WorldPos);
-vec3 result = CalcDirLight(dir_light, normal, view_dir);
-	vec4 calc_color = vec4( result, 1.0);
+    vec3 result = CalcDirLight(dir_light, normal, view_dir);
+	vec4 calc_color = vec4( result, transparency);
 	calc_color *= material.transparency;
 	
 	FragColor = calc_color;

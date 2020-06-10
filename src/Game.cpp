@@ -311,6 +311,10 @@ void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* phys
 				object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
 				object->GetComponent<Mesh>()->setupMesh();
 
+				if (name == "Grass")
+				{
+					object->layer = Layer::GroundLayer;
+				}
 				if (name == "Tree" || name == "Birch")
 				{
 					object->AddComponent<Collider>();
@@ -718,6 +722,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	//water
 	std::shared_ptr<Entity> water = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	water->layer = Layer::WaterLayer;
 	water->AddComponent<Transform>();
 	water->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-20.0f, -2.0f, -25.0f));
 	water->AddComponent<Water>();
