@@ -19,7 +19,7 @@ void Weapon::Start()
 
 void Weapon::Update()
 {
-
+	//std::cout << thisEntity->GetComponent<Transform>()->GetGlobalPosition().x << " " << thisEntity->GetComponent<Transform>()->GetGlobalPosition().y << " " << thisEntity->GetComponent<Transform>()->GetGlobalPosition().z << std::endl;
 }
 
 void Weapon::OnTriggerStay(std::shared_ptr<Collider> other)
@@ -30,6 +30,7 @@ void Weapon::OnTriggerStay(std::shared_ptr<Collider> other)
 
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>() != nullptr)
 	{
+
 		hitObjects.push_back(EntityManager::GetInstance()->GetEntity(other->GetOwnerID()));
 
 		EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>()->GetHit(damage + equipedWeapon->bonusDamage);

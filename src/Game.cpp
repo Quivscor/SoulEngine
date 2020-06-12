@@ -526,7 +526,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();
 	weapon->GetComponent<Transform>()->SetParent(character->GetComponent<Transform>());
-	weapon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 6.0f));
+	weapon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	colliderShape.clear();
 	colliderShape.push_back({ -6.0f, -5.0f });
