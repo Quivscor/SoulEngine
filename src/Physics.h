@@ -23,4 +23,5 @@ public:
 private:
 	void MoveCollider(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	bool CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Collider> col2, std::shared_ptr<Transform> trns1, std::shared_ptr<Transform> trns2) const;
+	bool TestFunction() const;
 };

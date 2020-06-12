@@ -562,7 +562,7 @@ void Renderer::DrawMeshes() const
 		//	}
 		//}
 		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	std::cout << "Models drawn: " << modelsDrawnCount << "\n";
+	//std::cout << "Models drawn: " << modelsDrawnCount << "\n";
 }
 void Renderer::DrawGrass() const
 {
