@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include "Model.h"
+#include "Scripts/MapGenerator.h"
 
 
 class Game
@@ -20,8 +21,7 @@ public:
 
 	void Init();
 	void Run();
-	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem);
-	void LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader, GameLogic* gameLogic, std::shared_ptr<Entity> player);
+	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem, MapGenerator* mapGenerator);
 	Model * FindModelByName(Model* [], std::string name);
 private:
 	void InitializeWeapons(AssetManager* assetManager);
