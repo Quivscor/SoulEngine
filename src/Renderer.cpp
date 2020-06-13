@@ -254,7 +254,8 @@ void Renderer::Update() const
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 	DrawGUI();
-
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Renderer::LateUpdate() const
