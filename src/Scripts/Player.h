@@ -72,6 +72,7 @@ private:
 	void CreateWeapon();
 	void Swap();
 	void Move();
+	void CheckWeapon();
 	void CalculateRotation();
 	void ChangeAnimation(AnimationType type);
 

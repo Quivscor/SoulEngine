@@ -22,6 +22,8 @@ void Player::Update()
 	if (inputHandler == nullptr)
 		return;
 
+	CheckWeapon();
+
 	if (pec->killedEnemiesCounter > lastEnemyCounter)
 	{
 		for (int i = 0; i < pec->killedEnemiesCounter - lastEnemyCounter; i++)
@@ -246,7 +248,7 @@ void Player::Swap()
 	{
 		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage : 25, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
 		weaponComparator->UpdateStats(2, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusSpeed - 2 : 0, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
-		weaponComparator->UpdateStats(1, 0, 0, weaponComparator->oldDurability, weaponComparator->newDurability);
+		weaponComparator->UpdateStats(-1, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->durability : 0, weaponInRange->weapon->durability, weaponComparator->oldDurability, weaponComparator->newDurability);
 	}
 }
 
@@ -259,7 +261,7 @@ void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
 
 		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage : 25, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
 		weaponComparator->UpdateStats(2, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusSpeed - 2 : 0, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
-		weaponComparator->UpdateStats(1, 0, 0, weaponComparator->oldDurability, weaponComparator->newDurability);
+		weaponComparator->UpdateStats(-1, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->durability : 0, weaponInRange->weapon->durability, weaponComparator->oldDurability, weaponComparator->newDurability);
 	}
 }
 
@@ -428,4 +430,14 @@ void Player::DisableBerserkerMode()
 {
 	renderer->berserkerModeActive = false;
 	berserkerModeText->isActive = false;
+}
+
+void Player::CheckWeapon()
+{
+	if (weapon->GetWeapon() != nullptr && weapon->GetWeapon()->durability <= 0)
+	{
+		weapon->SetWeapon(nullptr);
+
+		attackSpeed = 2.0f;
+	}
 }

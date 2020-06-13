@@ -30,10 +30,12 @@ void Weapon::OnTriggerStay(std::shared_ptr<Collider> other)
 
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>() != nullptr)
 	{
-
 		hitObjects.push_back(EntityManager::GetInstance()->GetEntity(other->GetOwnerID()));
 
-		EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>()->GetHit(damage + (equipedWeapon == nullptr ? 0 : equipedWeapon->bonusDamage));
+		EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>()->GetHit(damage + (equipedWeapon == nullptr || equipedWeapon->durability <= 0 ? 0 : equipedWeapon->bonusDamage));
+
+		if (equipedWeapon != nullptr)
+			equipedWeapon->durability--;
 	}
 }
 
