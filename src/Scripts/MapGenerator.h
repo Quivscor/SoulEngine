@@ -19,6 +19,8 @@ public:
 	void Generate();
 	void Clear();
 	std::shared_ptr <Entity> player;
+	int mapSizeX;
+	int mapSizeY;
 private:
 	Renderer* renderer;
 	AssetManager * assetManager;
@@ -28,8 +30,7 @@ private:
 	GameLogic* gameLogic;
 	std::shared_ptr<EntityManager> m_EntityManager;
 	
-	int mapSizeX;
-	int mapSizeY;
+	
 	bool **mapShape;
 	int startVillagesCount = 6;
 	int villagesCount = startVillagesCount;

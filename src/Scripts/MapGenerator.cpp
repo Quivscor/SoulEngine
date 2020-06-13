@@ -81,6 +81,9 @@ void MapGenerator::Generate()
 
 	mapSizeX = GenerateRandomNumber(7, 12);
 	mapSizeY = GenerateRandomNumber(7, 12);
+
+	mapSizeX = 5;
+	mapSizeY = 5;
 	std::cout << "\nX: " << mapSizeX << " Y: " << mapSizeY << std::endl;
 
 	generatedMap = new std::string*[mapSizeX];

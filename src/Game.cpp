@@ -269,7 +269,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	mapGenerator = new MapGenerator(renderer, assetManager, physics,  shadera, grassShader, gameLogic, m_EntityManager, pec);
 	mapGenerator->Generate();
 	// ------------------------------------------------------
-
+	character->GetComponent<Transform>()->SetLocalPosition(glm::vec3(mapGenerator->mapSizeX/2 * 16, 0, mapGenerator->mapSizeY / 2 * 16));
 	//player's weapon ! -> it should be spawned in player's script imo
 	std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
 	weapon->AddComponent<Transform>();
