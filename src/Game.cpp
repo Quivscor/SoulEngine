@@ -429,6 +429,11 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	Model* playerMaceAttack = assetManager->LoadModel("./res/models/player/mace/player_attack_mace.dae");
 	Model* playerMaceRun = assetManager->LoadModel("./res/models/player/mace/player_run_mace.dae");
 	Model* playerMaceRoll = assetManager->LoadModel("./res/models/player/mace/player_roll_mace.dae");
+	//without weapon
+	Model* playerIdle = assetManager->LoadModel("./res/models/player/noWeapon/player_idle.dae");
+	Model* playerAttack = assetManager->LoadModel("./res/models/player/noWeapon/player_attack.dae");
+	Model* playerRun = assetManager->LoadModel("./res/models/player/noWeapon/player_run.dae");
+	Model* playerRoll = assetManager->LoadModel("./res/models/player/noWeapon/player_roll.dae");
 
 	Model* playerDeath = assetManager->LoadModel("./res/models/player/player_death.dae");
 
@@ -479,8 +484,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->AddComponent<Mesh>();
 	character->AddComponent<Model>();
 
-	character->GetComponent<Model>()->UseModel(playerSwordIdle);
-	character->GetComponent<Mesh>()->SetAll(playerSwordIdle->GetMeshes()[0]);
+	character->GetComponent<Model>()->UseModel(playerIdle);
+	character->GetComponent<Mesh>()->SetAll(playerIdle->GetMeshes()[0]);
 	character->GetComponent<Mesh>()->setupMeshfBones();
 
 	character->GetComponent<Mesh>()->material->SetShader(shadera);
@@ -499,6 +504,10 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->animationMaceAttack = playerMaceAttack;
 	character->GetComponent<Player>()->animationMaceIdle = playerMaceIdle;
 	character->GetComponent<Player>()->animationMaceRoll = playerMaceRoll;
+	character->GetComponent<Player>()->animationRun = playerRun;
+	character->GetComponent<Player>()->animationAttack = playerAttack;
+	character->GetComponent<Player>()->animationIdle = playerIdle;
+	character->GetComponent<Player>()->animationRoll = playerRoll;
 	character->GetComponent<Player>()->animationDeath = playerDeath;
 	character->GetComponent<Player>()->shader = shadera;
 	character->GetComponent<Player>()->renderer = renderer;

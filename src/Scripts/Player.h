@@ -45,6 +45,12 @@ public:
 	Model* animationMaceAttack;
 	Model* animationMaceRoll;
 
+	//no weapon
+	Model* animationIdle;
+	Model* animationRun;
+	Model* animationAttack;
+	Model* animationRoll;
+
 	Model* animationDeath;
 
 	Renderer* renderer;
