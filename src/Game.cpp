@@ -86,16 +86,32 @@ void Game::Run()
 	source.SetVolume(0.1f);
 	//---------------------------------------------------------------------------------
 
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	//ImGuiIO &io = ImGui::GetIO();
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(m_Window->GetMWindow(), false);
+	ImGui_ImplOpenGL3_Init("#version 330 core");
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
 	while (true)
 	{
-		
 		//physics->FixedUpdate();
 		TimeCustom::RunTimer();
 		//double start = glfwGetTime();
 		glfwPollEvents();
-
 		//input must be early to read from it
 		inputSystem->Update();
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("Demo window");
+		ImGui::Text("%f FPS", 1/TimeCustom::GetDeltaTime());
+		ImGui::End();
 
 		gameLogic->Update();
 
@@ -112,6 +128,9 @@ void Game::Run()
 		renderer->LateUpdate();
 		inputSystem->LateUpdate();
 	}
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void Game::LoadMap(Renderer* renderer, AssetManager* assetManager, Physics* physics, Shader* animShader, Shader* grassShader, GameLogic* gameLogic, std::shared_ptr<Entity> player)
