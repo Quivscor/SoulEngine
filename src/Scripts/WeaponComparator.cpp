@@ -32,9 +32,21 @@ void WeaponComparator::UpdateStats(float base, float oldValue, float newValue, s
 {
 	std::shared_ptr<Text> oldTextGUI = oldText->GetComponent<Text>();
 	std::shared_ptr<Text> newTextGUI = newText->GetComponent<Text>();
+	
+	int oldCalcValue;
+	int newCalcValue;
 
-	int oldCalcValue = (oldValue / base * 100);
-	int newCalcValue = (newValue / base * 100);
+	if (base > 0)
+	{
+		oldCalcValue = (oldValue / base * 100);
+		newCalcValue = (newValue / base * 100);
+	}
+	else
+	{
+		oldCalcValue = oldValue;
+		newCalcValue = newValue;
+	}
+
 
 	oldTextGUI->text = std::to_string(oldCalcValue);
 	newTextGUI->text = std::to_string(newCalcValue);

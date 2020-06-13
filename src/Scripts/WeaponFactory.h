@@ -20,6 +20,7 @@ struct WeaponStats
 	WeaponModel model;
 	float bonusDamage;
 	float bonusSpeed;
+	int durability;
 };
 
 static class WeaponFactory

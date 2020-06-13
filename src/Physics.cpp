@@ -155,7 +155,7 @@ void Physics::Update() const
 		}
 	} 
 
-	std::cout << "Wynik: " << wyw << std::endl;
+	//std::cout << "Wynik: " << wyw << std::endl;
 	wyw = 0;
 
 	//check triggers function

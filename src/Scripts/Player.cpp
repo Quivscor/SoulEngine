@@ -14,13 +14,15 @@ void Player::Start()
 {
 	thisEntity->GetComponent<Transform>()->SetLocalRotation(glm::vec3(0, 0, 0));
 
-	currentAnimation = animationSwordIdle;
+	currentAnimation = animationIdle;
 }
 
 void Player::Update()
 {
 	if (inputHandler == nullptr)
 		return;
+
+	CheckWeapon();
 
 	if (pec->killedEnemiesCounter > lastEnemyCounter)
 	{
@@ -216,9 +218,12 @@ void Player::Swap()
 	weapon->SetWeapon(weaponInRange->weapon);
 	weaponInRange->weapon = weaponTmp;
 
-	weaponTmp.reset();
+	if (weaponInRange->weapon == nullptr)
+		EntityManager::GetInstance()->GetEntity(weaponInRange->GetOwnerID())->isActive = false;
+	else
+		weaponInRange->UpdateWeapon();
 
-	weaponInRange->UpdateWeapon();
+	weaponTmp.reset();
 
 	attackSpeed = weapon->GetWeapon()->bonusSpeed;
 	attackTime = 0.5f - ((attackSpeed - 2.0f) / 4.0f);
@@ -239,9 +244,12 @@ void Player::Swap()
 
 	ChangeAnimation(animToSet);
 
-	weaponComparator->UpdateStats(25, this->weapon->GetWeapon()->bonusDamage, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
-	weaponComparator->UpdateStats(2, this->weapon->GetWeapon()->bonusSpeed - 2, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
-	weaponComparator->UpdateStats(1, 0, 0, weaponComparator->oldDurability, weaponComparator->newDurability);
+	if (weaponInRange->weapon != nullptr)
+	{
+		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage : 25, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
+		weaponComparator->UpdateStats(2, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusSpeed - 2 : 0, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
+		weaponComparator->UpdateStats(-1, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->durability : 0, weaponInRange->weapon->durability, weaponComparator->oldDurability, weaponComparator->newDurability);
+	}
 }
 
 void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
@@ -251,9 +259,9 @@ void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
 		weaponInRange = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>();
 		weaponComparator->Show(true);
 
-		weaponComparator->UpdateStats(25, this->weapon->GetWeapon()->bonusDamage, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
-		weaponComparator->UpdateStats(2, this->weapon->GetWeapon()->bonusSpeed - 2, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
-		weaponComparator->UpdateStats(1, 0, 0, weaponComparator->oldDurability, weaponComparator->newDurability);
+		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage : 25, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
+		weaponComparator->UpdateStats(2, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusSpeed - 2 : 0, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
+		weaponComparator->UpdateStats(-1, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->durability : 0, weaponInRange->weapon->durability, weaponComparator->oldDurability, weaponComparator->newDurability);
 	}
 }
 
@@ -269,8 +277,32 @@ void Player::OnTriggerExit(std::shared_ptr<Collider> other)
 void Player::ChangeAnimation(AnimationType type)
 {
 	Model* model = nullptr;
+	if (weapon->GetWeapon() == nullptr)
+	{
+		switch (type)
+		{
+		case PlayerAnimationIdle:
+			model = animationIdle;
+			break;
 
-	if (weapon->GetWeapon()->model.type == Sword)
+		case PlayerAnimationRun:
+			model = animationRun;
+			break;
+
+		case PlayerAnimationAttack:
+			model = animationAttack;
+			break;
+
+		case PlayerAnimationRoll:
+			model = animationRoll;
+			break;
+
+		case PlayerAnimationDeath:
+			model = animationDeath;
+			break;
+		}
+	}
+	else if (weapon->GetWeapon()->model.type == Sword)
 	{
 		switch (type)
 		{
@@ -398,4 +430,14 @@ void Player::DisableBerserkerMode()
 {
 	renderer->berserkerModeActive = false;
 	berserkerModeText->isActive = false;
+}
+
+void Player::CheckWeapon()
+{
+	if (weapon->GetWeapon() != nullptr && weapon->GetWeapon()->durability <= 0)
+	{
+		weapon->SetWeapon(nullptr);
+
+		attackSpeed = 2.0f;
+	}
 }
