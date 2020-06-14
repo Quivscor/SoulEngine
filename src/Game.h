@@ -24,6 +24,8 @@ public:
 	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem, MapGenerator* mapGenerator);
 	Model * FindModelByName(Model* [], std::string name);
 private:
+	bool debug = true;
+
 	void InitializeWeapons(AssetManager* assetManager);
 	void InitializeBasicGUI(Renderer* renderer, Physics* physics);
 	void InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic);

@@ -121,15 +121,17 @@ void Game::Run()
 	ImGui_ImplOpenGL3_Init("#version 330 core");
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
-	std::chrono::time_point<std::chrono::steady_clock> startGL, endGL, startPhy, endPhy, startRender, endRender;
-	startGL = endGL = startPhy = endPhy = startRender = endRender = std::chrono::steady_clock::now();
-	std::chrono::duration<double> timeGameLogic, timePhysics, timeRender;
-	timeGameLogic = timePhysics = timeRender = startGL - endGL;
+	std::chrono::time_point<std::chrono::steady_clock> startFull, endFull, startGL, endGL, startPhy, endPhy, startRender, endRender;
+	startFull = endFull = startGL = endGL = startPhy = endPhy = startRender = endRender = std::chrono::steady_clock::now();
+	std::chrono::duration<double> timeGameLogic, timePhysics, timeRender, timeFull;
+	timeFull = timeGameLogic = timePhysics = timeRender = startGL - endGL;
 	std::cout << "\n=== ImGui initialized\n";
 
 
 	while (true)
 	{
+		startFull = std::chrono::steady_clock::now();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -141,12 +143,13 @@ void Game::Run()
 		//input must be early to read from it
 		inputSystem->Update();
 		
+		if(debug)
 		{
 			ImGui::Begin("Debug window");
 			ImGui::Text("%f FPS", 1 / TimeCustom::GetDeltaTime());
-			ImGui::Text("%f time of GameLogic Update", timeGameLogic);
-			ImGui::Text("%f time of Physics Update", timePhysics);
-			ImGui::Text("%f time of Graphics Update", timeRender);
+			ImGui::Text("%f %% of time on GameLogic Update", timeGameLogic.count()/timeFull.count());
+			ImGui::Text("%f %% of time on Physics Update", timePhysics.count()/timeFull.count());
+			ImGui::Text("%f %% of time on Graphics Update", timeRender.count()/timeFull.count());
 			ImGui::End();
 		}
 
@@ -174,6 +177,9 @@ void Game::Run()
 		physics->LateUpdate();
 		renderer->LateUpdate();
 		inputSystem->LateUpdate();
+
+		endFull = std::chrono::steady_clock::now();
+		timeFull = endFull - startFull;
 	}
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
