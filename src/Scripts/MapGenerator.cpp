@@ -26,58 +26,9 @@ void MapGenerator::Generate()
 	Model* grassLeaf = assetManager->LoadModel("./res/models/tiles/Grass/GrassFromGalapagos.obj");
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
-	name = "GrassLeaf";
-	int numberOfGrass = grassManager->amount;
+	
+	
 	srand(time(NULL));
-	for (int i = 0; i < numberOfGrass; i++)
-	{
-		float randomX = rand() % 40 + (rand() % 100) / 100.f;
-		if (rand() % 2 == 0)
-			randomX *= -1;
-		float randomY = rand() % 40 + (rand() % 100) / 100.f;
-		if (rand() % 2 == 0)
-			randomY *= -1;
-		glm::vec3 pos(randomX, 0, randomY);
-		glm::vec3 scale(0.05, 0.3, 0.05);
-		glm::vec3 rot(0, 0, 0);
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(pos));
-		model = glm::scale(model, glm::vec3(scale));
-		std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
-		grassManager->instanceModels[i] = model;
-
-		object->AddComponent<Mesh>();
-		object->GetComponent<Mesh>()->indices = (grassLeaf)->GetMeshes()[0].indices;
-		object->GetComponent<Mesh>()->vertices = (grassLeaf)->GetMeshes()[0].vertices;
-		object->GetComponent<Mesh>()->material = (grassLeaf)->GetMeshes()[0].material;
-		object->GetComponent<Mesh>()->setupMesh();
-		grassManager->m_mesh = object->GetComponent<Mesh>().get();
-
-	}
-	std::cout << sizeof(grassManager->instanceModels);
-	grassManager->m_shader = grassShader;
-	glGenBuffers(1, &grassManager->buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, grassManager->buffer);
-	glBufferData(GL_ARRAY_BUFFER, numberOfGrass * sizeof(glm::mat4), &grassManager->instanceModels[0], GL_STATIC_DRAW);
-	unsigned int VAO = grassLeaf->meshes[0].GetVAO();
-	glBindVertexArray(VAO);
-	// set attribute pointers for matrix (4 times vec4)
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
-	glEnableVertexAttribArray(5);
-	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
-	glEnableVertexAttribArray(6);
-	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
-
-	glVertexAttribDivisor(3, 1);
-	glVertexAttribDivisor(4, 1);
-	glVertexAttribDivisor(5, 1);
-	glVertexAttribDivisor(6, 1);
-
-	glBindVertexArray(0);
-	renderer->RegisterManager(grassManager);
 
 	mapSizeX = GenerateRandomNumber(7, 12);
 	mapSizeY = GenerateRandomNumber(7, 12);
@@ -101,12 +52,15 @@ void MapGenerator::Generate()
 	ShowVillagesMap();
 	GenerateRandomTiles();
 	ShowMapTiles();
-
+	int grassNumberOnTile = 1500;
+	grassManager->instanceModels = new glm::mat4[tilesNumber * grassNumberOnTile];
+	grassManager->amount = tilesNumber * grassNumberOnTile;
+	int numberOfGrass = grassManager->amount;
+	int grassCounter = 0;
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
 		{
-
 			std::ifstream file;
 			if (generatedMap[i][j] == "Forest1")
 			{
@@ -261,11 +215,69 @@ void MapGenerator::Generate()
 			}
 
 			file.close();
+			if (generatedMap[i][j]!= "Water")
+			{
+				name = "GrassLeaf";
+				for (int k = 0; k < grassNumberOnTile; k++)
+				{
+					
+					float randomX = rand() % 8 + (rand() % 100) / 100.f;
+					if (rand() % 2 == 0)
+						randomX *= -1;
+					float randomY = rand() % 8 + (rand() % 100) / 100.f;
+					if (rand() % 2 == 0)
+						randomY *= -1;
+						
+					glm::vec3 pos(randomX + j*16, 0, randomY+i*16);
+					glm::vec3 scale(0.05, 0.3, 0.05);
+					glm::vec3 rot(0, 0, 0);
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, glm::vec3(pos));
+					model = glm::scale(model, glm::vec3(scale));
+					std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+					grassManager->instanceModels[grassCounter] = model;
+					grassCounter++;
+					object->AddComponent<Transform>();
+					object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
+					object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(randomX, 0, randomY));
+					object->AddComponent<Mesh>();
+					object->GetComponent<Mesh>()->indices = (grassLeaf)->GetMeshes()[0].indices;
+					object->GetComponent<Mesh>()->vertices = (grassLeaf)->GetMeshes()[0].vertices;
+					object->GetComponent<Mesh>()->material = (grassLeaf)->GetMeshes()[0].material;
+					object->GetComponent<Mesh>()->setupMesh();
+					grassManager->m_mesh = object->GetComponent<Mesh>().get();
 
-			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(i * 16, 0, j * 16));
+				}
+			}
+			
+			
+			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(j * 16, 0, i * 16));
 
 		}
 	}
+	grassManager->m_shader = grassShader;
+	glGenBuffers(1, &grassManager->buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, grassManager->buffer);
+	glBufferData(GL_ARRAY_BUFFER, numberOfGrass * sizeof(glm::mat4), &grassManager->instanceModels[0], GL_STATIC_DRAW);
+	unsigned int VAO = grassLeaf->meshes[0].GetVAO();
+	glBindVertexArray(VAO);
+	// set attribute pointers for matrix (4 times vec4)
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
+	glVertexAttribDivisor(6, 1);
+
+	glBindVertexArray(0);
+	renderer->RegisterManager(grassManager);
 }
 Model* MapGenerator::FindModelByName(Model* array[], std::string name) 
 {
@@ -388,8 +400,21 @@ void MapGenerator::CreateMapShape()
 	if (!mapShape[mapSizeX - 2][0] && !mapShape[mapSizeX - 1][1]) mapShape[mapSizeX - 1][0] = false; // right top corner
 	if (!mapShape[0][mapSizeY - 2] && !mapShape[1][mapSizeY - 1]) mapShape[0][mapSizeY - 1] = false; // left bottom corner
 	if (!mapShape[mapSizeX - 1][mapSizeY - 2] && !mapShape[mapSizeX - 2][mapSizeY - 1]) mapShape[mapSizeX - 1][mapSizeY - 1] = false; // right bottom corner
-}
+	CountTiles();
 
+}
+// counting number of lands/tiles on map after generation
+void MapGenerator::CountTiles()
+{
+	for (int i = 0; i < mapSizeX; i++)
+	{
+		for (int j = 0; j < mapSizeY; j++)
+		{
+			if(mapShape[i][j])
+				tilesNumber++;
+		}
+	}
+}
 void MapGenerator::CreateVillages()
 {
 	// starting tile is a grassland

@@ -34,6 +34,7 @@ private:
 	
 	
 	bool **mapShape;
+	int tilesNumber = 0;
 	int startVillagesCount = 6;
 	int villagesCount = startVillagesCount;
 	std::string mapTiles[4] = { "GrassLand","Forest1","Forest2","Mountains" };
@@ -49,6 +50,7 @@ private:
 	int GenerateRandomNumber(int min, int max);
 	void ShowMapShape();
 	void CreateMapShape();
+	void CountTiles();
 	void CreateVillages();
 	void ShowVillagesMap();
 	void GenerateRandomTiles();
