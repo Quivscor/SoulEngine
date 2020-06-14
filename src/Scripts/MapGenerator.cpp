@@ -206,6 +206,8 @@ void MapGenerator::Generate()
 					object->AddComponent<Character>();
 					object->GetComponent<Character>()->playerReference = player;
 
+					player->GetComponent<PlayerEnemyCommunicator>()->EnemySpawned();
+
 					object->layer = EnemyLayer;
 
 					//container for Enemy script

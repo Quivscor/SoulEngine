@@ -29,6 +29,7 @@
 #include "Scripts/WeaponComparator.h"
 #include<Billboard.h>
 #include "Scripts/PlayerEnemyCommunicator.h"
+#include "Scripts/GameManager.h"
 
 
 Game::Game() {}
@@ -290,6 +291,14 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	renderer->RegisterEntity(weapon);
 	gameLogic->RegisterEntity(weapon);
 	physics->RegisterEntity(weapon);
+
+
+	//-------------GAME MANAGER------------
+	std::shared_ptr<Entity> gameManager = m_EntityManager->CreateEntity<Entity>();
+	gameManager->AddComponent<GameManager>();
+	gameManager->GetComponent<GameManager>()->pec = pec->GetComponent<PlayerEnemyCommunicator>();
+
+	gameLogic->RegisterEntity(gameManager);
 
 
 	//renderer->RegisterEntity(weapon);

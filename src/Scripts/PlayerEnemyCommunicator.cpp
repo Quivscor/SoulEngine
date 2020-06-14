@@ -16,3 +16,8 @@ void PlayerEnemyCommunicator::EnemyDied()
 	std::cout << "I'm dead" << std::endl;
 }
 
+void PlayerEnemyCommunicator::EnemySpawned()
+{
+	spawnedEnemies++;
+}
+

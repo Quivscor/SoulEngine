@@ -11,4 +11,8 @@ public:
 	void EnemyDied();
 
 	int killedEnemiesCounter = 0;
+
+	int spawnedEnemies = 0;
+
+	void EnemySpawned();
 };
