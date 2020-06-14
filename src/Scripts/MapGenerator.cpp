@@ -265,7 +265,16 @@ void MapGenerator::Generate()
 						randomY *= -1;
 						
 					glm::vec3 pos(randomX + j*16, 0, randomY+i*16);
-					glm::vec3 scale(0.05, 0.3, 0.05);
+					int grassX = rand() % 100 / 100.f;
+					if (rand() % 2 == 0)
+						grassX *-1.f;
+					int grassY = rand() % 100 / 100.f;
+					if (rand() % 2 == 0)
+						grassY *-1.f;
+					int grassZ = rand() % 100 / 100.f;
+					if (rand() % 2 == 0)
+						grassZ *-1.f;
+					glm::vec3 scale(0.1 + grassX, 0.2 + grassY, 0.1 + grassZ);
 					glm::vec3 rot(0, 0, 0);
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(pos));
@@ -285,8 +294,6 @@ void MapGenerator::Generate()
 
 				}
 			}
-			
-			
 			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(j * 16, 0, i * 16));
 			std::cout << "- tile [" << i << "][" << j << "] spawned\n";
 		}
