@@ -89,7 +89,7 @@ void MapGenerator::Generate()
 					std::cout << "Unable to open file TileVillage.txt";
 				}
 			}
-			if (generatedMap[i][j] == "Mountain")
+			if (generatedMap[i][j] == "Mountains")
 			{
 				//std::cout << "Mountain loading \n";
 				file.open("./res/maps/TileMountain.txt");
