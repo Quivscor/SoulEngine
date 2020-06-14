@@ -151,16 +151,14 @@ Renderer::~Renderer()
 
 }
 
-void Renderer::Init() const
+void Renderer::Init()
 {
-
-
+	cameraComponent = mainCamera->GetComponent<Camera>();
+	cameraTransform = mainCamera->GetComponent<Transform>();
 }
 
 void Renderer::Update() const
 {
-	mainCamera->GetComponent<Camera>()->CalculateFrustum();
-
 	glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -180,6 +178,7 @@ void Renderer::Update() const
 	
 	
 	std::shared_ptr<Transform> trns = m_Entities[0]->GetComponent<Transform>();
+	
 	//std::cout << trns->GetLocalPosition().x << std::endl;
 
 	/*Billboard::Instance("./res/textures/ExampleBillboard.DDS", true,mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
@@ -194,20 +193,20 @@ void Renderer::Update() const
 
 	glm::mat4 text_translate_to_model_1 = glm::translate(trns->GetLocalMatrix(), glm::vec3(trns->GetLocalPosition().x - 2.f, trns->GetLocalPosition().y + 20.0f, trns->GetLocalPosition().z));
 
-	glm::mat4 text_matrix_3D_model_1 = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * text_translate_to_model_1 * scale;
+	glm::mat4 text_matrix_3D_model_1 = cameraComponent->GetProjection() * cameraTransform->GetGlobalMatrix() * text_translate_to_model_1 * scale;
 
 	//TextRendering::Instance()->draw("Gracz", glm::vec3(1.0f, 0.0f, 0.0f), text_matrix_3D_model_1);
 
 	// drawing crystal object
 	refractorShader->use();
-	refractorShader->setMat4("projection", mainCamera->GetComponent<Camera>()->GetProjection());
-	refractorShader->setMat4("view", mainCamera->GetComponent<Transform>()->GetGlobalMatrix());
+	refractorShader->setMat4("projection", cameraComponent->GetProjection());
+	refractorShader->setMat4("view", cameraTransform->GetGlobalMatrix());
 	glm::mat4 model = glm::mat4(1.0f);
 	//model = glm::translate(model, glm::vec3(3.0f, 5.0f, 1.5f));
 	model = glm::scale(model, glm::vec3(1.0f, 3.0f, 1.0f));
 	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	refractorShader->setMat4("model", model);
-	refractorShader->setVec3("cameraPos", mainCamera->GetComponent<Transform>()->GetGlobalPosition());
+	refractorShader->setVec3("cameraPos", cameraTransform->GetGlobalPosition());
 
 	refractorShader->setInt("texture_diffuse1", 0);
 	glActiveTexture(GL_TEXTURE0);
@@ -221,11 +220,11 @@ void Renderer::Update() const
 	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 	skyBoxShader->use();
 	model = glm::mat4(1.0f);
-	glm::mat4 view = mainCamera->GetComponent<Transform>()->GetGlobalMatrix();
-	view = glm::mat4(glm::mat3(mainCamera->GetComponent<Transform>()->GetGlobalMatrix())); // remove translation from the view matrix
+	glm::mat4 view = cameraTransform->GetGlobalMatrix();
+	view = glm::mat4(glm::mat3(cameraTransform->GetGlobalMatrix())); // remove translation from the view matrix
 	skyBoxShader->setMat4("view", view);
 	skyBoxShader->setMat4("model", model);
-	glm::mat4 projection = mainCamera->GetComponent<Camera>()->GetProjection();
+	glm::mat4 projection = cameraComponent->GetProjection();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	skyBoxShader->setMat4("projection", projection);
 	// skybox cube
@@ -382,7 +381,7 @@ void Renderer::DrawMeshes() const
 		}
 		if (m_Entities[i]->layer != Layer::WaterLayer)
 		{
-			if (mainCamera->GetComponent<Camera>()->DistanceFromCameraTarget(trns) > renderingRange)
+			if (cameraComponent->DistanceFromCameraTarget(trns) > renderingRange)
 				continue;
 		}
 			
@@ -428,12 +427,14 @@ void Renderer::DrawMeshes() const
 			shader->use();
 			shader->setVec3("dir_light.direction", lightPos);
 			shader->setInt("material.shadowMap", 2);
-					shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-					shader->setVec3("playerPosition", playerPosition);
-			if (m_Entities[i]->GetComponent<Model>() != nullptr)
+			shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+			shader->setVec3("playerPosition", playerPosition);
+			std::shared_ptr<Model> modelComponent = m_Entities[i]->GetComponent<Model>();
+
+			if (modelComponent != nullptr)
 			{
-				m_Entities[i]->GetComponent<Model>()->initShaders(shader);
-				m_Entities[i]->GetComponent<Model>()->ChangeBonePositions();
+				modelComponent->initShaders(shader);
+				modelComponent->ChangeBonePositions();
 				
 					
 				//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
@@ -461,7 +462,7 @@ void Renderer::DrawMeshes() const
 			//player position
 			//glUniform3f(glGetUniformLocation(shader->ID, "playerPosition"), playerPosition.x, playerPosition.y, playerPosition.z);
 
-			glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * trns->GetGlobalMatrix();
+			glm::mat4 mvp = cameraComponent->GetProjection() * cameraTransform->GetGlobalMatrix() * trns->GetGlobalMatrix();
 
 			unsigned int model = glGetUniformLocation(shader->ID, "M_matrix");
 			glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
@@ -570,8 +571,8 @@ void Renderer::DrawGrass() const
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//glm::mat4 view = camera.GetViewMatrix();
 	instanceManagers[0]->m_shader->use();
-	instanceManagers[0]->m_shader->setMat4("projection", mainCamera->GetComponent<Camera>()->GetProjection());
-	instanceManagers[0]->m_shader->setMat4("view", mainCamera->GetComponent<Transform>()->GetGlobalMatrix());
+	instanceManagers[0]->m_shader->setMat4("projection", cameraComponent->GetProjection());
+	instanceManagers[0]->m_shader->setMat4("view", cameraTransform->GetGlobalMatrix());
 	instanceManagers[0]->m_shader->setInt("texture_diffuse1", 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, instanceManagers[0]->m_mesh->material->GetTextures()[0].id);
@@ -657,107 +658,6 @@ void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Tran
 	glDeleteBuffers(1, &VBO);
 }
 
-void Renderer::DrawFrustum(Frustum frustum) const
-{
-	Shader* shader = defaultShader;
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
-	int pointsCount = 6 * 3 * 3;
-
-	float* vertices = new float[pointsCount];
-
-	vertices[0] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].x;
-	vertices[1] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].y;
-	vertices[2] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].z;
-	vertices[3] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].x;
-	vertices[4] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].y;
-	vertices[5] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].z;
-	vertices[6] = frustum.fnear[Frustum::COORD_TOPLEFT].x;
-	vertices[7] = frustum.fnear[Frustum::COORD_TOPLEFT].y;
-	vertices[8] = frustum.fnear[Frustum::COORD_TOPLEFT].z;
-	vertices[9] = frustum.ffar[Frustum::COORD_TOPLEFT].x;
-	vertices[10] = frustum.ffar[Frustum::COORD_TOPLEFT].y;
-	vertices[11] = frustum.ffar[Frustum::COORD_TOPLEFT].z;
-	vertices[12] = frustum.ffar[Frustum::COORD_TOPRIGHT].x;
-	vertices[13] = frustum.ffar[Frustum::COORD_TOPRIGHT].y;
-	vertices[14] = frustum.ffar[Frustum::COORD_TOPRIGHT].z;
-	vertices[15] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].x;
-	vertices[16] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].y;
-	vertices[17] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].z;
-	vertices[18] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].x;
-	vertices[19] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].y;
-	vertices[20] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].z;
-	vertices[21] = frustum.fnear[Frustum::COORD_TOPLEFT].x;
-	vertices[22] = frustum.fnear[Frustum::COORD_TOPLEFT].y;
-	vertices[23] = frustum.fnear[Frustum::COORD_TOPLEFT].z;
-	vertices[24] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].x;
-	vertices[25] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].y;
-	vertices[26] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].z;
-	vertices[27] = frustum.ffar[Frustum::COORD_TOPRIGHT].x;
-	vertices[28] = frustum.ffar[Frustum::COORD_TOPRIGHT].y;
-	vertices[29] = frustum.ffar[Frustum::COORD_TOPRIGHT].z;
-	vertices[30] = frustum.fnear[Frustum::COORD_TOPRIGHT].x;
-	vertices[31] = frustum.fnear[Frustum::COORD_TOPRIGHT].y;
-	vertices[32] = frustum.fnear[Frustum::COORD_TOPRIGHT].z;
-	vertices[33] = frustum.ffar[Frustum::COORD_BOTTOMRIGHT].x;
-	vertices[34] = frustum.ffar[Frustum::COORD_BOTTOMRIGHT].y;
-	vertices[35] = frustum.ffar[Frustum::COORD_BOTTOMRIGHT].z;
-	vertices[36] = frustum.ffar[Frustum::COORD_TOPLEFT].x;
-	vertices[37] = frustum.ffar[Frustum::COORD_TOPLEFT].y;
-	vertices[38] = frustum.ffar[Frustum::COORD_TOPLEFT].z;
-	vertices[39] = frustum.ffar[Frustum::COORD_TOPRIGHT].x;
-	vertices[40] = frustum.ffar[Frustum::COORD_TOPRIGHT].y;
-	vertices[41] = frustum.ffar[Frustum::COORD_TOPRIGHT].z;
-	vertices[42] = frustum.fnear[Frustum::COORD_TOPLEFT].x;
-	vertices[43] = frustum.fnear[Frustum::COORD_TOPLEFT].y;
-	vertices[44] = frustum.fnear[Frustum::COORD_TOPLEFT].z;
-	vertices[45] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].x;
-	vertices[46] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].y;
-	vertices[47] = frustum.fnear[Frustum::COORD_BOTTOMLEFT].z;
-	vertices[48] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].x;
-	vertices[49] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].y;
-	vertices[50] = frustum.ffar[Frustum::COORD_BOTTOMLEFT].z;
-	vertices[51] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].x;
-	vertices[52] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].y;
-	vertices[53] = frustum.fnear[Frustum::COORD_BOTTOMRIGHT].z;
-	
-	unsigned int VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, pointsCount * sizeof(float), vertices, GL_STATIC_DRAW);
-
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	// texture coord attribute
-	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	shader->use();
-
-	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix();// *trns->matrix;
-
-	unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
-
-	unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
-	glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(1.0, 0.5f, 0.0f)));
-
-	unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
-	glUniform1i(hasTexture, 0);
-
-	glDrawArrays(GL_LINE_STRIP, 0, 54);
-
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-}
-
 void Renderer::DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -825,7 +725,7 @@ void Renderer::DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Ma
 
 	defaultShader->use();
 
-	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix() * transform->GetGlobalMatrix();
+	glm::mat4 mvp = cameraComponent->GetProjection() * cameraTransform->GetGlobalMatrix() * transform->GetGlobalMatrix();
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));

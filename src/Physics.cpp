@@ -10,7 +10,7 @@ Physics::~Physics()
 
 }
 
-void Physics::Init() const
+void Physics::Init()
 { 
 	
 }

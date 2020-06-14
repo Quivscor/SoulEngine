@@ -10,7 +10,7 @@ class Physics : public System
 public:
 	Physics();
 	~Physics();
-	void Init() const;
+	void Init();
 	virtual void Update() const;
 	virtual void LateUpdate() const;
 	void FixedUpdate() const;

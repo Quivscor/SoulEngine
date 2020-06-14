@@ -10,7 +10,7 @@ GameLogic::~GameLogic()
 
 }
 
-void GameLogic::Init() const
+void GameLogic::Init()
 {
 
 }

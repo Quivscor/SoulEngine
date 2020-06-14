@@ -12,7 +12,7 @@ public:
 	GameLogic();
 	~GameLogic();
 
-	void Init() const;
+	void Init();
 	void Start() const;
 	virtual void Update() const;
 	virtual void LateUpdate() const;

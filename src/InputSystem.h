@@ -21,7 +21,7 @@ public:
 
 	InputSystem();
 	~InputSystem();
-	virtual void Init() const {};
+	virtual void Init();
 	virtual void Update() const;
 	virtual void LateUpdate() const;
 	static void AddInput(int input, int action);

@@ -35,6 +35,10 @@ InputSystem::~InputSystem()
 {
 }
 
+void InputSystem::Init()
+{
+}
+
 void InputSystem::Update() const
 {
 	for (std::shared_ptr<Entity> entity : m_Entities)

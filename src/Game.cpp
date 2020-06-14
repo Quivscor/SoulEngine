@@ -88,6 +88,7 @@ void Game::Run()
 
 	InitializeBasicGUI(renderer, physics);
 
+	renderer->Init();
 	gameLogic->Start();
 	source.SetLooping(true);
 	source.Play(audioMaster.GenBuffer("./res/sound/VikingMusic.wav"));
@@ -103,25 +104,37 @@ void Game::Run()
 	ImGui_ImplOpenGL3_Init("#version 330 core");
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
+	std::chrono::time_point<std::chrono::steady_clock> startGL, endGL, startPhy, endPhy, startRender, endRender;
+	startGL = endGL = startPhy = endPhy = startRender = endRender = std::chrono::steady_clock::now();
+	std::chrono::duration<double> timeGameLogic, timePhysics, timeRender;
+	timeGameLogic = timePhysics = timeRender = startGL - endGL;
 
 	while (true)
 	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 		//physics->FixedUpdate();
 		TimeCustom::RunTimer();
 		//double start = glfwGetTime();
 		glfwPollEvents();
 		//input must be early to read from it
 		inputSystem->Update();
+		
+		{
+			ImGui::Begin("Debug window");
+			ImGui::Text("%f FPS", 1 / TimeCustom::GetDeltaTime());
+			ImGui::Text("%f time of GameLogic Update", timeGameLogic);
+			ImGui::Text("%f time of Physics Update", timePhysics);
+			ImGui::Text("%f time of Graphics Update", timeRender);
+			ImGui::End();
+		}
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		ImGui::Begin("Demo window");
-		ImGui::Text("%f FPS", 1/TimeCustom::GetDeltaTime());
-		ImGui::End();
-
+		startGL = std::chrono::steady_clock::now();
 		gameLogic->Update();
+		endGL = std::chrono::steady_clock::now();
+		timeGameLogic = endGL - startGL;
 
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_ESCAPE)) {
 			glfwTerminate();
@@ -129,8 +142,15 @@ void Game::Run()
 			exit(3);
 		}
 
+		startPhy = std::chrono::steady_clock::now();
 		physics->Update();
+		endPhy = std::chrono::steady_clock::now();
+		timePhysics = endPhy - startPhy;
+		
+		startRender = std::chrono::steady_clock::now();
 		renderer->Update();
+		endRender = std::chrono::steady_clock::now();
+		timeRender = endRender - startRender;
 
 		physics->LateUpdate();
 		renderer->LateUpdate();

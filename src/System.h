@@ -19,7 +19,7 @@ public:
 	System();
 	~System();
 
-	virtual void Init() const = 0;
+	virtual void Init() = 0;
 	virtual void Update() const = 0;
 	virtual void LateUpdate() const = 0;
 	virtual int GetSystemID() const { return m_SystemID; }

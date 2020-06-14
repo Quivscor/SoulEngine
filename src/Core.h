@@ -31,6 +31,7 @@
 #include <memory>
 #include <string>
 #include <functional>
+#include <chrono>
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL definitions
 
 // OpenGL math

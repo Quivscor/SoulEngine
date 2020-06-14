@@ -23,7 +23,7 @@ class Renderer : public System
 public:
 	Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader*refractorShader, Model * crystal);
 	~Renderer();
-	void Init() const;
+	void Init();
 	virtual void Update() const;
 	void DebugUpdate();
 	virtual void LateUpdate() const;
@@ -56,14 +56,13 @@ private:
 	void DrawMeshes() const;
 	void DrawGrass() const;
 	void DrawGUI() const;
-	void DrawFrustum(Frustum frustum) const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
 	static Shader* screenShader;
 	const static unsigned int SHADOW_WIDTH = 1024 ;
 	const static unsigned int SHADOW_HEIGHT = 1024;
 	unsigned   int depthMapFBO = 0;
-	
+
 	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
 	const  float far_plane = 100.5f;
@@ -77,6 +76,8 @@ private:
 	Model* crystal;
 	//Debug
 	std::shared_ptr<Entity> mainCamera;
+	std::shared_ptr<Camera> cameraComponent;
+	std::shared_ptr<Transform> cameraTransform;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
 };
