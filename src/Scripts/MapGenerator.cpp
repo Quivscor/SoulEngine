@@ -210,6 +210,28 @@ void MapGenerator::Generate()
 
 					object->layer = EnemyLayer;
 
+					//enemy weapon
+					std::shared_ptr<Entity> weapon = m_EntityManager->CreateEntity<Entity>();
+					weapon->AddComponent<Transform>();
+					weapon->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
+					weapon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+					std::vector<glm::vec2> weaponColliderShape;
+					weaponColliderShape.clear();
+					weaponColliderShape.push_back({ -6.0f, -5.0f });
+					weaponColliderShape.push_back({ -6.0f, 12.0f });
+					weaponColliderShape.push_back({ 6.0f, 12.0f });
+					weaponColliderShape.push_back({ 6.0f, -5.0f });
+
+					weapon->AddComponent<Collider>();
+					weapon->GetComponent<Collider>()->SetShape(weaponColliderShape);
+					weapon->GetComponent<Collider>()->isTrigger = true;
+					weapon->AddComponent<EnemyWeapon>();
+
+					renderer->RegisterEntity(weapon);
+					gameLogic->RegisterEntity(weapon);
+					physics->RegisterEntity(weapon);
+
 					//container for Enemy script
 					std::shared_ptr<Entity> enemy = m_EntityManager->CreateEntity<Entity>();
 					enemy->AddComponent<Transform>();
@@ -220,6 +242,8 @@ void MapGenerator::Generate()
 					enemy->GetComponent<Enemy>()->animationAttack = FindModelByName(tileModels, "EnemyAttack");
 					enemy->GetComponent<Enemy>()->animationDeath = FindModelByName(tileModels, "EnemyDeath");
 					enemy->GetComponent<Enemy>()->shader = shaderForEnemy;
+
+					enemy->GetComponent<Enemy>()->weapon = weapon;
 
 					gameLogic->RegisterEntity(enemy);
 					physics->RegisterEntity(enemy);

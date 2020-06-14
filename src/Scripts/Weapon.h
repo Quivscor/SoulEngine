@@ -13,6 +13,8 @@ public:
 	void Use();
 	void TurnOffCollider();
 
+	std::shared_ptr<Entity> characterContainer;
+
 	std::shared_ptr<WeaponStats> GetWeapon();
 	void SetWeapon(std::shared_ptr<WeaponStats> newWeapon);
 

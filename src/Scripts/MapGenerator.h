@@ -11,6 +11,8 @@
 #include <time.h>
 #include "Model.h"
 #include "Village.h"
+#include "Scripts/EnemyWeapon.h"
+
 class MapGenerator
 {
 public:

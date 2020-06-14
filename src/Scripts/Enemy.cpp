@@ -11,6 +11,24 @@ void Enemy::Start()
 
 void Enemy::Update()
 {
+	if (isAttacking)
+	{
+		currentAttackTime += TimeCustom::GetDeltaTime();
+
+		if (currentAttackTime >= attackTime)
+		{
+			isAttacking = false;
+			weapon->GetComponent<EnemyWeapon>()->TurnOffCollider();
+
+			std::shared_ptr<Entity> playerRef = weapon->GetComponent<EnemyWeapon>()->player;
+
+			if (playerRef != nullptr)
+			{
+				weapon->GetComponent<EnemyWeapon>()->DealDmg(playerRef);
+			}
+		}
+	}
+
 	if (isTriggered)
 	{
 		float distance = glm::sqrt(glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().x - playerPosition->GetGlobalPosition().x, 2) + glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().z - playerPosition->GetGlobalPosition().z, 2));
@@ -28,6 +46,13 @@ void Enemy::Update()
 void Enemy::Attack()
 {
 	ChangeAnimation(EnemyAnimationAttack);
+	
+	if (!isAttacking)
+	{
+		isAttacking = true;
+		currentAttackTime = 0.0f;
+		weapon->GetComponent<EnemyWeapon>()->Use();
+	}
 }
 
 void Enemy::Move()

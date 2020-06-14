@@ -59,7 +59,7 @@ void Player::Update()
 
 	if (killstreakCounterActive)
 	{
-		std::cout << "KillstreakCounterActive" << std::endl;
+		//std::cout << "KillstreakCounterActive" << std::endl;
 
 		killstreakCurrentTime += TimeCustom::GetDeltaTime();
 
@@ -74,7 +74,7 @@ void Player::Update()
 
 	if (berserkerModeActive)
 	{
-		std::cout << "BerserkerCounterActive" << std::endl;
+		//std::cout << "BerserkerCounterActive" << std::endl;
 
 		berserkerCurrentTime += TimeCustom::GetDeltaTime();
 

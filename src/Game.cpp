@@ -62,7 +62,7 @@ void Game::Run()
 	Shader* screenShader = new Shader("./res/shaders/screen.vert", "./res/shaders/screen.frag");
 	Shader* skyBoxShader = new Shader("./res/shaders/skyboxShader.vert", "./res/shaders/skyboxShader.frag");
 	Shader* refractorShader = new Shader("./res/shaders/refractorShader.vert", "./res/shaders/refractorShader.frag");
-	
+
 	//Creating systems
 	AssetManager* assetManager = new AssetManager();
 	Model* crystal = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
@@ -74,11 +74,14 @@ void Game::Run()
 	mapGenerator = NULL;
 	AudioMaster audioMaster;
 	Source source;
-	
+
 	Listener listener;
 	//Input register test
+
 	std::shared_ptr<Entity> inputHandler = m_EntityManager->CreateEntity<Entity>();
+
 	inputHandler->AddComponent<InputHandler>();
+
 	inputSystem->RegisterEntity(inputHandler);
 
 	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler, mapGenerator);
@@ -258,6 +261,20 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
 
+	//player character container
+	std::shared_ptr<Entity> characterContainer = m_EntityManager->CreateEntity<Entity>();
+	characterContainer->AddComponent<Transform>();
+	characterContainer->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	characterContainer->GetComponent<Transform>()->SetParent(character->GetComponent<Transform>());
+	characterContainer->AddComponent<Collider>();
+	characterContainer->GetComponent<Collider>()->SetShape(colliderShape);
+	characterContainer->GetComponent<Collider>()->isTrigger = true;
+	characterContainer->layer = PlayerLayer;
+	characterContainer->AddComponent<Character>();
+
+	gameLogic->RegisterEntity(characterContainer);
+	physics->RegisterEntity(characterContainer);
+
 	//Weapons gui 
 	InitializePlayerGUI(renderer, physics, character, gameLogic);
 
@@ -287,6 +304,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	weapon->GetComponent<Collider>()->SetShape(colliderShape);
 	weapon->GetComponent<Collider>()->isTrigger = true;
 	weapon->AddComponent<Weapon>();
+	weapon->GetComponent<Weapon>()->characterContainer = characterContainer;
 
 	renderer->RegisterEntity(weapon);
 	gameLogic->RegisterEntity(weapon);
