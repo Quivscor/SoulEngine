@@ -495,7 +495,7 @@ void Renderer::DrawMeshes() const
 
 		}
 		
-		/*if (debugMode)
+		if(debugMode)
 		{
 			std::shared_ptr<Collider> collider = m_Entities[i]->GetComponent<Collider>();
 
@@ -503,7 +503,7 @@ void Renderer::DrawMeshes() const
 			{
 				DrawColliders(collider, trns);
 			}
-		}*/
+		}
 	}
 
 	

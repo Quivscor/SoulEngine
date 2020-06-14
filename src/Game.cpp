@@ -47,8 +47,8 @@ void Game::Init()
 	m_Window = m_Window->GetInstance();
 	m_Window->Init("SoulEater", 1280, 720);
 
-	LogEvent e("Hello events!");
-	m_Window->EventCallback(e);
+	//LogEvent e("Hello events!");
+	//m_Window->EventCallback(e);
 
 	srand(time(NULL));
 }
@@ -58,36 +58,51 @@ void Game::Run()
 	//-----------------------------Tests zone------------------------------------------
 	//TO DELETE:
 	//Creating simple shader
+	std::cout << "=== SoulEngine starting ===\n";
+
+	std::cout << "\n=== Creating shaders\n";
 	Shader* shader = new Shader("./res/shaders/basiclight.vert", "./res/shaders/basiclight.frag");
+	std::cout << "- basiclight shader created\n";
 	Shader* screenShader = new Shader("./res/shaders/screen.vert", "./res/shaders/screen.frag");
+	std::cout << "- screen shader created\n";
 	Shader* skyBoxShader = new Shader("./res/shaders/skyboxShader.vert", "./res/shaders/skyboxShader.frag");
+	std::cout << "- skybox shader created\n";
 	Shader* refractorShader = new Shader("./res/shaders/refractorShader.vert", "./res/shaders/refractorShader.frag");
+	std::cout << "- refractor shader created\n";
 
 	//Creating systems
+	std::cout << "\n=== Creating systems\n";
 	AssetManager* assetManager = new AssetManager();
+	std::cout << "- AssetManager created\n";
 	Model* crystal = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
 	Renderer* renderer = new Renderer(shader, screenShader, skyBoxShader, refractorShader, crystal);
+	std::cout << "- Renderer created\n";
 	Physics* physics = new Physics();
+	std::cout << "- Physics created\n";
 	InputSystem* inputSystem = new InputSystem();
+	std::cout << "- InputSystem created\n";
 	GameLogic* gameLogic = new GameLogic();
+	std::cout << "- GameLogic created\n";
 	MapGenerator* mapGenerator;
+	std::cout << "- MapGenerator created\n";
 	mapGenerator = NULL;
 	AudioMaster audioMaster;
+	std::cout << "- AudioMaster created\n";
 	Source source;
 
 	Listener listener;
 	//Input register test
-
+	std::cout << "\n=== Initalizing\n";
 	std::shared_ptr<Entity> inputHandler = m_EntityManager->CreateEntity<Entity>();
 
 	inputHandler->AddComponent<InputHandler>();
 
 	inputSystem->RegisterEntity(inputHandler);
-
+	std::cout << "- inputSystem registered\n";
 	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler, mapGenerator);
 
 	InitializeBasicGUI(renderer, physics);
-
+	std::cout << "\n=== BasicGUI initalized\n";
 	gameLogic->Start();
 	source.SetLooping(true);
 	source.Play(audioMaster.GenBuffer("./res/sound/VikingMusic.wav"));
@@ -103,6 +118,7 @@ void Game::Run()
 	ImGui_ImplOpenGL3_Init("#version 330 core");
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
+	std::cout << "\n=== ImGui initialized\n";
 
 	while (true)
 	{
@@ -144,37 +160,60 @@ void Game::Run()
 void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem, MapGenerator* mapGenerator)
 {
 	InitializeWeapons(assetManager);
-	
+	std::cout << "- Weapons initalized\n";
 	Shader* shader = new Shader("./res/shaders/basic.vert", "./res/shaders/basic.frag");
+	std::cout << "- basic shader created\n";
 	Shader* shadera = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
+	std::cout << "- anim shader created\n";
 	Shader* grassShader = new Shader("./res/shaders/grass.vert", "./res/shaders/grass.frag");
-	//Shader* light = new Shader("./res/shaders/bassiclight.vert", "./res/shaders/basiclight.frag");
+	std::cout << "- grass shader created\n";
 
-	//Model* mapModel = assetManager->LoadModel("./res/models/map/Map1.obj");
-	
 	//player
+	std::cout << "\n=== Loading sword's animations\n";
 	//sword
 	Model* playerSwordIdle = assetManager->LoadModel("./res/models/player/sword/player_idle_sword.dae");
+	std::cout << "- player_idle animation loaded\n";
 	Model* playerSwordAttack = assetManager->LoadModel("./res/models/player/sword/player_attack_sword.dae");
+	std::cout << "- player_attack animation loaded\n";
 	Model* playerSwordRun = assetManager->LoadModel("./res/models/player/sword/player_run_sword.dae");
+	std::cout << "- player_run animation loaded\n";
 	Model* playerSwordRoll = assetManager->LoadModel("./res/models/player/sword/player_roll_sword.dae");
+	std::cout << "- player_roll animation loaded\n";
+
+	std::cout << "\n=== Loading axe's animations\n";
 	//axe
 	Model* playerAxeIdle = assetManager->LoadModel("./res/models/player/axe/player_idle_axe.dae");
+	std::cout << "- player_idle animation loaded\n";
 	Model* playerAxeAttack = assetManager->LoadModel("./res/models/player/axe/player_attack_axe.dae");
+	std::cout << "- player_attack animation loaded\n";
 	Model* playerAxeRun = assetManager->LoadModel("./res/models/player/axe/player_run_axe.dae");
+	std::cout << "- player_run animation loaded\n";
 	Model* playerAxeRoll = assetManager->LoadModel("./res/models/player/axe/player_roll_axe.dae");
+	std::cout << "- player_roll animation loaded\n";
+
+	std::cout << "\n=== Loading mace's animations\n";
 	//mace
 	Model* playerMaceIdle = assetManager->LoadModel("./res/models/player/mace/player_idle_mace.dae");
+	std::cout << "- player_idle animation loaded\n";
 	Model* playerMaceAttack = assetManager->LoadModel("./res/models/player/mace/player_attack_mace.dae");
+	std::cout << "- player_attack animation loaded\n";
 	Model* playerMaceRun = assetManager->LoadModel("./res/models/player/mace/player_run_mace.dae");
+	std::cout << "- player_run animation loaded\n";
 	Model* playerMaceRoll = assetManager->LoadModel("./res/models/player/mace/player_roll_mace.dae");
+	std::cout << "- player_roll animation loaded\n";
+
+	std::cout << "\n=== Loading without weapon animations\n";
 	//without weapon
 	Model* playerIdle = assetManager->LoadModel("./res/models/player/noWeapon/player_idle.dae");
+	std::cout << "- player_idle animation loaded\n";
 	Model* playerAttack = assetManager->LoadModel("./res/models/player/noWeapon/player_attack.dae");
+	std::cout << "- player_attack animation loaded\n";
 	Model* playerRun = assetManager->LoadModel("./res/models/player/noWeapon/player_run.dae");
+	std::cout << "- player_run animation loaded\n";
 	Model* playerRoll = assetManager->LoadModel("./res/models/player/noWeapon/player_roll.dae");
-
+	std::cout << "- player_roll animation loaded\n";
 	Model* playerDeath = assetManager->LoadModel("./res/models/player/player_death.dae");
+	std::cout << "- player_death animation loaded\n";
 
 	//Camera object
 	std::shared_ptr<Entity> cameraRoot = m_EntityManager->CreateEntity<Entity>();
@@ -196,7 +235,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	camera->GetComponent<Transform>()->SetLocalRotation(glm::vec3(45.0f, 0.0f, 0.0f));
 	camera->GetComponent<Transform>()->SetParent(cameraRoot->GetComponent<Transform>());
 	//camera->GetComponent<Transform>()->DisplayDebugInfo(true);
-	
+	std::cout << "\n=== Camera initalized \n";
 
 	//LoadMap(5,5, renderer, assetManager, physics);
 	/*std::cout<<testModela->scene->mAnimations[0]->mDuration;*/
@@ -251,7 +290,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->shader = shadera;
 	character->GetComponent<Player>()->renderer = renderer;
 	character->layer = PlayerLayer;
-
+	std::cout << "\n=== Animations added to player \n";
 
 	gameLogic->RegisterEntity(character);
 
@@ -275,6 +314,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	gameLogic->RegisterEntity(characterContainer);
 	physics->RegisterEntity(characterContainer);
 
+	std::cout << "\n=== Player fully initalized \n";
+
 	//Weapons gui 
 	InitializePlayerGUI(renderer, physics, character, gameLogic);
 
@@ -282,6 +323,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	pec->AddComponent<PlayerEnemyCommunicator>();
 
 	character->GetComponent<Player>()->pec = pec->GetComponent<PlayerEnemyCommunicator>();
+	std::cout << "\n=== Weapons gui initalized \n";
 
 	// --------- G E N E R A T I N G --- M A P ---------------
 	mapGenerator = new MapGenerator(renderer, assetManager, physics,  shadera, grassShader, gameLogic, m_EntityManager, pec);
@@ -312,12 +354,16 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 
 	//-------------GAME MANAGER------------
+	std::cout << "\n=== Game manager initalizing \n";
 	std::shared_ptr<Entity> gameManager = m_EntityManager->CreateEntity<Entity>();
+	std::cout << "- gameManager entity created \n";
 	gameManager->AddComponent<GameManager>();
+	std::cout << "- GameManager component added \n";
 	gameManager->GetComponent<GameManager>()->pec = pec->GetComponent<PlayerEnemyCommunicator>();
+	std::cout << "- game manager entity created \n";
 
 	gameLogic->RegisterEntity(gameManager);
-
+	
 
 	//renderer->RegisterEntity(weapon);
 
@@ -444,7 +490,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	renderer->SetCamera(camera);
 	//renderer->debugMode = true;
-
+	std::cout << "\n=== Testing weapons \n";
 	//testing weapon 1
 	std::shared_ptr<Entity> weaponOnTheGround1 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	weaponOnTheGround1->AddComponent<Transform>();
@@ -457,6 +503,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround1);
 	physics->RegisterEntity(weaponOnTheGround1);
 	renderer->RegisterEntity(weaponOnTheGround1);
+	std::cout << "- testing weapon 1 initalized \n";
 
 	//testing weapon 2
 	std::shared_ptr<Entity> weaponOnTheGround2 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
@@ -469,6 +516,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround2);
 	physics->RegisterEntity(weaponOnTheGround2);
 	renderer->RegisterEntity(weaponOnTheGround2);
+	std::cout << "- testing weapon 2 initalized \n";
 
 	//testing weapon 3
 	std::shared_ptr<Entity> weaponOnTheGround3 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
@@ -481,6 +529,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround3);
 	physics->RegisterEntity(weaponOnTheGround3);
 	renderer->RegisterEntity(weaponOnTheGround3);
+	std::cout << "- testing weapon 3 initalized \n";
 
 	//testing weapon 4
 	std::shared_ptr<Entity> weaponOnTheGround4 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
@@ -493,6 +542,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//gameLogic->RegisterEntity(weaponOnTheGround4);
 	physics->RegisterEntity(weaponOnTheGround4);
 	renderer->RegisterEntity(weaponOnTheGround4);
+	std::cout << "- testing weapon 4 initalized \n";
+
 	camera->GetComponent<Camera>()->SetLookAndUpVectors(character);
 
 	//water
@@ -505,6 +556,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(water);
 	renderer->RegisterEntity(water);
+	std::cout << "\n=== Water created\n";
 }
 
 void Game::InitializeWeapons(AssetManager* assetManager)

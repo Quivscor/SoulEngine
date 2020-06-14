@@ -35,7 +35,8 @@ void MapGenerator::Generate()
 
 	mapSizeX = 5;
 	mapSizeY = 5;
-	std::cout << "\nX: " << mapSizeX << " Y: " << mapSizeY << std::endl;
+	std::cout << "\n=== Map size";
+	std::cout << "X: " << mapSizeX << " Y: " << mapSizeY << std::endl;
 
 	generatedMap = new std::string*[mapSizeX];
 	for (int i = 0; i < mapSizeX; ++i) {
@@ -57,6 +58,7 @@ void MapGenerator::Generate()
 	grassManager->amount = tilesNumber * grassNumberOnTile;
 	int numberOfGrass = grassManager->amount;
 	int grassCounter = 0;
+	std::cout << "\n=== Spawning tiles\n";
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
@@ -140,10 +142,44 @@ void MapGenerator::Generate()
 				{
 					object->layer = Layer::GroundLayer;
 				}
-				if (name == "Tree" || name == "Birch")
+				if (name == "Tree" || name == "Birch" )
 				{
 					object->AddComponent<Collider>();
-					object->GetComponent<Collider>()->SetShape(colliderShape);
+					object->GetComponent<Collider>()->SetShape(treeCollider);
+					object->GetComponent<Collider>()->isStatic = true;
+				}
+				if (name == "Rock1" || name == "Rock2" || name == "Rock3")
+				{
+					
+					if (generatedMap[i][j] == "Mountains")
+					{
+						std::shared_ptr<Entity> rockScale = m_EntityManager->CreateEntity<Entity>();
+						rockScale->AddComponent<Transform>();
+						rockScale->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5, 0.5, 0.5));
+						rockScale->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
+						rockScale->AddComponent<Collider>();
+						rockScale->GetComponent<Collider>()->SetShape(rockCollider);
+						rockScale->GetComponent<Collider>()->isStatic = true;
+						physics->RegisterEntity(rockScale);
+					}	
+					else
+					{
+						object->AddComponent<Collider>();
+						object->GetComponent<Collider>()->SetShape(rockCollider);
+						object->GetComponent<Collider>()->isStatic = true;
+					}
+					
+				}
+				if (name == "House1")
+				{
+					object->AddComponent<Collider>();
+					object->GetComponent<Collider>()->SetShape(house1Collider);
+					object->GetComponent<Collider>()->isStatic = true;
+				}
+				if (name == "House2")
+				{
+					object->AddComponent<Collider>();
+					object->GetComponent<Collider>()->SetShape(house2Collider);
 					object->GetComponent<Collider>()->isStatic = true;
 				}
 				if (name == "Enemy")
@@ -252,7 +288,7 @@ void MapGenerator::Generate()
 			
 			
 			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(j * 16, 0, i * 16));
-
+			std::cout << "- tile [" << i << "][" << j << "] spawned\n";
 		}
 	}
 	grassManager->m_shader = grassShader;
@@ -312,30 +348,53 @@ Model* MapGenerator::FindModelByName(Model* array[], std::string name)
 }
 void MapGenerator::LoadMapModels()
 {
+	std::cout << "\n=== Loading map models\n";
 	tileModels[0] = assetManager->LoadModel("./res/models/tiles/Grass/Grass.obj");
+	std::cout << "- Grass.obj loaded \n";
 	tileModels[1] = assetManager->LoadModel("./res/models/tiles/Tree/Tree.obj");
+	std::cout << "- Tree.obj loaded\n";
 	tileModels[2] = assetManager->LoadModel("./res/models/tiles/Tree/Birch.obj");
+	std::cout << "- Birch.obj loaded \n";
 	tileModels[3] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock1.obj");
+	std::cout << "- Rock1.obj loaded \n";
 	tileModels[4] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock2.obj");
+	std::cout << "- Rock2.obj loaded \n";
 	tileModels[5] = assetManager->LoadModel("./res/models/tiles/Rocks/Rock3.obj");
+	std::cout << "- Rock3.obj loaded \n";
 	tileModels[6] = assetManager->LoadModel("./res/models/tiles/Houses/house_1.obj");
+	std::cout << "- house_1.obj loaded \n";
 	tileModels[7] = assetManager->LoadModel("./res/models/tiles/Houses/house_2.obj");
+	std::cout << "- house_2.obj loaded \n";
 	tileModels[8] = assetManager->LoadModel("./res/models/player/player_idle.dae");
+	std::cout << "- player_idle.dae loaded \n";
 	tileModels[9] = assetManager->LoadModel("./res/models/player/player_idle.dae");
+	std::cout << "- player_idle.dae loaded \n";
 	tileModels[10] = assetManager->LoadModel("./res/models/player/player_run.dae");
+	std::cout << "- player_run.dae loaded \n";
 	tileModels[11] = assetManager->LoadModel("./res/models/player/player_attack.dae");
+	std::cout << "- player_attack.dae loaded \n";
 	tileModels[12] = assetManager->LoadModel("./res/models/player/player_death.dae");
+	std::cout << "- player_death.dae loaded \n";
 }
 void MapGenerator::PrepareColliders()
 {
-	colliderShape.push_back({ -2.0f, -1.25f });
-	colliderShape.push_back({ -1.25f, -2.0f });
-	colliderShape.push_back({ 1.25f, -2.0f });
-	colliderShape.push_back({ 2.0f, -1.25f });
-	colliderShape.push_back({ 2.0f, 1.25f });
-	colliderShape.push_back({ 1.25f,  2.0f });
-	colliderShape.push_back({ -1.25f, 2.0f });
-	colliderShape.push_back({ -2.0f, 1.25f });
+	treeCollider.push_back({ -2.0f, -1.25f });
+	treeCollider.push_back({ -1.25f, -2.0f });
+	treeCollider.push_back({ 1.25f, -2.0f });
+	treeCollider.push_back({ 2.0f, -1.25f });
+	treeCollider.push_back({ 2.0f, 1.25f });
+	treeCollider.push_back({ 1.25f,  2.0f });
+	treeCollider.push_back({ -1.25f, 2.0f });
+	treeCollider.push_back({ -2.0f, 1.25f });
+
+	rockCollider.push_back({ -1.0f, -0.625f });
+	rockCollider.push_back({ -0.625f, -1.0f });
+	rockCollider.push_back({ 0.625f, -1.0f });
+	rockCollider.push_back({ 1.0f, -0.625f });
+	rockCollider.push_back({ 1.0f,  0.625f });
+	rockCollider.push_back({ 0.625f,  1.0f });
+	rockCollider.push_back({ -0.625f, 1.0f });
+	rockCollider.push_back({ -1.0f,  0.625f });
 
 	characterCollider.push_back({ -8.0f, -5.0f });
 	characterCollider.push_back({ -5.0f, -8.0f });
@@ -345,6 +404,16 @@ void MapGenerator::PrepareColliders()
 	characterCollider.push_back({ 5.0f,  8.0f });
 	characterCollider.push_back({ -5.0f, 8.0f });
 	characterCollider.push_back({ -8.0f, 5.0f });
+
+	house1Collider.push_back({-4.0f, -6.0f});
+	house1Collider.push_back({-4.0f, 10.0f});
+	house1Collider.push_back({4.0f, 10.0f});
+	house1Collider.push_back({4.0f, -6.0f});
+
+	house2Collider.push_back({ -6.0f, -6.0f });
+	house2Collider.push_back({ -6.0f, 10.0f });
+	house2Collider.push_back({ 6.0f, 8.0f });
+	house2Collider.push_back({ 6.0f, -6.0f });
 }
 
 int MapGenerator::GenerateRandomNumber(int min, int max)
@@ -353,7 +422,7 @@ int MapGenerator::GenerateRandomNumber(int min, int max)
 }
 void MapGenerator::ShowMapShape()
 {
-	std::cout << "\n Map shape\n";
+	std::cout << "\n=== Map shape\n";
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
@@ -444,7 +513,8 @@ void MapGenerator::CreateVillages()
 }
 void MapGenerator::ShowVillagesMap()
 {
-	std::cout << "\n Map of villages preset\n";
+	std::cout << "\n=== Map of villages preset\n";
+	//std::cout << "Legend\n. - water, O - Land, V - village, g - grassland\n";
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
@@ -485,7 +555,8 @@ void MapGenerator::GenerateRandomTiles()
 
 void MapGenerator::ShowMapTiles()
 {
-	std::cout << "\n Map tiles\n";
+	std::cout << "\n=== Map tiles\n";
+	//std::cout << "Legend\nV - village, F - forest1, f - forest2, g - grassland, m - mountains, . - water\n";
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)

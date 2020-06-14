@@ -40,8 +40,11 @@ private:
 	std::string mapTiles[4] = { "GrassLand","Forest1","Forest2","Mountains" };
 	std::string **generatedMap;
 	Model* tileModels[13];
-	std::vector<glm::vec2> colliderShape;
+	std::vector<glm::vec2> treeCollider;
+	std::vector<glm::vec2> rockCollider;
 	std::vector<glm::vec2> characterCollider;
+	std::vector<glm::vec2> house1Collider;
+	std::vector<glm::vec2> house2Collider;
 	
 	// functions
 	Model * FindModelByName(Model * array[], std::string name);
