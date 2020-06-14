@@ -155,6 +155,9 @@ void Renderer::Init()
 {
 	cameraComponent = mainCamera->GetComponent<Camera>();
 	cameraTransform = mainCamera->GetComponent<Transform>();
+
+	std::cout << "\n=== Sorting Renderer Entities by shader\n";
+	SortEntities();
 }
 
 void Renderer::Update() const
@@ -788,4 +791,22 @@ unsigned int loadCubemap(std::vector<std::string> faces)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	return textureID;
+}
+
+void Renderer::SortEntities()
+{
+	std::sort(m_Entities.begin(), m_Entities.end(),
+		[](const std::shared_ptr<Entity> &entity1, const std::shared_ptr<Entity> &entity2)
+	{
+		unsigned int shaderID1 = 0, shaderID2 = 0;
+		if (entity1->GetComponent<Mesh>() != nullptr)
+		{
+			shaderID1 = entity1->GetComponent<Mesh>()->material->GetShader()->ID;
+		}
+		if (entity2->GetComponent<Mesh>() != nullptr)
+		{
+			shaderID2 = entity2->GetComponent<Mesh>()->material->GetShader()->ID;
+		}
+		return shaderID1 > shaderID2;
+	});
 }

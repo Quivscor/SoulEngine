@@ -80,6 +80,8 @@ private:
 	std::shared_ptr<Transform> cameraTransform;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
+
+	void SortEntities();
 };
 
 unsigned int loadCubemap(std::vector<std::string> faces);
