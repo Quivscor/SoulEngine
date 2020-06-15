@@ -30,9 +30,10 @@ void Character::CheckDeathCondition()
 	{
 		if (thisEntity->layer == PlayerLayer)
 		{
+			gameLostText->isActive = true;
+			//playerReference->GetComponent<PlayerEnemyCommunicator>()->PlayerDead();
 			EntityManager::GetInstance()->GetEntity(thisEntity->GetComponent<Transform>()->GetParent()->GetOwnerID())->isActive = false;
 			thisEntity->isActive = false;
-			//playerReference->GetComponent<PlayerEnemyCommunicator>()->PlayerDead();
 		}
 		else
 		{

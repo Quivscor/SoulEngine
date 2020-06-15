@@ -351,6 +351,22 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	std::shared_ptr<Entity> pec = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	pec->AddComponent<PlayerEnemyCommunicator>();
 
+	// PEC INFO
+	std::shared_ptr<Entity> gameLost = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	gameLost->AddComponent<Transform>();
+	gameLost->GetComponent<Transform>()->SetLocalPosition(glm::vec3(300, 350, 0));
+	gameLost->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	gameLost->AddComponent<Text>();
+	gameLost->GetComponent<Text>()->text = "YOU HAVE BEEN DEFEATED!";
+	gameLost->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	physics->RegisterEntity(gameLost);
+	renderer->RegisterEntity(gameLost);
+
+	characterContainer->GetComponent<Character>()->gameLostText = gameLost;
+
+	gameLost->isActive = false;
+
 	character->GetComponent<Player>()->pec = pec->GetComponent<PlayerEnemyCommunicator>();
 	std::cout << "\n=== Weapons gui initalized \n";
 

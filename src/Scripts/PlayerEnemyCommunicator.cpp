@@ -21,8 +21,3 @@ void PlayerEnemyCommunicator::EnemySpawned()
 	spawnedEnemies++;
 }
 
-void PlayerEnemyCommunicator::PlayerDead()
-{
-	//playerReference->enabled = false;
-}
-

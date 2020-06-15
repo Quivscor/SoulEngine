@@ -16,6 +16,8 @@ public:
 
 	float GetHealth();
 
+	std::shared_ptr<Entity> gameLostText;
+
 protected:
 	//virtual void Start();
 

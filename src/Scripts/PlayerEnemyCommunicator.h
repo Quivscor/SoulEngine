@@ -20,10 +20,6 @@ public:
 	int spawnedEnemies = 0;
 
 	void EnemySpawned();
-
-	void PlayerDead();
-
-	//Player* playerReference;
 };
 
 #endif
