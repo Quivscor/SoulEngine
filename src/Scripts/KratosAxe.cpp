@@ -32,7 +32,7 @@ void KratosAxe::Update()
 		currentEnemiesOnMap = enemiesOnMap;
 	}
 
-	std::cout << currentAxeSoulLevel << std::endl;
+	//std::cout << currentAxeSoulLevel << std::endl;
 
 	axeIsHungry = currentAxeSoulLevel <= 0.0f;
 
