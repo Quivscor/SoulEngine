@@ -53,7 +53,7 @@ void MapGenerator::Generate()
 	ShowVillagesMap();
 	GenerateRandomTiles();
 	ShowMapTiles();
-	int grassNumberOnTile = 1500;
+	int grassNumberOnTile = 1000;
 	grassManager->instanceModels = new glm::mat4[tilesNumber * grassNumberOnTile];
 	grassManager->amount = tilesNumber * grassNumberOnTile;
 	int numberOfGrass = grassManager->amount;
@@ -78,7 +78,6 @@ void MapGenerator::Generate()
 				tile->GetComponent<Collider>()->isStatic = true;
 
 				tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(j * 16, 0, i * 16));
-				std::cout << "- tile sea spawned\n";
 			}
 			
 		}
@@ -159,17 +158,37 @@ void MapGenerator::Generate()
 			{
 				std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
 
-				object->AddComponent<Transform>();
-				object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
-				object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
-				object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0], scale[1], scale[2]));
+				
+				if (name == "Weapon")
+				{
+					if (rand() % 100 >= 50)
+					{
+						object->AddComponent<Transform>();
+						object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
+						object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
+						object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0], scale[1], scale[2]));
 
+						object->AddComponent<Material>();
+						object->AddComponent<WeaponOnTheGround>();
+						object->GetComponent<WeaponOnTheGround>()->Start();
+						physics->RegisterEntity(object);
+						renderer->RegisterEntity(object);
+					}
+					
+				}
+				else
+				{
+					object->AddComponent<Transform>();
+					object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
+					object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
+					object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0], scale[1], scale[2]));
 
-				object->AddComponent<Mesh>();
-				object->GetComponent<Mesh>()->indices = (FindModelByName(tileModels, name))->GetMeshes()[0].indices;
-				object->GetComponent<Mesh>()->vertices = (FindModelByName(tileModels, name))->GetMeshes()[0].vertices;
-				object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
-				object->GetComponent<Mesh>()->setupMesh();
+					object->AddComponent<Mesh>();
+					object->GetComponent<Mesh>()->indices = (FindModelByName(tileModels, name))->GetMeshes()[0].indices;
+					object->GetComponent<Mesh>()->vertices = (FindModelByName(tileModels, name))->GetMeshes()[0].vertices;
+					object->GetComponent<Mesh>()->material = (FindModelByName(tileModels, name))->GetMeshes()[0].material;
+					object->GetComponent<Mesh>()->setupMesh();
+				}
 
 				if (name == "Grass")
 				{
@@ -298,23 +317,26 @@ void MapGenerator::Generate()
 					float randomY;
 					if (generatedMap[i][j] == "Village")
 					{
-						if (rand() % 100 < 80)
+						float radius = 5.0f;
+		
+						randomX = rand() % 8 + (rand() % 100) / 100.f;
+						if (rand() % 2 == 0)
+							randomX *= -1;
+						randomY = rand() % 8 + (rand() % 100) / 100.f;
+						if (rand() % 2 == 0)
+							randomY *= -1;
+
+						if (randomX*randomX + randomY * randomY < radius*radius)
 						{
-							randomX = rand() % 8 + (rand() % 100) / 100.f;
-							if (rand() % 2 == 0)
-								randomX *= -1;
-							randomY = rand() % 8 + (rand() % 100) / 100.f;
-							if (rand() % 2 == 0)
-								randomY *= -1;
-						}
-						else
-						{
-							randomX = rand() % 6 + 2 + (rand() % 50) / 100.f;
-							if (rand() % 2 == 0)
-								randomX *= -1;
-							randomY = rand() % 6 + 2 + (rand() % 50) / 100.f;
-							if (rand() % 2 == 0)
-								randomY *= -1;
+							if (rand() % 100 > 5)
+							{
+								randomX = rand() % 8 + (rand() % 100) / 100.f;
+								if (rand() % 2 == 0)
+									randomX *= -1;
+								randomY = rand() % 8 + (rand() % 100) / 100.f;
+								if (rand() % 2 == 0)
+									randomY *= -1;
+							}
 						}
 						
 					}

@@ -625,6 +625,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	renderer->SetCamera(camera);
 	//renderer->debugMode = true;
+	/*
 	std::cout << "\n=== Testing weapons \n";
 	//testing weapon 1
 	std::shared_ptr<Entity> weaponOnTheGround1 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
@@ -678,7 +679,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(weaponOnTheGround4);
 	renderer->RegisterEntity(weaponOnTheGround4);
 	std::cout << "- testing weapon 4 initalized \n";
-
+		*/
 	camera->GetComponent<Camera>()->SetLookAndUpVectors(character);
 
 	//water
@@ -691,7 +692,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(water);
 	renderer->RegisterEntity(water);
-	std::cout << "\n=== Water created\n";
+	std::cout << "\n=== Sea created\n";
 }
 
 void Game::InitializeWeapons(AssetManager* assetManager)

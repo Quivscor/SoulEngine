@@ -12,6 +12,7 @@
 #include "Model.h"
 #include "Village.h"
 #include "Scripts/EnemyWeapon.h"
+#include "Scripts/WeaponOnTheGround.h"
 
 class MapGenerator
 {
