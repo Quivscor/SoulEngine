@@ -40,7 +40,7 @@ void EnemyWeapon::OnTriggerStay(std::shared_ptr<Collider> other)
 }
 
 void EnemyWeapon::OnTriggerExit(std::shared_ptr<Collider> other)
-{
+{ 
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>() != nullptr && EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->layer == PlayerLayer)
 	{
 		player = nullptr;

@@ -2,7 +2,8 @@
 #ifndef PLAYERENEMYCOMMUNICATOR
 #define PLAYERENEMYCOMMUNICATOR
 #include "ScriptableObject.h"
-//#include "Player.h"
+//#include "Character.h"
+//#include "KratosAxe.h"
 
 //class Player;
 
@@ -20,6 +21,8 @@ public:
 	int spawnedEnemies = 0;
 
 	void EnemySpawned();
+
+	//std::shared_ptr<KratosAxe> kratosAxe;
 };
 
 #endif

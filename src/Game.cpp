@@ -27,7 +27,7 @@
 #include <iostream>
 #include "GUI/Text.h"
 #include "Scripts/WeaponComparator.h"
-
+#include "Scripts/KratosAxe.h"
 #include "Scripts/PlayerEnemyCommunicator.h"
 #include "Scripts/GameManager.h"
 
@@ -355,6 +355,14 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> pec = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	pec->AddComponent<PlayerEnemyCommunicator>();
+
+	std::shared_ptr<Entity> kratosAxe = m_EntityManager->CreateEntity<Entity>();
+	kratosAxe->AddComponent<KratosAxe>();
+	kratosAxe->GetComponent<KratosAxe>()->playersCharacter = characterContainer->GetComponent<Character>();
+	kratosAxe->GetComponent<KratosAxe>()->pec = pec->GetComponent<PlayerEnemyCommunicator>();
+	//pec->GetComponent<PlayerEnemyCommunicator>()->kratosAxe = kratosAxe->GetComponent<KratosAxe>();
+
+	gameLogic->RegisterEntity(kratosAxe);
 
 	// PEC INFO
 	std::shared_ptr<Entity> gameLost = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
