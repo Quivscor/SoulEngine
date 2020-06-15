@@ -34,6 +34,10 @@ void KratosAxe::Update()
 
 	//std::cout << currentAxeSoulLevel << std::endl;
 
+	debugSoulsTaken->text = std::to_string(pec->spawnedEnemies - currentEnemiesOnMap) + "";
+
+	debugAxeStatus->text = std::to_string((int)glm::floor(currentAxeSoulLevel)) + "%";
+
 	axeIsHungry = currentAxeSoulLevel <= 0.0f;
 
 	if (axeIsHungry)

@@ -4,6 +4,7 @@
 #include "ScriptableObject.h"
 #include "Character.h"
 #include "PlayerEnemyCommunicator.h"
+#include "TextRendering.h"
 
 class KratosAxe : public ScriptableObject
 {
@@ -16,6 +17,9 @@ public:
 	std::shared_ptr<PlayerEnemyCommunicator> pec;
 
 	void EnemyKilled();
+
+	std::shared_ptr<Text> debugSoulsTaken;
+	std::shared_ptr<Text> debugAxeStatus;
 
 protected:
 	virtual void Start() override;

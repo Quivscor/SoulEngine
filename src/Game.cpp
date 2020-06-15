@@ -376,7 +376,81 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(gameLost);
 	renderer->RegisterEntity(gameLost);
 
+	//--------------------------------------------------------------------------------------------------------------DEBUG HEALTH <--- TO DELETE \/\/\/
+	std::shared_ptr<Entity> debugHealthTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	debugHealthTitle->AddComponent<Transform>();
+	debugHealthTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 50, 0));
+	debugHealthTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugHealthTitle->AddComponent<Text>();
+	debugHealthTitle->GetComponent<Text>()->text = "HP:";
+	debugHealthTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	physics->RegisterEntity(debugHealthTitle);
+	renderer->RegisterEntity(debugHealthTitle);
+
+	std::shared_ptr<Entity> debugHealthValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	debugHealthValue->AddComponent<Transform>();
+	debugHealthValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(50, 50, 0));
+	debugHealthValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugHealthValue->AddComponent<Text>();
+	debugHealthValue->GetComponent<Text>()->text = "oooooooooo";
+	debugHealthValue->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	physics->RegisterEntity(debugHealthValue);
+	renderer->RegisterEntity(debugHealthValue);
+
+	std::shared_ptr<Entity> debugAxeTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	debugAxeTitle->AddComponent<Transform>();
+	debugAxeTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 100, 0));
+	debugAxeTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugAxeTitle->AddComponent<Text>();
+	debugAxeTitle->GetComponent<Text>()->text = "Axe Fill:";
+	debugAxeTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	physics->RegisterEntity(debugAxeTitle);
+	renderer->RegisterEntity(debugAxeTitle);
+
+	std::shared_ptr<Entity> debugAxeValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	debugAxeValue->AddComponent<Transform>();
+	debugAxeValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(170, 100, 0));
+	debugAxeValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugAxeValue->AddComponent<Text>();
+	debugAxeValue->GetComponent<Text>()->text = "100%";
+	debugAxeValue->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
+
+	physics->RegisterEntity(debugAxeValue);
+	renderer->RegisterEntity(debugAxeValue);
+
+	std::shared_ptr<Entity> soulsTakenTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	soulsTakenTitle->AddComponent<Transform>();
+	soulsTakenTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 150, 0));
+	soulsTakenTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	soulsTakenTitle->AddComponent<Text>();
+	soulsTakenTitle->GetComponent<Text>()->text = "Souls taken:";
+	soulsTakenTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	physics->RegisterEntity(soulsTakenTitle);
+	renderer->RegisterEntity(soulsTakenTitle);
+
+	std::shared_ptr<Entity> soulsTakenValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	soulsTakenValue->AddComponent<Transform>();
+	soulsTakenValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(250, 150, 0));
+	soulsTakenValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	soulsTakenValue->AddComponent<Text>();
+	soulsTakenValue->GetComponent<Text>()->text = "100";
+	soulsTakenValue->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
+
+	physics->RegisterEntity(soulsTakenValue);
+	renderer->RegisterEntity(soulsTakenValue);
+
+
+	//--------------------------------------------------------------------------------------------------------------DEBUG HEALTH <--- TO DELETE /\/\/\
+
 	characterContainer->GetComponent<Character>()->gameLostText = gameLost;
+	characterContainer->GetComponent<Character>()->healthDebugValue = debugHealthValue->GetComponent<Text>();
+
+	kratosAxe->GetComponent<KratosAxe>()->debugAxeStatus = debugAxeValue->GetComponent<Text>();
+	kratosAxe->GetComponent<KratosAxe>()->debugSoulsTaken = soulsTakenValue->GetComponent<Text>();
 
 	gameLost->isActive = false;
 

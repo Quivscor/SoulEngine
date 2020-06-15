@@ -2,6 +2,7 @@
 #include "ScriptableObject.h"
 #include "PlayerEnemyCommunicator.h"
 #include "Billboard.h"
+#include "TextRendering.h"
 
 class Character : public ScriptableObject
 {
@@ -20,6 +21,9 @@ public:
 	std::shared_ptr<Entity> gameLostText;
 
 	std::shared_ptr<Billboard> healthBar;
+
+	//debug
+	std::shared_ptr<Text> healthDebugValue;
 
 protected:
 	//virtual void Start();
