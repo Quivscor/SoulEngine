@@ -256,13 +256,40 @@ void MapGenerator::Generate()
 				name = "GrassLeaf";
 				for (int k = 0; k < grassNumberOnTile; k++)
 				{
+					float randomX;
+					float randomY;
+					if (generatedMap[i][j] == "Village")
+					{
+						if (rand() % 100 < 80)
+						{
+							randomX = rand() % 8 + (rand() % 100) / 100.f;
+							if (rand() % 2 == 0)
+								randomX *= -1;
+							randomY = rand() % 8 + (rand() % 100) / 100.f;
+							if (rand() % 2 == 0)
+								randomY *= -1;
+						}
+						else
+						{
+							randomX = rand() % 6 + 2 + (rand() % 50) / 100.f;
+							if (rand() % 2 == 0)
+								randomX *= -1;
+							randomY = rand() % 6 + 2 + (rand() % 50) / 100.f;
+							if (rand() % 2 == 0)
+								randomY *= -1;
+						}
+						
+					}
+					else 
+					{
+						randomX = rand() % 8 + (rand() % 100) / 100.f;
+						if (rand() % 2 == 0)
+							randomX *= -1;
+						randomY = rand() % 8 + (rand() % 100) / 100.f;
+						if (rand() % 2 == 0)
+							randomY *= -1;
+					}
 					
-					float randomX = rand() % 8 + (rand() % 100) / 100.f;
-					if (rand() % 2 == 0)
-						randomX *= -1;
-					float randomY = rand() % 8 + (rand() % 100) / 100.f;
-					if (rand() % 2 == 0)
-						randomY *= -1;
 						
 					glm::vec3 pos(randomX + j*16, 0, randomY+i*16);
 					int grassX = rand() % 100 / 100.f;
@@ -295,7 +322,7 @@ void MapGenerator::Generate()
 				}
 			}
 			tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(j * 16, 0, i * 16));
-			std::cout << "- tile [" << i << "][" << j << "] spawned\n";
+			std::cout << "- tile [" << i << "][" << j << "] " << generatedMap[i][j] << " spawned\n";
 		}
 	}
 	grassManager->m_shader = grassShader;
@@ -563,6 +590,7 @@ void MapGenerator::GenerateRandomTiles()
 void MapGenerator::ShowMapTiles()
 {
 	std::cout << "\n=== Map tiles\n";
+	std::cout << "= Number of tiles: " << tilesNumber << "\n";
 	//std::cout << "Legend\nV - village, F - forest1, f - forest2, g - grassland, m - mountains, . - water\n";
 	for (int i = 0; i < mapSizeX; i++)
 	{
