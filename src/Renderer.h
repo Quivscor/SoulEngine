@@ -35,7 +35,7 @@ public:
 	std::vector <int> test;
 
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
-	Billboard *box, *box2;
+	//Billboard *box, *box2;
 	//Shader* shader;
 	glm::vec3 lightPos;
 	Shader* simpleDepthShader;
@@ -56,13 +56,14 @@ private:
 	void DrawMeshes() const;
 	void DrawGrass() const;
 	void DrawGUI() const;
+	void DrawHPbar() const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
 	static Shader* screenShader;
 	const static unsigned int SHADOW_WIDTH = 1024 ;
 	const static unsigned int SHADOW_HEIGHT = 1024;
 	unsigned   int depthMapFBO = 0;
-
+	
 	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
 	const  float far_plane = 100.5f;

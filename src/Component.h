@@ -13,7 +13,8 @@ enum ComponentType
 	CharacterComponent = 8,
 	WeaponOnTheGroundComponent = 9,
 	WaterComponent = 10,
-	TextComponent = 11
+	TextComponent = 11,
+	BillboardComponent = 12
 };
 
 class Component

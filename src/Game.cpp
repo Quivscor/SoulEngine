@@ -27,7 +27,7 @@
 #include <iostream>
 #include "GUI/Text.h"
 #include "Scripts/WeaponComparator.h"
-#include<Billboard.h>
+
 #include "Scripts/PlayerEnemyCommunicator.h"
 #include "Scripts/GameManager.h"
 
@@ -296,7 +296,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Mesh>()->setupMeshfBones();
 
 	character->GetComponent<Mesh>()->material->SetShader(shadera);
-
+	character->AddComponent<Billboard>();
+	//character->GetComponent<Billboard>()->setLife(100);
+	character->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
 	character->AddComponent<Player>();
 	character->GetComponent<Player>()->inputHandler = inputSystem;
 	character->GetComponent<Player>()->animationSwordRun = playerSwordRun;
@@ -323,6 +325,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	gameLogic->RegisterEntity(character);
 
+	//character->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
 	character->AddComponent<Collider>();
 	character->GetComponent<Collider>()->SetShape(colliderShape);
 

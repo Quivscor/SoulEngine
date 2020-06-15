@@ -16,7 +16,7 @@ public:
 	std::vector<Mesh> GetMeshes();
 	Assimp::Importer import;
 	const aiScene* scene;
-	aiScene** scenes;
+
 	std::map<std::string, uint> m_bone_mapping; // maps a bone name and their index
 	uint m_num_bones = 0;	
 	std::vector<BoneMatrix> m_bone_matrices;

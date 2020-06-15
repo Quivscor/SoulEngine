@@ -1,11 +1,12 @@
 
 #include "Billboard.h"
-#include "stb_image.h"
+
 
 
 Billboard::Billboard(char* imagepath, bool x)
 {
 	shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
+
 	static const GLfloat g_vertex_buffer_data[] = {
  -0.5f, -0.5f, 0.0f,
   0.5f, -0.5f, 0.0f,
@@ -57,16 +58,33 @@ Billboard::Billboard(char* imagepath, bool x)
 	//
 	
 }
-//const char* imagepath = "./res/textures/ExampleBillboard.DDS";
 Billboard::~Billboard()
 {
-	
+
 	glDeleteBuffers(1, &billboard_vertex_buffer);
 	glDeleteVertexArrays(1, &vao);
 	glDeleteProgram(shaderbil->ID);
 	Texture = NULL;
 }
+Billboard::Billboard()
+{
+shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.frag");
 
+//	this->type;
+
+
+LifeLevel = 100;
+Texture=NULL;
+billboard_vertex_buffer=NULL;
+vao = NULL;
+}
+
+//const char* imagepath = "./res/textures/ExampleBillboard.DDS";
+
+void Billboard::setLife(float life)
+{
+	this->LifeLevel = life;
+}
 void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size )
 {
 
@@ -112,7 +130,7 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 
 	glUniform3f(BillboardPosID, position.x, position.y, position.z); // The billboard will be just above the cube
 	glUniform2f(BillboardSizeID, size.x, size.y);     // and 1m*12cm, because it matches its 256*32 resolution =)
-	float LifeLevel = sin(TimeCustom::GetTime()) * 0.1f + 0.7f;
+	
 	glUniform1f(LifeLevelID, LifeLevel);
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
@@ -122,6 +140,58 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 
 	//delete this; //freed memory
 	
+}
+void Billboard::SetBillboard(char* imagepath, bool x)
+{
+	LifeLevel = 100;
+	
+	static const GLfloat g_vertex_buffer_data[] = {
+-0.5f, -0.5f, 0.0f,
+ 0.5f, -0.5f, 0.0f,
+-0.5f,  0.5f, 0.0f,
+ 0.5f,  0.5f, 0.0f,
+	};
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+
+	glGenBuffers(1, &billboard_vertex_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+	glVertexAttribPointer(
+		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	if (x)
+	{
+
+		Texture = loadDDS(imagepath);
+	}
+	else
+	{
+		glGenTextures(1, &Texture);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		int width, height, nrChannels;
+
+		unsigned char* data = stbi_load(imagepath, &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		stbi_image_free(data);
+	}
 }
 GLuint Billboard::loadDDS(const char* imagepath)
 {
