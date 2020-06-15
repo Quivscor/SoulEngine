@@ -289,10 +289,7 @@ void Renderer::DrawHPbar() const
 {
 	for (int i = 0; i < billboards.size(); i++)
 	{
-		if (billboards[i]->isActive == true && billboards[i]->GetComponent<Billboard>() != nullptr)
-		{ 
-			billboards[i]->GetComponent<Billboard>()->Draw(mainCamera, glm::vec3(billboards[i]->GetComponent<Transform>()->GetGlobalPosition().x, billboards[i]->GetComponent<Transform>()->GetGlobalPosition().y + 1.5f, billboards[i]->GetComponent<Transform>()->GetGlobalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
-		}
+		billboards[i].first->Draw(mainCamera, glm::vec3(billboards[i].second->GetGlobalPosition().x, billboards[i].second->GetGlobalPosition().y + 1.5f, billboards[i].second->GetGlobalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	}
 }
 
@@ -839,5 +836,5 @@ void Renderer::SortEntities()
 
 void Renderer::RegisterBillboard(std::shared_ptr<Entity> billboard)
 {
-	billboards.push_back(billboard);
+	billboards.push_back(std::make_pair(billboard->GetComponent<Billboard>(), billboard->GetComponent<Transform>()));
 }

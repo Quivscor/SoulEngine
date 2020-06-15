@@ -81,7 +81,7 @@ private:
 	std::shared_ptr<Entity> mainCamera;
 	std::shared_ptr<Camera> cameraComponent;
 	std::shared_ptr<Transform> cameraTransform;
-	std::vector<std::shared_ptr<Entity>> billboards;
+	std::vector<std::pair<std::shared_ptr<Billboard>, std::shared_ptr<Transform>>> billboards;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
 
