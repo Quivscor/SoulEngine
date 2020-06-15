@@ -41,6 +41,7 @@ private:
 	std::string **generatedMap;
 	Model* tileModels[13];
 	std::vector<glm::vec2> treeCollider;
+	std::vector<glm::vec2> waterCollider;
 	std::vector<glm::vec2> rockCollider;
 	std::vector<glm::vec2> characterCollider;
 	std::vector<glm::vec2> house1Collider;

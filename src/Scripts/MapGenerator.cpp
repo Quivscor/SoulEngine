@@ -59,6 +59,32 @@ void MapGenerator::Generate()
 	int numberOfGrass = grassManager->amount;
 	int grassCounter = 0;
 	std::cout << "\n=== Spawning tiles\n";
+
+	
+	for (int i = -1; i <= mapSizeX; i++)
+	{
+		for (int j = -1; j <= mapSizeY; j++)
+		{
+			if (i == -1 || j == -1 || i == mapSizeX || j == mapSizeY)
+			{
+				std::shared_ptr<Entity> tile = m_EntityManager->CreateEntity<Entity>();
+				tile->AddComponent<Transform>();
+				map.push_back(tile);
+				renderer->RegisterEntity(tile);
+				physics->RegisterEntity(tile);
+
+				tile->AddComponent<Collider>();
+				tile->GetComponent<Collider>()->SetShape(waterCollider);
+				tile->GetComponent<Collider>()->isStatic = true;
+
+				tile->GetComponent<Transform>()->SetLocalPosition(glm::vec3(j * 16, 0, i * 16));
+				std::cout << "- tile sea spawned\n";
+			}
+			
+		}
+	}
+	
+
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
@@ -115,6 +141,13 @@ void MapGenerator::Generate()
 			map.push_back(tile);
 			renderer->RegisterEntity(tile);
 			physics->RegisterEntity(tile);
+
+			if (generatedMap[i][j] == "Water")
+			{
+				tile->AddComponent<Collider>();
+				tile->GetComponent<Collider>()->SetShape(waterCollider);
+				tile->GetComponent<Collider>()->isStatic = true;
+			}
 
 			if (generatedMap[i][j] == "Village")
 			{
@@ -417,6 +450,11 @@ void MapGenerator::LoadMapModels()
 }
 void MapGenerator::PrepareColliders()
 {
+	waterCollider.push_back({-8.f, -8.f});
+	waterCollider.push_back({-8.f, 8.f });
+	waterCollider.push_back({8.f, 8.f});
+	waterCollider.push_back({8.f, -8.f });
+
 	treeCollider.push_back({ -2.0f, -1.25f });
 	treeCollider.push_back({ -1.25f, -2.0f });
 	treeCollider.push_back({ 1.25f, -2.0f });
@@ -528,7 +566,7 @@ void MapGenerator::CreateVillages()
 	// starting tile is a grassland
 	generatedMap[mapSizeX / 2][mapSizeY / 2] = "GrassLand";
 	// one village is 2 tiles to north from player's spawn
-	generatedMap[mapSizeX / 2][mapSizeY / 2 + 2] = "Village";
+	generatedMap[mapSizeX / 2 - 1][mapSizeY / 2] = "Village";
 
 	while (villagesCount > 0)
 	{

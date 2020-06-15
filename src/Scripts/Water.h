@@ -16,10 +16,10 @@ public:
 	virtual ComponentType GetComponentType() const { return ComponentType::WaterComponent; }
 
 private:
-	float width = 75.0f;
-	float height = 75.0f;
-	int xRectangles = 75;
-	int zRectangles = 75;
+	float width = 400.0f;
+	float height = 400.0f;
+	int xRectangles = 400;
+	int zRectangles = 400;
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
