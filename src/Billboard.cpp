@@ -95,7 +95,7 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 
 	int w = 1280, h = 720; //fix later
 	//	glm::vec2 size = glm::vec2(1.f, 0.125f);
-
+	this->LifeLevel = this->LifeLevel / 100.f;
 	
 	// Vertex shader
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.01f, 10000.0f);
@@ -130,8 +130,8 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 
 	glUniform3f(BillboardPosID, position.x, position.y, position.z); // The billboard will be just above the cube
 	glUniform2f(BillboardSizeID, size.x, size.y);     // and 1m*12cm, because it matches its 256*32 resolution =)
-	
-	glUniform1f(LifeLevelID, LifeLevel);
+
+	glUniform1f(LifeLevelID, this->LifeLevel);
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

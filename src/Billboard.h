@@ -24,7 +24,7 @@ public:
 	bool type= true;
 	virtual ComponentType GetComponentType() const override { return ComponentType::BillboardComponent; }
 
-	int LifeLevel;
+	float LifeLevel=100.0f;
 	GLuint Texture;
 	GLuint billboard_vertex_buffer;
 
