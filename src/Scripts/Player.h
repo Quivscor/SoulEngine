@@ -15,6 +15,8 @@ enum AnimationType
 	PlayerAnimationDeath
 };
 
+class PlayerEnemyCommunicator;
+
 class Player : public ScriptableObject
 {
 public:

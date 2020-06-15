@@ -14,6 +14,8 @@ public:
 
 	std::shared_ptr<Entity> playerReference = nullptr;
 
+	float GetHealth();
+
 protected:
 	//virtual void Start();
 

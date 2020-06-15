@@ -1,5 +1,10 @@
 #pragma once
+#ifndef PLAYERENEMYCOMMUNICATOR
+#define PLAYERENEMYCOMMUNICATOR
 #include "ScriptableObject.h"
+//#include "Player.h"
+
+//class Player;
 
 class PlayerEnemyCommunicator : public ScriptableObject
 {
@@ -15,4 +20,10 @@ public:
 	int spawnedEnemies = 0;
 
 	void EnemySpawned();
+
+	void PlayerDead();
+
+	//Player* playerReference;
 };
+
+#endif
