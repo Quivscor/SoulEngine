@@ -24,6 +24,8 @@ double TimeCustom::GetDeltaTime()
 
 void TimeCustom::RunTimer()
 {
+	if (TimeCustom::m_Time == 0)
+		TimeCustom::m_Time = glfwGetTime();
 	TimeCustom::m_DeltaTime = glfwGetTime() - TimeCustom::m_Time;
 	TimeCustom::m_Time = glfwGetTime();
 }
