@@ -14,6 +14,10 @@ public:
 
 	std::shared_ptr<Entity> playerReference = nullptr;
 
+	float GetHealth();
+
+	std::shared_ptr<Entity> gameLostText;
+
 protected:
 	//virtual void Start();
 

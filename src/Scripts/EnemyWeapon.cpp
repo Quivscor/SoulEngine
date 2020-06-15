@@ -31,7 +31,7 @@ void EnemyWeapon::Start()
 
 }*/
 
-void EnemyWeapon::OnTriggerEnter(std::shared_ptr<Collider> other)
+void EnemyWeapon::OnTriggerStay(std::shared_ptr<Collider> other)
 {
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>() != nullptr && EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->layer == PlayerLayer)
 	{
@@ -49,7 +49,12 @@ void EnemyWeapon::OnTriggerExit(std::shared_ptr<Collider> other)
 
 void EnemyWeapon::DealDmg(std::shared_ptr<Entity> target)
 {
+	if (target->isActive == false || target->GetComponent<Character>()->GetHealth() <= 0)
+		return;
+
 	target->GetComponent<Character>()->GetHit(damage);
 	std::cout << "Player has been hit!" << std::endl;
+
+	player = nullptr;
 }
 

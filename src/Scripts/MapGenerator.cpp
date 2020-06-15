@@ -209,8 +209,8 @@ void MapGenerator::Generate()
 					std::vector<glm::vec2> weaponColliderShape;
 					weaponColliderShape.clear();
 					weaponColliderShape.push_back({ -6.0f, -5.0f });
-					weaponColliderShape.push_back({ -6.0f, 12.0f });
-					weaponColliderShape.push_back({ 6.0f, 12.0f });
+					weaponColliderShape.push_back({ -6.0f, 18.0f });
+					weaponColliderShape.push_back({ 6.0f, 18.0f });
 					weaponColliderShape.push_back({ 6.0f, -5.0f });
 
 					weapon->AddComponent<Collider>();
