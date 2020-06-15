@@ -57,6 +57,7 @@ private:
 	void DrawGrass() const;
 	void DrawGUI() const;
 	void DrawHPbar() const;
+	void DrawShadows() const;
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
 	static Shader* screenShader;

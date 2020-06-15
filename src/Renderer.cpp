@@ -168,9 +168,9 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	DrawShadows();
 	DrawMeshes();
-
+	
 	DrawGrass();
 
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
@@ -297,11 +297,8 @@ void Renderer::DrawHPbar() const
 }
 }
 
-void Renderer::DrawMeshes() const
+void Renderer::DrawShadows() const
 {
-	
-	int modelsDrawnCount = 0;
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glm::mat4 lightProjection, lightView;
 	glm::mat4 lightSpaceMatrix;
 	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
@@ -328,7 +325,7 @@ void Renderer::DrawMeshes() const
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
 		if (mesh != nullptr)
 		{
-		
+
 			glBindVertexArray(mesh->GetVAO());
 
 			if (mesh->hasEBO)
@@ -342,13 +339,36 @@ void Renderer::DrawMeshes() const
 			glBindVertexArray(0);
 
 		}
-		
+
 	}
+	simpleDepthShader->setMat4("model", *instanceManagers[0]->instanceModels);
+
+
+
+	glBindVertexArray(instanceManagers[0]->m_model->meshes[0].GetVAO());
+	glDrawElementsInstanced(GL_TRIANGLES, instanceManagers[0]->m_model->meshes[0].indices.size(), GL_UNSIGNED_INT, 0, instanceManagers[0]->amount);
+	//glBindVertexArray(0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// reset viewport
 	glViewport(0, 0, 1280, 720);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+}
+
+void Renderer::DrawMeshes() const
+{
+	glm::mat4 lightProjection, lightView;
+	glm::mat4 lightSpaceMatrix;
+	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
+	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
+
+	lightSpaceMatrix = lightProjection * lightView;
+
+	int modelsDrawnCount = 0;
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	if (berserkerModeActive == true)
 	{
@@ -515,16 +535,7 @@ void Renderer::DrawGrass() const
 
 
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//glm::mat4 view = camera.GetViewMatrix();
-	//glm::mat4 lightProjection, lightView;
-	//glm::mat4 lightSpaceMatrix;
-	////lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	//lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
-	////lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
 
-	//lightSpaceMatrix = lightProjection * lightView;
 
 
 	//simpleDepthShader->use();
@@ -551,7 +562,16 @@ void Renderer::DrawGrass() const
 	//// reset viewport
 	//glViewport(0, 0, 1280, 720);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 lightProjection, lightView;
+	glm::mat4 lightSpaceMatrix;
+	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
+	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
 
+	lightSpaceMatrix = lightProjection * lightView;
 	instanceManagers[0]->m_shader->use();
 	instanceManagers[0]->m_shader->setVec3("dir_light.direction", lightPos);
 	glUniform3f(glGetUniformLocation(instanceManagers[0]->m_shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
@@ -563,7 +583,7 @@ void Renderer::DrawGrass() const
 	instanceManagers[0]->m_shader->setInt("material.shadowMap", 2);
 	instanceManagers[0]->m_shader->setMat4("projection", cameraComponent->GetProjection());
 	instanceManagers[0]->m_shader->setMat4("view", cameraTransform->GetGlobalMatrix());
-	instanceManagers[0]->m_shader->setMat4("lightSpaceMatrix", *instanceManagers[0]->instanceModels);
+	instanceManagers[0]->m_shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 	instanceManagers[0]->m_shader->setInt("texture_diffuse1", 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, instanceManagers[0]->m_mesh->material->GetTextures()[0].id);
