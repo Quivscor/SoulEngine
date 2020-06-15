@@ -239,7 +239,7 @@ void Renderer::Update() const
 	glDepthFunc(GL_LESS); // set depth function back to default
 	//box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	//box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
-	//DrawHPbar();
+	DrawHPbar();
 
 	if (berserkerModeActive == true)
 	{
@@ -287,14 +287,13 @@ void Renderer::DrawGUI() const
 
 void Renderer::DrawHPbar() const
 {
-	for (int i = 0; i < m_Entities.size(); i++)
-{
-	if (m_Entities[i]->GetComponent<Billboard>() != nullptr)
+	for (int i = 0; i < billboards.size(); i++)
 	{
-		 
-		m_Entities[i]->GetComponent<Billboard>()->Draw(mainCamera, glm::vec3(m_Entities[i]->GetComponent<Transform>()->GetLocalPosition().x, m_Entities[i]->GetComponent<Transform>()->GetLocalPosition().y + 1.5f, m_Entities[i]->GetComponent<Transform>()->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
+		if (billboards[i]->isActive == true && billboards[i]->GetComponent<Billboard>() != nullptr)
+		{ 
+			billboards[i]->GetComponent<Billboard>()->Draw(mainCamera, glm::vec3(billboards[i]->GetComponent<Transform>()->GetGlobalPosition().x, billboards[i]->GetComponent<Transform>()->GetGlobalPosition().y + 1.5f, billboards[i]->GetComponent<Transform>()->GetGlobalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
+		}
 	}
-}
 }
 
 void Renderer::DrawShadows() const
@@ -382,7 +381,6 @@ void Renderer::DrawMeshes() const
 	{
 		if (!m_Entities[i]->isActive)
 			continue;
-
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
@@ -837,4 +835,9 @@ void Renderer::SortEntities()
 		}
 		return shaderID1 > shaderID2;
 	});
+}
+
+void Renderer::RegisterBillboard(std::shared_ptr<Entity> billboard)
+{
+	billboards.push_back(billboard);
 }

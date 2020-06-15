@@ -49,7 +49,7 @@ void EnemyWeapon::OnTriggerExit(std::shared_ptr<Collider> other)
 
 void EnemyWeapon::DealDmg(std::shared_ptr<Entity> target)
 {
-	if (target->isActive == false || target->GetComponent<Character>()->GetHealth() <= 0)
+	if (EntityManager::GetInstance()->GetEntity(thisEntity->GetComponent<Transform>()->GetParent()->GetOwnerID())->isActive == false || target->isActive == false || target->GetComponent<Character>()->GetHealth() <= 0)
 		return;
 
 	target->GetComponent<Character>()->GetHit(damage);

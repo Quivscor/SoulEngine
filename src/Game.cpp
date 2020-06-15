@@ -296,9 +296,6 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Mesh>()->setupMeshfBones();
 
 	character->GetComponent<Mesh>()->material->SetShader(shadera);
-	character->AddComponent<Billboard>();
-	//character->GetComponent<Billboard>()->setLife(100);
-	character->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
 	character->AddComponent<Player>();
 	character->GetComponent<Player>()->inputHandler = inputSystem;
 	character->GetComponent<Player>()->animationSwordRun = playerSwordRun;
@@ -332,6 +329,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
 
+
 	//player character container
 	std::shared_ptr<Entity> characterContainer = m_EntityManager->CreateEntity<Entity>();
 	characterContainer->AddComponent<Transform>();
@@ -342,7 +340,11 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->GetComponent<Collider>()->isTrigger = true;
 	characterContainer->layer = PlayerLayer;
 	characterContainer->AddComponent<Character>();
+	characterContainer->AddComponent<Billboard>();
+	characterContainer->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
+	characterContainer->GetComponent<Character>()->healthBar = characterContainer->GetComponent<Billboard>();
 
+	renderer->RegisterBillboard(characterContainer);
 	gameLogic->RegisterEntity(characterContainer);
 	physics->RegisterEntity(characterContainer);
 
@@ -369,6 +371,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->GetComponent<Character>()->gameLostText = gameLost;
 
 	gameLost->isActive = false;
+
+	//std::shared_ptr<Entity> testingBillboard = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	//testingBillboard->AddComponent<Billboard>();
 
 	character->GetComponent<Player>()->pec = pec->GetComponent<PlayerEnemyCommunicator>();
 	std::cout << "\n=== Weapons gui initalized \n";

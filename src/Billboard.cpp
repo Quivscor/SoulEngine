@@ -94,11 +94,11 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 	glDepthFunc(GL_ALWAYS);
 
 	int w = 1280, h = 720; //fix later
-//	glm::vec2 size = glm::vec2(1.f, 0.125f);
+	//	glm::vec2 size = glm::vec2(1.f, 0.125f);
 
 	
-		// Vertex shader
-		 glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.01f, 10000.0f);
+	// Vertex shader
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.01f, 10000.0f);
 
 	glm::vec3 cameraUp = camera->GetComponent<Camera>()->upVector;
 	glm::vec3 cameraRight = camera->GetComponent<Transform>()->Right();

@@ -28,6 +28,7 @@ public:
 	void DebugUpdate();
 	virtual void LateUpdate() const;
 	void DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material);
+	void RegisterBillboard(std::shared_ptr<Entity> billboard);
 	
 	static Shader* GetDefualtShader();
 	void RegisterManager(std::shared_ptr<InstanceManager> instanceManager);
@@ -80,6 +81,7 @@ private:
 	std::shared_ptr<Entity> mainCamera;
 	std::shared_ptr<Camera> cameraComponent;
 	std::shared_ptr<Transform> cameraTransform;
+	std::vector<std::shared_ptr<Entity>> billboards;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
 

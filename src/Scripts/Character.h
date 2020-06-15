@@ -1,6 +1,7 @@
 #pragma once
 #include "ScriptableObject.h"
 #include "PlayerEnemyCommunicator.h"
+#include "Billboard.h"
 
 class Character : public ScriptableObject
 {
@@ -17,6 +18,8 @@ public:
 	float GetHealth();
 
 	std::shared_ptr<Entity> gameLostText;
+
+	std::shared_ptr<Billboard> healthBar;
 
 protected:
 	//virtual void Start();

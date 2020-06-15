@@ -22,6 +22,9 @@ void Character::GetHit(float damage)
 	health -= damage;
 
 	CheckDeathCondition();
+
+	//thisEntity->GetComponent<Billboard>()->setLife(health);
+	healthBar->setLife(health);
 }
 
 void Character::CheckDeathCondition()
