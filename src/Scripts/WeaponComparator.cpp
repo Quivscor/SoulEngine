@@ -53,13 +53,13 @@ void WeaponComparator::UpdateStats(float base, float oldValue, float newValue, s
 
 	if (oldValue > newValue)
 	{
-		oldTextGUI->color = glm::vec3(0.0f, 1.0f, 0.0f);
+		oldTextGUI->color = glm::vec3(0.2f, 0.8f, 1.0f);
 		newTextGUI->color = glm::vec3(1.0f, 0.0f, 0.0f);
 	}
 	else if (oldValue < newValue)
 	{
 		oldTextGUI->color = glm::vec3(1.0f, 0.0f, 0.0f);
-		newTextGUI->color = glm::vec3(0.0f, 1.0f, 0.0f);
+		newTextGUI->color = glm::vec3(0.2f, 0.8f, 1.0f);
 	}
 	else
 	{

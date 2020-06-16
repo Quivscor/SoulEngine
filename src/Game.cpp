@@ -379,8 +379,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//--------------------------------------------------------------------------------------------------------------DEBUG HEALTH <--- TO DELETE \/\/\/
 	std::shared_ptr<Entity> debugHealthTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugHealthTitle->AddComponent<Transform>();
-	debugHealthTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 50, 0));
-	debugHealthTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugHealthTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 50, 0));
+	debugHealthTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	debugHealthTitle->AddComponent<Text>();
 	debugHealthTitle->GetComponent<Text>()->text = "HP:";
 	debugHealthTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -391,7 +391,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	std::shared_ptr<Entity> debugHealthValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugHealthValue->AddComponent<Transform>();
 	debugHealthValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(50, 50, 0));
-	debugHealthValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugHealthValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	debugHealthValue->AddComponent<Text>();
 	debugHealthValue->GetComponent<Text>()->text = "oooooooooo";
 	debugHealthValue->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -401,8 +401,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> debugAxeTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugAxeTitle->AddComponent<Transform>();
-	debugAxeTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 100, 0));
-	debugAxeTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugAxeTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 100, 0));
+	debugAxeTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	debugAxeTitle->AddComponent<Text>();
 	debugAxeTitle->GetComponent<Text>()->text = "Axe Fill:";
 	debugAxeTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -412,8 +412,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> debugAxeValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugAxeValue->AddComponent<Transform>();
-	debugAxeValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(170, 100, 0));
-	debugAxeValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	debugAxeValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(130, 100, 0));
+	debugAxeValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	debugAxeValue->AddComponent<Text>();
 	debugAxeValue->GetComponent<Text>()->text = "100%";
 	debugAxeValue->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
@@ -423,8 +423,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> soulsTakenTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	soulsTakenTitle->AddComponent<Transform>();
-	soulsTakenTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 150, 0));
-	soulsTakenTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	soulsTakenTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 150, 0));
+	soulsTakenTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	soulsTakenTitle->AddComponent<Text>();
 	soulsTakenTitle->GetComponent<Text>()->text = "Souls taken:";
 	soulsTakenTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -434,8 +434,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> soulsTakenValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	soulsTakenValue->AddComponent<Transform>();
-	soulsTakenValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(250, 150, 0));
-	soulsTakenValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	soulsTakenValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(175, 150, 0));
+	soulsTakenValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	soulsTakenValue->AddComponent<Text>();
 	soulsTakenValue->GetComponent<Text>()->text = "100";
 	soulsTakenValue->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
@@ -729,8 +729,8 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 {
 	std::shared_ptr<Entity> movement = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	movement->AddComponent<Transform>();
-	movement->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 680, 0));
-	movement->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	movement->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 680, 0));
+	movement->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	movement->AddComponent<Text>();
 	movement->GetComponent<Text>()->text = "WSAD - movement";
 	movement->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -740,8 +740,8 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 
 	std::shared_ptr<Entity> interaction = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	interaction->AddComponent<Transform>();
-	interaction->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 660, 0));
-	interaction->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	interaction->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 660, 0));
+	interaction->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	interaction->AddComponent<Text>();
 	interaction->GetComponent<Text>()->text = "E - use";
 	interaction->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -751,8 +751,8 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 
 	std::shared_ptr<Entity> attack = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	attack->AddComponent<Transform>();
-	attack->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 640, 0));
-	attack->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	attack->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 640, 0));
+	attack->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	attack->AddComponent<Text>();
 	attack->GetComponent<Text>()->text = "J - attack";
 	attack->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -762,8 +762,8 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 
 	std::shared_ptr<Entity> roll = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	roll->AddComponent<Transform>();
-	roll->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 620, 0));
-	roll->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	roll->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 620, 0));
+	roll->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	roll->AddComponent<Text>();
 	roll->GetComponent<Text>()->text = "K - roll";
 	roll->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -776,8 +776,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 {
 	std::shared_ptr<Entity> damageDesc = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	damageDesc->AddComponent<Transform>();
-	damageDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(930, 60, 0));
-	damageDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	damageDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(920, 120, 0));
+	damageDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	damageDesc->AddComponent<Text>();
 	damageDesc->GetComponent<Text>()->text = "Damage (+%)";
 	damageDesc->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -787,8 +787,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> oldDamage = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	oldDamage->AddComponent<Transform>();
-	oldDamage->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 60, 0));
-	oldDamage->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	oldDamage->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 120, 0));
+	oldDamage->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	oldDamage->AddComponent<Text>();
 	oldDamage->GetComponent<Text>()->text = "XX";
 	oldDamage->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -798,8 +798,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> damageCompare = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	damageCompare->AddComponent<Transform>();
-	damageCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 60, 0));
-	damageCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	damageCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 120, 0));
+	damageCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	damageCompare->AddComponent<Text>();
 	damageCompare->GetComponent<Text>()->text = "->";
 	damageCompare->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -809,8 +809,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> newDamage = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	newDamage->AddComponent<Transform>();
-	newDamage->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 60, 0));
-	newDamage->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	newDamage->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 120, 0));
+	newDamage->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	newDamage->AddComponent<Text>();
 	newDamage->GetComponent<Text>()->text = "XX";
 	newDamage->GetComponent<Text>()->color = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -822,8 +822,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> speedDesc = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	speedDesc->AddComponent<Transform>();
-	speedDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(930, 40, 0));
-	speedDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	speedDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(920, 70, 0));
+	speedDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	speedDesc->AddComponent<Text>();
 	speedDesc->GetComponent<Text>()->text = "Att. Speed (+%)";
 	speedDesc->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -833,8 +833,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> oldSpeed = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	oldSpeed->AddComponent<Transform>();
-	oldSpeed->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 40, 0));
-	oldSpeed->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	oldSpeed->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 70, 0));
+	oldSpeed->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	oldSpeed->AddComponent<Text>();
 	oldSpeed->GetComponent<Text>()->text = "XX";
 	oldSpeed->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -844,8 +844,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> speedCompare = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	speedCompare->AddComponent<Transform>();
-	speedCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 40, 0));
-	speedCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	speedCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 70, 0));
+	speedCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	speedCompare->AddComponent<Text>();
 	speedCompare->GetComponent<Text>()->text = "->";
 	speedCompare->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -855,8 +855,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> newSpeed = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	newSpeed->AddComponent<Transform>();
-	newSpeed->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 40, 0));
-	newSpeed->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	newSpeed->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 70, 0));
+	newSpeed->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	newSpeed->AddComponent<Text>();
 	newSpeed->GetComponent<Text>()->text = "XX";
 	newSpeed->GetComponent<Text>()->color = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -868,8 +868,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> durDesc = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	durDesc->AddComponent<Transform>();
-	durDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(930, 20, 0));
-	durDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	durDesc->GetComponent<Transform>()->SetLocalPosition(glm::vec3(920, 20, 0));
+	durDesc->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	durDesc->AddComponent<Text>();
 	durDesc->GetComponent<Text>()->text = "Durability";
 	durDesc->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -880,7 +880,7 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 	std::shared_ptr<Entity> oldDur = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	oldDur->AddComponent<Transform>();
 	oldDur->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1100, 20, 0));
-	oldDur->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	oldDur->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	oldDur->AddComponent<Text>();
 	oldDur->GetComponent<Text>()->text = "XX";
 	oldDur->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -891,7 +891,7 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 	std::shared_ptr<Entity> durCompare = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	durCompare->AddComponent<Transform>();
 	durCompare->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1150, 20, 0));
-	durCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	durCompare->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	durCompare->AddComponent<Text>();
 	durCompare->GetComponent<Text>()->text = "->";
 	durCompare->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
@@ -902,7 +902,7 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 	std::shared_ptr<Entity> newDur = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	newDur->AddComponent<Transform>();
 	newDur->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1180, 20, 0));
-	newDur->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.35f, 0.35f, 0.35f));
+	newDur->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	newDur->AddComponent<Text>();
 	newDur->GetComponent<Text>()->text = "XX";
 	newDur->GetComponent<Text>()->color = glm::vec3(0.0f, 1.0f, 0.0f);

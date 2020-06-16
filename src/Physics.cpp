@@ -250,7 +250,7 @@ bool Physics::CheckCollisions(std::shared_ptr<Collider> col1, std::shared_ptr<Co
 			col2->AddTriggerCollision(col1);
 		}
 
-	} 
+	}
 
 	return false;
 }
