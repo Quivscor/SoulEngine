@@ -289,7 +289,8 @@ void Renderer::DrawHPbar() const
 {
 	for (int i = 0; i < billboards.size(); i++)
 	{
-		billboards[i].first->Draw(mainCamera, glm::vec3(billboards[i].second->GetGlobalPosition().x, billboards[i].second->GetGlobalPosition().y + 1.5f, billboards[i].second->GetGlobalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
+		if (EntityManager::GetInstance()->GetEntity(billboards[i].first->GetOwnerID())->isActive == true)
+			billboards[i].first->Draw(mainCamera, glm::vec3(billboards[i].second->GetGlobalPosition().x, billboards[i].second->GetGlobalPosition().y + 1.5f, billboards[i].second->GetGlobalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	}
 }
 

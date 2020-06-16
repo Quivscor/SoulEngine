@@ -104,6 +104,7 @@ void Game::Run()
 	InitializeBasicGUI(renderer, physics);
 
 	renderer->Init();
+	physics->Init();
 
 	std::cout << "\n=== BasicGUI initalized\n";
 	gameLogic->Start();
