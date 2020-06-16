@@ -425,7 +425,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	debugHealthValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(50, 50, 0));
 	debugHealthValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	debugHealthValue->AddComponent<Text>();
-	debugHealthValue->GetComponent<Text>()->text = "oooooooooo";
+	debugHealthValue->GetComponent<Text>()->text = "100%";
 	debugHealthValue->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
 
 	physics->RegisterEntity(debugHealthValue);
