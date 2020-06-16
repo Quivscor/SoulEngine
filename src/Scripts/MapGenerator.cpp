@@ -82,8 +82,7 @@ void MapGenerator::Generate()
 			
 		}
 	}
-	
-
+	// spawning tiles and grass
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
@@ -91,7 +90,6 @@ void MapGenerator::Generate()
 			std::ifstream file;
 			if (generatedMap[i][j] == "Forest1")
 			{
-				//std::cout << "\nForest 1 loading \n";
 				file.open("./res/maps/TileForest.txt");
 				if (!file)
 				{
@@ -100,7 +98,6 @@ void MapGenerator::Generate()
 			}
 			if (generatedMap[i][j] == "Forest2")
 			{
-				//std::cout << "Forest 2 loading \n";
 				file.open("./res/maps/TileForest2.txt");
 				if (!file)
 				{
@@ -109,7 +106,6 @@ void MapGenerator::Generate()
 			}
 			if (generatedMap[i][j] == "Village")
 			{
-				//std::cout << "Village loading \n";
 				file.open("./res/maps/TileVillage.txt");
 				if (!file)
 				{
@@ -118,7 +114,6 @@ void MapGenerator::Generate()
 			}
 			if (generatedMap[i][j] == "Mountains")
 			{
-				//std::cout << "Mountain loading \n";
 				file.open("./res/maps/TileMountain.txt");
 				if (!file)
 				{
@@ -127,7 +122,6 @@ void MapGenerator::Generate()
 			}
 			if (generatedMap[i][j] == "GrassLand")
 			{
-				//std::cout << "Grassland loading \n";
 				file.open("./res/maps/TileGrassLand.txt");
 				if (!file)
 				{
@@ -315,6 +309,7 @@ void MapGenerator::Generate()
 				{
 					float randomX;
 					float randomY;
+					// circle in centre of villages with lesser grass
 					if (generatedMap[i][j] == "Village")
 					{
 						float radius = 5.0f;
@@ -366,18 +361,10 @@ void MapGenerator::Generate()
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(pos));
 					model = glm::scale(model, glm::vec3(scale));
-					std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+					
 					grassManager->instanceModels[grassCounter] = model;
 					grassCounter++;
-					object->AddComponent<Transform>();
-					object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
-					object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(randomX, 0, randomY));
-					object->AddComponent<Mesh>();
-					object->GetComponent<Mesh>()->indices = (grassLeaf)->GetMeshes()[0].indices;
-					object->GetComponent<Mesh>()->vertices = (grassLeaf)->GetMeshes()[0].vertices;
-					object->GetComponent<Mesh>()->material = (grassLeaf)->GetMeshes()[0].material;
-					object->GetComponent<Mesh>()->setupMesh();
-					grassManager->m_mesh = object->GetComponent<Mesh>().get();
+				
 
 				}
 			}
@@ -385,6 +372,13 @@ void MapGenerator::Generate()
 			std::cout << "- tile [" << i << "][" << j << "] " << generatedMap[i][j] << " spawned\n";
 		}
 	}
+	std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
+	object->AddComponent<Mesh>();
+	object->GetComponent<Mesh>()->indices = (grassLeaf)->GetMeshes()[0].indices;
+	object->GetComponent<Mesh>()->vertices = (grassLeaf)->GetMeshes()[0].vertices;
+	object->GetComponent<Mesh>()->material = (grassLeaf)->GetMeshes()[0].material;
+	object->GetComponent<Mesh>()->setupMesh();
+	grassManager->m_mesh = object->GetComponent<Mesh>().get();
 	grassManager->m_shader = grassShader;
 	glGenBuffers(1, &grassManager->buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, grassManager->buffer);
