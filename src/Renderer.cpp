@@ -16,7 +16,7 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	/*box = new Billboard("./res/textures/ExampleBillboard.DDS", true);
 	box2 = new Billboard("./res/textures/stone.jpg", false);*/
 	simpleDepthShader = new Shader("./res/shaders/shadow_mapping_depth.vs", "./res/shaders/shadow_mapping_depth.fs");
-	hud = new HUD(20.0f, 20.0f, 20.0f, 20.0f, "./res/textures/stone.jpg");
+	hud = new HUD(0.3f, 0.1f, 0.55f, 0.9f, "./res/textures/skybox/top.jpg");
 	glGenFramebuffers(1, &depthMapFBO);
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -243,7 +243,7 @@ void Renderer::Update() const
 	//box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	//box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	DrawHPbar();
-	//hud->Draw();
+	hud->Draw();
 	std::cout << glGetError() << "HpBar\n";
 
 	if (berserkerModeActive == true)
