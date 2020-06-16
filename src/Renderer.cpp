@@ -168,13 +168,9 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	std::cout << glGetError() << "StartRendUpdate\n";
 	DrawShadows();
-	std::cout << glGetError() << "Shadows\n";
-	/*DrawMeshes();*/
-	std::cout << glGetError() << "Meshes\n";
+	DrawMeshes();
 	DrawGrass();
-	std::cout << glGetError() << "Grass\n";
 
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	/*glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
@@ -243,7 +239,6 @@ void Renderer::Update() const
 	//box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	//box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	DrawHPbar();
-	std::cout << glGetError() << "HpBar\n";
 
 	if (berserkerModeActive == true)
 	{
@@ -260,10 +255,8 @@ void Renderer::Update() const
 		glDisable(GL_DEPTH_TEST);
 		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		std::cout << glGetError() << "Berserk\n";
 	}
 	DrawGUI();
-	std::cout << glGetError() << "GUI\n";
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -340,7 +333,6 @@ void Renderer::DrawShadows() const
 				glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
 			}
 			glBindVertexArray(0);
-
 		}
 
 	}
@@ -409,8 +401,7 @@ void Renderer::DrawMeshes() const
 			int anyTexture = 0;
 
 			Shader* shader = m_Entities[i]->GetComponent<Mesh>()->material->GetShader();
-			
-			for (unsigned int j = 0; j < mesh->material->GetTextures().size(); j++)
+			for (int j = 0; j < mesh->material->GetTextures().size(); j++)
 			{		
 				anyTexture = 1;
 				//defaultShader->setInt("material.diffuse", i);
@@ -426,10 +417,10 @@ void Renderer::DrawMeshes() const
 				//defaultShader->setFloat(("material." + name + number).c_str(), i);
 
 				glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
-				glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
+				//glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
 			}
 
-		
+			
 			glActiveTexture(GL_TEXTURE2);
 					glBindTexture(GL_TEXTURE_2D, depthMap);
 			/*		glUniform1i(glGetUniformLocation(shader->ID, "material.shadowMap"), mesh->material->GetTextures().size());

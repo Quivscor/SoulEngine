@@ -182,7 +182,6 @@ void Game::Run()
 		endFull = std::chrono::steady_clock::now();
 		timeFull = endFull - startFull;
 
-		std::cout << glGetError()<<"EndFrame\n";
 	}
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
