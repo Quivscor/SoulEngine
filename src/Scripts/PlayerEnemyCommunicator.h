@@ -22,6 +22,9 @@ public:
 
 	void EnemySpawned();
 
+	std::shared_ptr<Entity> gameWon;
+	std::shared_ptr<Entity> gameWon2;
+
 	//std::shared_ptr<KratosAxe> kratosAxe;
 };
 

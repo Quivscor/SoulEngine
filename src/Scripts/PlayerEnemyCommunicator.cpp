@@ -15,7 +15,11 @@ void PlayerEnemyCommunicator::EnemyDied()
 	killedEnemiesCounter++;
 	std::cout << "I'm dead" << std::endl;
 
-	//kratosAxe->EnemyKilled();
+	if (killedEnemiesCounter == spawnedEnemies)
+	{
+		gameWon->isActive = true;
+		gameWon2->isActive = true;
+	}
 }
 
 void PlayerEnemyCommunicator::EnemySpawned()

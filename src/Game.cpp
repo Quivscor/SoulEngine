@@ -379,6 +379,35 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(gameLost);
 	renderer->RegisterEntity(gameLost);
 
+	std::shared_ptr<Entity> gameWon = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	gameWon->AddComponent<Transform>();
+	gameWon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(400, 300, 0));
+	gameWon->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	gameWon->AddComponent<Text>();
+	gameWon->GetComponent<Text>()->text = "THANK YOU FOR PLAYING SOULEATER DEMO!";
+	gameWon->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	physics->RegisterEntity(gameWon);
+	renderer->RegisterEntity(gameWon);
+
+	gameWon->isActive = false;
+
+	std::shared_ptr<Entity> gameWon2 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
+	gameWon2->AddComponent<Transform>();
+	gameWon2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(400, 350, 0));
+	gameWon2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	gameWon2->AddComponent<Text>();
+	gameWon2->GetComponent<Text>()->text = "NOONE SURVIVED ON THIS ISLAND! YOU WON!";
+	gameWon2->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	physics->RegisterEntity(gameWon2);
+	renderer->RegisterEntity(gameWon2);
+
+	gameWon2->isActive = false;
+
+	pec->GetComponent<PlayerEnemyCommunicator>()->gameWon = gameWon;
+	pec->GetComponent<PlayerEnemyCommunicator>()->gameWon2 = gameWon2;
+
 	//--------------------------------------------------------------------------------------------------------------DEBUG HEALTH <--- TO DELETE \/\/\/
 	std::shared_ptr<Entity> debugHealthTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugHealthTitle->AddComponent<Transform>();
