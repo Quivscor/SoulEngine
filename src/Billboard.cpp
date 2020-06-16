@@ -60,11 +60,11 @@ Billboard::Billboard(char* imagepath, bool x)
 }
 Billboard::~Billboard()
 {
-
+	Texture = NULL;
 	glDeleteBuffers(1, &billboard_vertex_buffer);
 	glDeleteVertexArrays(1, &vao);
 	glDeleteProgram(shaderbil->ID);
-	Texture = NULL;
+	
 }
 Billboard::Billboard()
 {
@@ -73,7 +73,7 @@ shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.
 //	this->type;
 
 
-LifeLevel = 100;
+this->LifeLevel = 100.0f;
 Texture=NULL;
 billboard_vertex_buffer=NULL;
 vao = NULL;
@@ -83,27 +83,30 @@ vao = NULL;
 
 void Billboard::setLife(float life)
 {
-	this->LifeLevel = life;
+	//std::cout << life<< std::endl;
+	this->LifeLevel = life/1.f;
+	
 }
 void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size )
 {
 
 	
 	
-	
-	glDepthFunc(GL_ALWAYS);
-
+	glDisable(GL_DEPTH_TEST);	glDepthFunc(GL_ALWAYS);
+	//std::cout << this->LifeLevel << std::endl;
 	int w = 1280, h = 720; //fix later
 	//	glm::vec2 size = glm::vec2(1.f, 0.125f);
-	this->LifeLevel = this->LifeLevel / 100.f;
-	
+float level = this->LifeLevel / 100.0f;
+//std::cout << level << std::endl;
 	// Vertex shader
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.01f, 10000.0f);
+	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 
 	glm::vec3 cameraUp = camera->GetComponent<Camera>()->upVector;
 	glm::vec3 cameraRight = camera->GetComponent<Transform>()->Right();
 	glm::vec3 cameraPos = camera->GetComponent<Transform>()->GetGlobalPosition();
 	glm::mat4 ViewMatrix = camera->GetComponent<Transform>()->GetGlobalMatrix();
+
 	glm::mat4 ViewProjectionMatrix = Projection * ViewMatrix;
 
 	GLuint CameraRight_worldspace_ID = glGetUniformLocation(shaderbil->ID, "CameraRight_worldspace");
@@ -131,7 +134,8 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 	glUniform3f(BillboardPosID, position.x, position.y, position.z); // The billboard will be just above the cube
 	glUniform2f(BillboardSizeID, size.x, size.y);     // and 1m*12cm, because it matches its 256*32 resolution =)
 
-	glUniform1f(LifeLevelID, this->LifeLevel);
+	//this->LifeLevel = 0.2f;
+	glUniform1f(LifeLevelID, level);
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -143,7 +147,7 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 }
 void Billboard::SetBillboard(char* imagepath, bool x)
 {
-	LifeLevel = 100;
+	
 	
 	static const GLfloat g_vertex_buffer_data[] = {
 -0.5f, -0.5f, 0.0f,
