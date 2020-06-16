@@ -23,7 +23,7 @@ public:
 
 private:
 	//[SerializeField] F [*]
-	float damage = 10.0f;
+	float damage = 5.0f;
 
 	//──────────▄▀▀▀▀▀▀▄
 	//───────────▀▄─────▀▄───▄███▄

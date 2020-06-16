@@ -23,10 +23,7 @@ void Character::GetHit(float damage)
 
 	if (thisEntity->layer == PlayerLayer)
 	{
-		healthDebugValue->text = "";
-
-		for (int i = 0; i < glm::floor(health / 10.0f); i++)
-			healthDebugValue->text = healthDebugValue->text + "o";
+		healthDebugValue->text = std::to_string((int)glm::floor(health)) + "%";
 	}
 
 	CheckDeathCondition();
