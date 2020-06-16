@@ -70,12 +70,12 @@ private:
 	const  float near_plane = 1.0f;
 	const  float far_plane = 100.5f;
 	HUD* hud;
-	unsigned int frameBuffer;
-	unsigned int textureColorBuffer;
-	unsigned int rbo;
-	unsigned int quadVAO, quadVBO;
-	unsigned int skyboxVAO, skyboxVBO;
-	unsigned int cubemapTexture;
+	unsigned int frameBuffer = 0;
+	unsigned int textureColorBuffer = 0;
+	unsigned int rbo = 0;
+	unsigned int quadVAO = 0, quadVBO = 0;
+	unsigned int skyboxVAO = 0, skyboxVBO = 0;
+	unsigned int cubemapTexture = 0;
 	Model* crystal;
 	//Debug
 	std::shared_ptr<Entity> mainCamera;

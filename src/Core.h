@@ -33,6 +33,7 @@
 #include <functional>
 #include <chrono>
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL definitions
+#include <thread>
 
 // OpenGL math
 #include <glm/glm.hpp>

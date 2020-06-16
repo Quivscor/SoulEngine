@@ -296,8 +296,8 @@ void Renderer::DrawHPbar() const
 
 void Renderer::DrawShadows() const
 {
-	glm::mat4 lightProjection, lightView;
-	glm::mat4 lightSpaceMatrix;
+	glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
+	glm::mat4 lightSpaceMatrix = glm::mat4();
 	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
 	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
 	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
@@ -354,8 +354,8 @@ void Renderer::DrawShadows() const
 
 void Renderer::DrawMeshes() const
 {
-	glm::mat4 lightProjection, lightView;
-	glm::mat4 lightSpaceMatrix;
+	glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
+	glm::mat4 lightSpaceMatrix = glm::mat4();
 	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
 	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
 	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
@@ -408,7 +408,7 @@ void Renderer::DrawMeshes() const
 				//defaultShader->setInt("material.diffuse", i);
 				glActiveTexture(GL_TEXTURE0 + j); //glActiveTexture(diffuse_textureN), where N = GL_TEXTURE0 + i
 
-				std::string number;
+				std::string number = "";
 				std::string name = mesh->material->GetTextures()[j].type;
 				if (name == "texture_diffuse")
 					number = std::to_string(diffuseNr++);
@@ -418,7 +418,7 @@ void Renderer::DrawMeshes() const
 				//defaultShader->setFloat(("material." + name + number).c_str(), i);
 
 				glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
-				//glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
+				glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
 			}
 
 			
@@ -472,20 +472,32 @@ void Renderer::DrawMeshes() const
 			//glUniform3f(glGetUniformLocation(shader->ID, "playerPosition"), playerPosition.x, playerPosition.y, playerPosition.z);
 
 			glm::mat4 mvp = cameraComponent->GetProjection() * cameraTransform->GetGlobalMatrix() * trns->GetGlobalMatrix();
+			/*std::cout << "\n"<< cameraComponent->GetProjection()[0][0] << " " << cameraComponent->GetProjection()[0][1] << " " << cameraComponent->GetProjection()[0][2] << " " << cameraComponent->GetProjection()[0][3]
+				<< "\n " << cameraComponent->GetProjection()[1][0] << " " << cameraComponent->GetProjection()[1][1] << " " << cameraComponent->GetProjection()[1][2] << " " << cameraComponent->GetProjection()[1][3]
+				<< "\n " << cameraComponent->GetProjection()[2][0] << " " << cameraComponent->GetProjection()[2][1] << " " << cameraComponent->GetProjection()[2][2] << " " << cameraComponent->GetProjection()[2][3]
+				<< "\n " << cameraComponent->GetProjection()[3][0] << " " << cameraComponent->GetProjection()[3][1] << " " << cameraComponent->GetProjection()[3][2] << " " << cameraComponent->GetProjection()[3][3];
+			std::cout << "\n" << cameraTransform->GetGlobalMatrix()[0][0] << " " << cameraTransform->GetGlobalMatrix()[0][1] << " " << cameraTransform->GetGlobalMatrix()[0][2] << " " << cameraTransform->GetGlobalMatrix()[0][3]
+				<< "\n " << cameraTransform->GetGlobalMatrix()[1][0] << " " << cameraTransform->GetGlobalMatrix()[1][1] << " " << cameraTransform->GetGlobalMatrix()[1][2] << " " << cameraTransform->GetGlobalMatrix()[1][3]
+				<< "\n " << cameraTransform->GetGlobalMatrix()[2][0] << " " << cameraTransform->GetGlobalMatrix()[2][1] << " " << cameraTransform->GetGlobalMatrix()[2][2] << " " << cameraTransform->GetGlobalMatrix()[2][3]
+				<< "\n " << cameraTransform->GetGlobalMatrix()[3][0] << " " << cameraTransform->GetGlobalMatrix()[3][1] << " " << cameraTransform->GetGlobalMatrix()[3][2] << " " << cameraTransform->GetGlobalMatrix()[3][3];
+			std::cout << "\n" << trns->GetGlobalMatrix()[0][0] << " " << trns->GetGlobalMatrix()[0][1] << " " << trns->GetGlobalMatrix()[0][2] << " " << trns->GetGlobalMatrix()[0][3]
+				<< "\n " << trns->GetGlobalMatrix()[1][0] << " " << trns->GetGlobalMatrix()[1][1] << " " << trns->GetGlobalMatrix()[1][2] << " " << trns->GetGlobalMatrix()[1][3]
+				<< "\n " << trns->GetGlobalMatrix()[2][0] << " " << trns->GetGlobalMatrix()[2][1] << " " << trns->GetGlobalMatrix()[2][2] << " " << trns->GetGlobalMatrix()[2][3]
+				<< "\n " << trns->GetGlobalMatrix()[3][0] << " " << trns->GetGlobalMatrix()[3][1] << " " << trns->GetGlobalMatrix()[3][2] << " " << trns->GetGlobalMatrix()[3][3];*/
 
 			unsigned int model = glGetUniformLocation(shader->ID, "M_matrix");
-			glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
+			glUniformMatrix4fv(model, 1, GL_FALSE, &(trns->GetGlobalMatrix())[0][0]);
 
 			unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
-			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &(mvp)[0][0]);
 
 			glUniform1f(glGetUniformLocation(shader->ID, "waveTime"), (float)TimeCustom::GetTime() * 0.1f);
 
 			unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
-			glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
-			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "M_matrix"), 1, GL_FALSE, glm::value_ptr(trns->GetGlobalMatrix()));
+			glUniform3fv(colorLoc, 1, &(mesh->material->GetColor())[0]);
+			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "M_matrix"), 1, GL_FALSE, &(trns->GetGlobalMatrix())[0][0]);
 			glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->GetGlobalMatrix())));
-			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "normals_matrix"), 1, GL_FALSE, glm::value_ptr(matr_normals_cube));
+			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "normals_matrix"), 1, GL_FALSE, &matr_normals_cube[0][0]);
 			unsigned int hasTexture = glGetUniformLocation(shader->ID, "hasTexture");
 			glUniform1i(hasTexture, anyTexture);
 			// draw mesh
@@ -558,8 +570,8 @@ void Renderer::DrawGrass() const
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//glm::mat4 view = camera.GetViewMatrix();
-	glm::mat4 lightProjection, lightView;
-	glm::mat4 lightSpaceMatrix;
+	glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
+	glm::mat4 lightSpaceMatrix = glm::mat4();
 	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
 	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
 	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
@@ -669,7 +681,7 @@ void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Tran
 	glm::mat4 mvp = mainCamera->GetComponent<Camera>()->GetProjection() * mainCamera->GetComponent<Transform>()->GetGlobalMatrix();// *trns->matrix;
 
 	unsigned int transformLoc = glGetUniformLocation(shader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &(mvp)[0][0]);
 
 	unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
 	glUniform3fv(colorLoc, 1, glm::value_ptr(glm::vec3(0.0, 1.0f, 0.0f)));
@@ -753,7 +765,7 @@ void Renderer::DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Ma
 	glm::mat4 mvp = cameraComponent->GetProjection() * cameraTransform->GetGlobalMatrix() * transform->GetGlobalMatrix();
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &(mvp)[0][0]);
 
 	unsigned int colorLoc = glGetUniformLocation(defaultShader->ID, "color");
 	glUniform3fv(colorLoc, 1, glm::value_ptr(material->GetColor()));

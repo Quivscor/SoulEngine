@@ -83,9 +83,8 @@ void Game::Run()
 	std::cout << "- InputSystem created\n";
 	GameLogic* gameLogic = new GameLogic();
 	std::cout << "- GameLogic created\n";
-	MapGenerator* mapGenerator;
+	MapGenerator* mapGenerator = NULL;
 	std::cout << "- MapGenerator created\n";
-	mapGenerator = NULL;
 	AudioMaster audioMaster;
 	std::cout << "- AudioMaster created\n";
 	Source source;
@@ -122,10 +121,12 @@ void Game::Run()
 	ImGui_ImplOpenGL3_Init("#version 330 core");
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
-	std::chrono::time_point<std::chrono::steady_clock> startFull, endFull, startGL, endGL, startPhy, endPhy, startRender, endRender;
-	startFull = endFull = startGL = endGL = startPhy = endPhy = startRender = endRender = std::chrono::steady_clock::now();
-	std::chrono::duration<double> timeGameLogic, timePhysics, timeRender, timeFull;
-	timeFull = timeGameLogic = timePhysics = timeRender = startGL - endGL;
+	std::chrono::time_point<std::chrono::steady_clock> startFull = std::chrono::steady_clock::now(), 
+		endFull = std::chrono::steady_clock::now(), startGL = std::chrono::steady_clock::now(), 
+		endGL = std::chrono::steady_clock::now(), startPhy = std::chrono::steady_clock::now(), 
+		endPhy = std::chrono::steady_clock::now(), startRender = std::chrono::steady_clock::now(), 
+		endRender = std::chrono::steady_clock::now();
+	std::chrono::duration<double> timeGameLogic=startGL - endGL, timePhysics=startGL - endGL, timeRender=startGL - endGL, timeFull=startGL - endGL;
 	std::cout << "\n=== ImGui initialized\n";
 
 
@@ -181,7 +182,7 @@ void Game::Run()
 
 		endFull = std::chrono::steady_clock::now();
 		timeFull = endFull - startFull;
-
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
@@ -271,16 +272,11 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//LoadMap(5,5, renderer, assetManager, physics);
 	/*std::cout<<testModela->scene->mAnimations[0]->mDuration;*/
 	//float fTheta = glm::pi<float>() * 2.0f / 5.0f;
-	std::vector<glm::vec2> colliderShape;
+	std::vector<glm::vec2> colliderShape { { -5.0f, -5.0f } ,{ -5.0f, 5.0f } ,{ 5.0f, 5.0f },{ 5.0f, -5.0f } };
 	/*for (int i = 0; i < 5; i++)
 	{
 		colliderShape.push_back({ 30.0f * glm::cos(fTheta * i), 30.0f * glm::sin(fTheta * i) });
 	}*/
-
-	colliderShape.push_back({ -5.0f, -5.0f });
-	colliderShape.push_back({ -5.0f, 5.0f });
-	colliderShape.push_back({ 5.0f, 5.0f });
-	colliderShape.push_back({ 5.0f, -5.0f });
 
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
