@@ -108,6 +108,8 @@ glm::mat4 Transform::GetGlobalMatrix()
 
 void Transform::SetLocalPosition(glm::vec3 vector)
 {
+	if (position == vector)
+		return;
 	position = vector;
 	dirtyFlag = true;
 
@@ -116,6 +118,8 @@ void Transform::SetLocalPosition(glm::vec3 vector)
 
 void Transform::SetLocalRotation(glm::vec3 vector)
 {
+	if (rotation == vector)
+		return;
 	rotation = vector;
 	dirtyFlag = true;
 
@@ -124,6 +128,8 @@ void Transform::SetLocalRotation(glm::vec3 vector)
 
 void Transform::SetLocalScale(glm::vec3 vector)
 {
+	if (scale == vector)
+		return;
 	scale = vector;
 	dirtyFlag = true;
 
@@ -132,6 +138,8 @@ void Transform::SetLocalScale(glm::vec3 vector)
 
 void Transform::SetLocalMatrix(glm::mat4 matrix)
 {
+	if (this->matrix == matrix)
+		return;
 	this->matrix = matrix;
 	dirtyFlag = true;
 
