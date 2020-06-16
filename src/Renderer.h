@@ -9,7 +9,7 @@
 #include "Frustum.h"
 #include "InstanceManager.h"
 #include "GUI/Text.h"
-//#include <HUD.h>
+#include <HUD.h>
 
 //#include "Scripts/Water.h"
 
@@ -69,7 +69,7 @@ private:
 	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
 	const  float far_plane = 100.5f;
-//	HUD* hud;
+	HUD* hud;
 	unsigned int frameBuffer;
 	unsigned int textureColorBuffer;
 	unsigned int rbo;
