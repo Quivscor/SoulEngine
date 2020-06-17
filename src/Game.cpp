@@ -45,7 +45,7 @@ void Game::Init()
 	m_ComponentManager = ComponentManager::GetInstance();
 
 	m_Window = m_Window->GetInstance();
-	m_Window->Init("SoulEater", 1280, 720);
+	m_Window->Init("SoulEater", 1920, 1080);
 
 	//LogEvent e("Hello events!");
 	//m_Window->EventCallback(e);

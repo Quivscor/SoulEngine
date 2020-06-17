@@ -46,7 +46,7 @@ void Physics::Update() const
 			//update collider position
 			if (collider != nullptr)
 			{
-				glm::vec4 point;
+				glm::vec4 point = glm::vec4(1.0f);
 
 				glm::mat4 colliderMatrix = glm::mat4(1.0f);
 				colliderMatrix = glm::translate(colliderMatrix, transform->GetGlobalPosition());
@@ -92,7 +92,7 @@ void Physics::Update() const
 			continue;
 		}
 
-		glm::mat4 matrix;
+		glm::mat4 matrix = glm::mat4(1.0f);
 
 		glm::mat4 translateToPivot = glm::mat4(1);
 		glm::mat4 translateFromPivot = glm::mat4(1);

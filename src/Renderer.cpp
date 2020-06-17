@@ -43,7 +43,7 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	//create a color attachment texture
 	glGenTextures(1, &textureColorBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1920, 1080, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -52,7 +52,7 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	//create a renderebuffer object for depth and stencil attachment 
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1280, 720);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1920, 1080);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
@@ -269,7 +269,7 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawGUI() const
 {
-	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
+	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f);
 
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
@@ -347,7 +347,7 @@ void Renderer::DrawShadows() const
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// reset viewport
-	glViewport(0, 0, 1280, 720);
+	glViewport(0, 0, 1920, 1080);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 }
@@ -418,7 +418,7 @@ void Renderer::DrawMeshes() const
 				//defaultShader->setFloat(("material." + name + number).c_str(), i);
 
 				glBindTexture(GL_TEXTURE_2D, mesh->material->GetTextures()[j].id);
-				glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
+				//glUniform1i(glGetUniformLocation(shader->ID, ("material." + name + number).c_str()), j);
 			}
 
 			

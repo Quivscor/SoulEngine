@@ -1,6 +1,7 @@
 #include "AudioMaster.h"
 
-
+ALCdevice AudioMaster::*device = 0;
+ALCcontext AudioMaster::*context = 0;
 AudioMaster::AudioMaster()
 {
 	device = alcOpenDevice(NULL); // defualt implementation 

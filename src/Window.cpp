@@ -14,6 +14,8 @@ Window::~Window()
 
 void Window::Init(std::string name, int width, int height)
 {
+	m_Width = width;
+	m_Height = height;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

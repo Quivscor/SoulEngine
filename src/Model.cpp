@@ -253,7 +253,7 @@ void Model::boneTransform(double time_in_sec, std::vector<aiMatrix4x4>& transfor
 
 	double time_in_ticks = time_in_sec * ticks_per_second;
 
-	float animation_time = fmod(time_in_ticks, this->scene->mAnimations[0]->mDuration);
+	float animation_time = (float)fmod(time_in_ticks, this->scene->mAnimations[0]->mDuration);
 	readNodeHierarchy(animation_time, scene->mRootNode, identity_matrix);
 
 	transforms.resize(this->m_num_bones);

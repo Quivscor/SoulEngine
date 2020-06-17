@@ -1,7 +1,7 @@
 #include "WeaponFactory.h"
 
 std::vector<WeaponModel> WeaponFactory::weapons;
-
+std::shared_ptr<WeaponFactory>WeaponFactory::m_Instance = nullptr;
 WeaponFactory::WeaponFactory()
 {
 

@@ -15,9 +15,9 @@ MapGenerator::MapGenerator(Renderer* renderer, AssetManager* assetManager, Physi
 void MapGenerator::Generate()
 {
 	std::vector<std::shared_ptr<Entity>> map;
-	float pos[3];
-	float scale[3];
-	std::string name;
+	float pos[3] = { 0 };
+	float scale[3] = { 0 };
+	std::string name = "";
 	Shader* shaderForEnemy = new Shader("./res/shaders/anim.vert", "./res/shaders/anim.frag");
 
 	PrepareColliders();
@@ -27,14 +27,13 @@ void MapGenerator::Generate()
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
 	
-	
 	srand(time(NULL));
 
 	mapSizeX = GenerateRandomNumber(7, 12);
 	mapSizeY = GenerateRandomNumber(7, 12);
 
-	mapSizeX = 5;
-	mapSizeY = 5;
+	mapSizeX = 6;
+	mapSizeY = 6;
 	std::cout << "\n=== Map size";
 	std::cout << "X: " << mapSizeX << " Y: " << mapSizeY << std::endl;
 
@@ -83,11 +82,12 @@ void MapGenerator::Generate()
 		}
 	}
 	// spawning tiles and grass
+	std::ifstream file;
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
 		{
-			std::ifstream file;
+			
 			if (generatedMap[i][j] == "Forest1")
 			{
 				file.open("./res/maps/TileForest.txt");
@@ -307,8 +307,8 @@ void MapGenerator::Generate()
 				name = "GrassLeaf";
 				for (int k = 0; k < grassNumberOnTile; k++)
 				{
-					float randomX;
-					float randomY;
+					float randomX = 0;
+					float randomY = 0;
 					// circle in centre of villages with lesser grass
 					if (generatedMap[i][j] == "Village")
 					{
@@ -349,13 +349,13 @@ void MapGenerator::Generate()
 					glm::vec3 pos(randomX + j*16, 0, randomY+i*16);
 					int grassX = rand() % 100 / 100.f;
 					if (rand() % 2 == 0)
-						grassX *-1.f;
+						grassX *=-1.f;
 					int grassY = rand() % 100 / 100.f;
 					if (rand() % 2 == 0)
-						grassY *-1.f;
+						grassY *=-1.f;
 					int grassZ = rand() % 100 / 100.f;
 					if (rand() % 2 == 0)
-						grassZ *-1.f;
+						grassZ *=-1.f;
 					glm::vec3 scale(0.1 + grassX, 0.2 + grassY, 0.1 + grassZ);
 					glm::vec3 rot(0, 0, 0);
 					glm::mat4 model = glm::mat4(1.0f);
@@ -433,6 +433,7 @@ Model* MapGenerator::FindModelByName(Model* array[], std::string name)
 		return array[12];
 	else if (name == "GrassLeaf")
 		return array[13];
+	else return 0;
 }
 void MapGenerator::LoadMapModels()
 {

@@ -1,7 +1,8 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "EntityManager.h"
-
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/string_cast.hpp"
 #define thisEntity EntityManager::GetInstance()->GetEntity(GetOwnerID())
 
 Camera::Camera()
@@ -44,9 +45,17 @@ glm::mat4 Camera::GetProjection()
 
 void Camera::UpdateProjection()
 {
+	projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(fieldOfView),
-		(float)Window::GetInstance()->m_Width / (float)Window::GetInstance()->m_Height,
+		1.0f,
 		nearClippingPlane, farClippingPlane);
+	/*
+	std::cout << "\nWidth: " << Window::GetInstance()->m_Width;
+	std::cout << "\nHeight: " << Window::GetInstance()->m_Height;
+	std::cout << "\n Width / Height: " << (float)Window::GetInstance()->m_Width / (float)Window::GetInstance()->m_Height;
+	std::cout << "\n nearClipping plane : " << nearClippingPlane;
+	std::cout << "\n farClippingPlane plane : " << farClippingPlane;
+	std::cout << glm::to_string(projection) << std::endl; */
 }
 
 void Camera::CalculateFrustum() {

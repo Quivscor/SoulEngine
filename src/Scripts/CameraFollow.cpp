@@ -1,5 +1,4 @@
 #include "CameraFollow.h"
-
 CameraFollow::CameraFollow()
 {
 
