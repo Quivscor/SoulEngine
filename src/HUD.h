@@ -10,15 +10,12 @@ public:
 	~HUD();
 	void Draw();
 	
-	
-
-	float sizeX, sizeY;
-	float posX, posY;
+	float sizeX = 0, sizeY = 0;
+	float posX = 0, posY = 0;
 
 private:
-	Shader* hudshader;
-	GLuint activeTexture;
-	GLuint textureIdle;
-	
-	GLuint vao;
+	Shader* hudshader = nullptr;
+	GLuint activeTexture = 0;
+	GLuint textureIdle = 0;
+	GLuint vao = 0;
 };

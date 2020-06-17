@@ -26,17 +26,17 @@ public:
 	void CalculateFrustum();
 	float DistanceFromCameraTarget(std::shared_ptr<Transform> transform);
 
-	glm::vec3 upVector = glm::vec3(0);
-	glm::vec3 lookVector = glm::vec3(0);
+	glm::vec3 upVector = glm::vec3(0.0f);
+	glm::vec3 lookVector = glm::vec3(0.0f);
 private:
 	void UpdateProjection();
 
-	glm::mat4 projection;
+	glm::mat4 projection = glm::mat4(1.0f);
 
 	float nearClippingPlane = 0.1f;
 	float farClippingPlane = 1000.0f;
 	float fieldOfView = 60.0f;
-	std::shared_ptr<Transform> cameraTarget;
+	std::shared_ptr<Transform> cameraTarget = nullptr;
 
 	bool cameraVectorsSet = false;
 
