@@ -13,5 +13,5 @@ void main()
     //col = (col - 0.5) * (1.0 + contrast) + 0.5;
     //col = vec3(1.0, col.y, 1.0) + 0.5;
     float bw = (col.x + col.y + col.z) / 3.0;
-    FragColor = vec4(bw, bw, bw, 1.0);
+    FragColor = vec4(bw, bw, bw, 1.0) + vec4(0.5, 0.3, 0, 0);
 } 
