@@ -36,8 +36,8 @@ HUD::HUD(float sizeX, float sizeY, float posX, float posY, const char* textureNa
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	glGenTextures(1, &textureIdle);
-	glBindTexture(GL_TEXTURE_2D, textureIdle);
+	glGenTextures(1, &activeTexture);
+	glBindTexture(GL_TEXTURE_2D, activeTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -61,6 +61,11 @@ HUD::HUD(float sizeX, float sizeY, float posX, float posY, const char* textureNa
 
 HUD::~HUD()
 {
+	GLuint activeTexture=NULL;
+	GLuint textureIdle = NULL;
+	glDeleteVertexArrays(1, &vao);
+	glDeleteProgram(hudshader->ID);
+
 }
 
 void HUD::Draw()

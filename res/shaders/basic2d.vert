@@ -6,6 +6,8 @@ out vec2 TexCoord;
 
 void main()
 {
+	// UV of the vertex. No special space for this one.
+
 	gl_Position = vec4(aPos, 1.0);
 	TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 }
