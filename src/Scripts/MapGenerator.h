@@ -34,9 +34,9 @@ private:
 	std::shared_ptr<EntityManager> m_EntityManager;
 	
 	
-	bool **mapShape;
+	bool **mapShape = false;
 	int tilesNumber = 0;
-	int startVillagesCount = 6;
+	int startVillagesCount = 5;
 	int villagesCount = startVillagesCount;
 	std::string mapTiles[4] = { "GrassLand","Forest1","Forest2","Mountains" };
 	std::string **generatedMap;
