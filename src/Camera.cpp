@@ -47,7 +47,7 @@ void Camera::UpdateProjection()
 {
 	projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(fieldOfView),
-		1.0f,
+		(float)Window::GetInstance()->m_Width/ (float)Window::GetInstance()->m_Height,
 		nearClippingPlane, farClippingPlane);
 	/*
 	std::cout << "\nWidth: " << Window::GetInstance()->m_Width;
