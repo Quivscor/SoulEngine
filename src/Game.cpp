@@ -365,8 +365,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	// PEC INFO
 	std::shared_ptr<Entity> gameLost = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	gameLost->AddComponent<Transform>();
-	gameLost->GetComponent<Transform>()->SetLocalPosition(glm::vec3(300, 350, 0));
-	gameLost->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	gameLost->GetComponent<Transform>()->SetLocalPosition(glm::vec3(700, 600, 0));
+	gameLost->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.5f, 1.5f, 1.5f));
 	gameLost->AddComponent<Text>();
 	gameLost->GetComponent<Text>()->text = "YOU HAVE BEEN DEFEATED!";
 	gameLost->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -376,8 +376,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> gameWon = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	gameWon->AddComponent<Transform>();
-	gameWon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(400, 300, 0));
-	gameWon->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	gameWon->GetComponent<Transform>()->SetLocalPosition(glm::vec3(700, 500, 0));
+	gameWon->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.f, 1.f, 1.f));
 	gameWon->AddComponent<Text>();
 	gameWon->GetComponent<Text>()->text = "THANK YOU FOR PLAYING SOULEATER DEMO!";
 	gameWon->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -389,8 +389,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> gameWon2 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	gameWon2->AddComponent<Transform>();
-	gameWon2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(400, 350, 0));
-	gameWon2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	gameWon2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(700, 450, 0));
+	gameWon2->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.0f, 1.f, 1.f));
 	gameWon2->AddComponent<Text>();
 	gameWon2->GetComponent<Text>()->text = "NOONE SURVIVED ON THIS ISLAND! YOU WON!";
 	gameWon2->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -756,10 +756,10 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 {
 	std::shared_ptr<Entity> movement = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	movement->AddComponent<Transform>();
-	movement->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 680, 0));
+	movement->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 1000, 0));
 	movement->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	movement->AddComponent<Text>();
-	movement->GetComponent<Text>()->text = "WSAD - movement";
+	movement->GetComponent<Text>()->text = "WSAD - move";
 	movement->GetComponent<Text>()->color = glm::vec3(0.8f, 0.8f, 0.8f);
 
 	physics->RegisterEntity(movement);
@@ -767,7 +767,7 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 
 	std::shared_ptr<Entity> interaction = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	interaction->AddComponent<Transform>();
-	interaction->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 660, 0));
+	interaction->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 980, 0));
 	interaction->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	interaction->AddComponent<Text>();
 	interaction->GetComponent<Text>()->text = "E - use";
@@ -778,7 +778,7 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 
 	std::shared_ptr<Entity> attack = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	attack->AddComponent<Transform>();
-	attack->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 640, 0));
+	attack->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 960, 0));
 	attack->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	attack->AddComponent<Text>();
 	attack->GetComponent<Text>()->text = "J - attack";
@@ -789,7 +789,7 @@ void Game::InitializeBasicGUI(Renderer* renderer, Physics* physics)
 
 	std::shared_ptr<Entity> roll = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	roll->AddComponent<Transform>();
-	roll->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 620, 0));
+	roll->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 940, 0));
 	roll->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	roll->AddComponent<Text>();
 	roll->GetComponent<Text>()->text = "K - roll";
@@ -968,8 +968,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> berserkerMode = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	berserkerMode->AddComponent<Transform>();
-	berserkerMode->GetComponent<Transform>()->SetLocalPosition(glm::vec3(550, 650, 0));
-	berserkerMode->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
+	berserkerMode->GetComponent<Transform>()->SetLocalPosition(glm::vec3(750, 900, 0));
+	berserkerMode->GetComponent<Transform>()->SetLocalScale(glm::vec3(3.f, 3.f, 3.f));
 	berserkerMode->AddComponent<Text>();
 	berserkerMode->GetComponent<Text>()->text = "BERSERKER!";
 	berserkerMode->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);

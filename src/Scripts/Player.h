@@ -102,7 +102,7 @@ private:
 	Model* currentAnimation;
 
 	bool berserkerModeActive = false;
-	float berserkerModeDuration = 20.0f;
+	float berserkerModeDuration = 10.0f;
 	float berserkerCurrentTime = 0.0f;
 	int killedEnemies = 0;
 	int enemiesRequiredToStartBerserkerMode = 3;
