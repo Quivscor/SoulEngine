@@ -1,5 +1,4 @@
-#ifndef Billboard_HEADER
-#define Billboard_HEADER
+
 #pragma once
 #include <glad/glad.h>
 #include<Core.h>
@@ -33,4 +32,3 @@ private:
 	GLuint vao;
 };
 
-#endif

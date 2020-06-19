@@ -21,6 +21,7 @@ public:
 	std::shared_ptr<Entity> gameLostText;
 
 	std::shared_ptr<Billboard> healthBar;
+	std::shared_ptr<HUD> HUDhealthBar;
 
 	//debug
 	std::shared_ptr<Text> healthDebugValue;
