@@ -16,7 +16,7 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	/*box = new Billboard("./res/textures/ExampleBillboard.DDS", true);
 	box2 = new Billboard("./res/textures/stone.jpg", false);*/
 	simpleDepthShader = new Shader("./res/shaders/shadow_mapping_depth.vs", "./res/shaders/shadow_mapping_depth.fs");
-	hud = new HUD(0.3f, 0.1f, 0.55f, 0.9f, "./res/textures/skybox/top.jpg");
+	//hud = new HUD(0.3f, 0.1f, 0.55f, 0.9f, "./res/textures/skybox/top.jpg");
 	glGenFramebuffers(1, &depthMapFBO);
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -239,7 +239,7 @@ void Renderer::Update() const
 	//box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	//box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	DrawHPbar();
-	hud->Draw();
+	//hud->Draw();
 
 	if (berserkerModeActive == true)
 	{
@@ -282,6 +282,12 @@ void Renderer::DrawGUI() const
 
 			TextRendering::Instance()->draw(text->text, text->color, text_matrix_2D * EntityManager::GetInstance()->GetEntity(text->GetOwnerID())->GetComponent<Transform>()->GetGlobalMatrix());
 		}
+	
+	}
+	for (int i = 0; i < HUDs.size(); i++)
+	{
+		if (EntityManager::GetInstance()->GetEntity(HUDs[i].first->GetOwnerID())->isActive == true)
+			HUDs[i].first->Draw();
 	}
 }
 
@@ -292,6 +298,7 @@ void Renderer::DrawHPbar() const
 		if (EntityManager::GetInstance()->GetEntity(billboards[i].first->GetOwnerID())->isActive == true)
 			billboards[i].first->Draw(mainCamera, glm::vec3(billboards[i].second->GetGlobalPosition().x, billboards[i].second->GetGlobalPosition().y + 1.5f, billboards[i].second->GetGlobalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	}
+
 }
 
 void Renderer::DrawShadows() const
@@ -848,4 +855,9 @@ void Renderer::SortEntities()
 void Renderer::RegisterBillboard(std::shared_ptr<Entity> billboard)
 {
 	billboards.push_back(std::make_pair(billboard->GetComponent<Billboard>(), billboard->GetComponent<Transform>()));
+}
+
+void Renderer::RegisterHUD(std::shared_ptr<Entity> hut)
+{
+	HUDs.push_back(std::make_pair(hut->GetComponent<HUD>(), hut->GetComponent<Transform>()));
 }

@@ -30,6 +30,7 @@ void Character::GetHit(float damage)
 
 	//thisEntity->GetComponent<Billboard>()->setLife(health);
 	healthBar->setLife(health);
+	//HUDhealthBar->setLife(health);
 }
 
 void Character::CheckDeathCondition()
