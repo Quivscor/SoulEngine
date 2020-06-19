@@ -29,7 +29,7 @@ public:
 	virtual void LateUpdate() const;
 	void DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material);
 	void RegisterBillboard(std::shared_ptr<Entity> billboard);
-	
+	void RegisterHUD(std::shared_ptr<Entity> HUD);
 	static Shader* GetDefualtShader();
 	void RegisterManager(std::shared_ptr<InstanceManager> instanceManager);
 	std::vector <std::shared_ptr <InstanceManager>> instanceManagers;
@@ -82,6 +82,7 @@ private:
 	std::shared_ptr<Camera> cameraComponent;
 	std::shared_ptr<Transform> cameraTransform;
 	std::vector<std::pair<std::shared_ptr<Billboard>, std::shared_ptr<Transform>>> billboards;
+	std::vector<std::pair<std::shared_ptr<HUD>, std::shared_ptr<Transform>>> HUDs;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
 

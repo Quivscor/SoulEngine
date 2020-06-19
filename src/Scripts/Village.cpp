@@ -14,14 +14,14 @@ void Village::Start()
 {
 	std::vector<glm::vec2> colliderShape;
 
-	colliderShape.push_back({ -3.0f, 5.0f });
-	colliderShape.push_back({ 3.0f, 5.0f });
-	colliderShape.push_back({ 5.0f, 3.0f });
-	colliderShape.push_back({ 5.0f, -3.0f });
-	colliderShape.push_back({ 3.0f, -5.0f });
-	colliderShape.push_back({ -3.0f, -5.0f });
-	colliderShape.push_back({ -5.0f, -3.0f });
-	colliderShape.push_back({ -5.0f, 3.0f });
+	colliderShape.push_back({ -5.0f, 7.0f });
+	colliderShape.push_back({ 5.0f, 7.0f });
+	colliderShape.push_back({ 7.0f, 5.0f });
+	colliderShape.push_back({ 7.0f, -5.0f });
+	colliderShape.push_back({ 5.0f, -7.0f });
+	colliderShape.push_back({ -5.0f, -7.0f });
+	colliderShape.push_back({ -7.0f, -5.0f });
+	colliderShape.push_back({ -7.0f, 5.0f });
 
 	thisEntity->AddComponent<Collider>();
 	thisEntity->GetComponent<Collider>()->SetShape(colliderShape);
