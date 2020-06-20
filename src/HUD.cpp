@@ -113,7 +113,8 @@ void HUD::SetHud(float sizeX, float sizeY, float posX, float posY, const char* t
 
 void HUD::setLife(float Life)
 {
-	health = Life;
+	std::cout<< Life <<std::endl;
+	this->health = Life  / 1.f;
 }
 
 HUD::~HUD()
@@ -146,8 +147,10 @@ void HUD::Drawbar()
 	glDisable(GL_DEPTH_TEST);
 	// Use our shader
 	hudshader->use();
-	float hp = health / 100.0f;
-	hudshader->setFloat("LifeLevel", hp);
+	float hp = this->health / 100.0f;
+	GLuint LifeLevelID = glGetUniformLocation(hudshader->ID, "LifeLevel");
+	glUniform1f(LifeLevelID, hp);
+	//hudshader->setFloat("LifeLevel", hp);
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, activeTexture);

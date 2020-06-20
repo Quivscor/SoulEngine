@@ -135,6 +135,7 @@ float level = this->LifeLevel / 100.0f;
 	glUniform2f(BillboardSizeID, size.x, size.y);     // and 1m*12cm, because it matches its 256*32 resolution =)
 
 	//this->LifeLevel = 0.2f;
+
 	glUniform1f(LifeLevelID, level);
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 

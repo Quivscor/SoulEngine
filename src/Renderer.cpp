@@ -287,7 +287,7 @@ void Renderer::DrawGUI() const
 	for (int i = 0; i < HUDs.size(); i++)
 	{
 		if (EntityManager::GetInstance()->GetEntity(HUDs[i].first->GetOwnerID())->isActive == true)
-			HUDs[i].first->Draw();
+			HUDs[i].first->Drawbar();
 	}
 }
 
