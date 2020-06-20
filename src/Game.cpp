@@ -341,11 +341,6 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->AddComponent<Billboard>();
 	characterContainer->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
 	characterContainer->GetComponent<Character>()->healthBar = characterContainer->GetComponent<Billboard>();
-	characterContainer->AddComponent<HUD>();
-	characterContainer->GetComponent<HUD>()->SetHud(0.3f, 0.1f, 0.55f, 0.9f, "./res/hpbg.png");
-	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
-
-
 
 	renderer->RegisterHUD(characterContainer);
 	renderer->RegisterBillboard(characterContainer);
