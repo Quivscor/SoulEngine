@@ -32,7 +32,7 @@ public:
 private:
 	Shader* hudshader = nullptr;
 	GLuint activeTexture = 0;
-	float health=100.0f;
+	float health= 0.0f;
 	GLuint vao = 0;
 };
 #endif

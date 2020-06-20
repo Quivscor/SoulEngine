@@ -342,13 +342,35 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
 	characterContainer->GetComponent<Character>()->healthBar = characterContainer->GetComponent<Billboard>();
 	characterContainer->AddComponent<HUD>();
-	characterContainer->GetComponent<HUD>()->SetHud(0.3f, 0.1f, 0.55f, 0.9f, "./res/textures/skybox/top.jpg");
+	characterContainer->GetComponent<HUD>()->SetHud(0.3f, 0.1f, 0.55f, 0.9f, "./res/hpbg.png");
 	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
+
+
 
 	renderer->RegisterHUD(characterContainer);
 	renderer->RegisterBillboard(characterContainer);
 	gameLogic->RegisterEntity(characterContainer);
 	physics->RegisterEntity(characterContainer);
+
+
+	std::shared_ptr<Entity> soulsMeter = m_EntityManager->CreateEntity<Entity>();
+	soulsMeter->AddComponent<HUD>();
+	soulsMeter->GetComponent<HUD>()->SetHud(0.5f, 0.08f, -0.8f, -0.9f, "./res/purplebg.png");
+
+	renderer->RegisterHUD(soulsMeter);
+
+	std::shared_ptr<Entity> hpBackhround = m_EntityManager->CreateEntity<Entity>();
+	hpBackhround->AddComponent<HUD>();
+	hpBackhround->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
+
+	renderer->RegisterHUD(hpBackhround);
+
+
+	std::shared_ptr<Entity> durabilityMeter = m_EntityManager->CreateEntity<Entity>();
+	durabilityMeter->AddComponent<HUD>();
+	durabilityMeter->GetComponent<HUD>()->SetHud(0.08f, 0.35f, 0.8f, 0.0f, "./res/swordbg.png");
+
+	renderer->RegisterHUD(durabilityMeter);
 
 	std::cout << "\n=== Player fully initalized \n";
 

@@ -168,7 +168,7 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	DrawShadows();
+	//DrawShadows();
 	DrawMeshes();
 	DrawGrass();
 
@@ -377,7 +377,7 @@ void Renderer::DrawMeshes() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+		glClearColor(0.0f, 0.3f, 0.5f, 0.5f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -471,7 +471,7 @@ void Renderer::DrawMeshes() const
 			glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
 	
 			//glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
-			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
+			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.55f, 0.55f, 0.55f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
 
@@ -543,21 +543,13 @@ void Renderer::DrawMeshes() const
 }
 void Renderer::DrawGrass() const
 {
-
-
-
-
-
-
-
-
 	//simpleDepthShader->use();
 	//simpleDepthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 	//glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	//glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	//glClear(GL_DEPTH_BUFFER_BIT);
 
-	///*std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
+	//*std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 	//std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();*/
 
 	//simpleDepthShader->setMat4("model",* instanceManagers[0]->instanceModels);

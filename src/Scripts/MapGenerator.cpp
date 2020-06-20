@@ -52,7 +52,7 @@ void MapGenerator::Generate()
 	ShowVillagesMap();
 	GenerateRandomTiles();
 	ShowMapTiles();
-	int grassNumberOnTile = 1000;
+	int grassNumberOnTile = 150;
 	grassManager->instanceModels = new glm::mat4[tilesNumber * grassNumberOnTile];
 	grassManager->amount = tilesNumber * grassNumberOnTile;
 	int numberOfGrass = grassManager->amount;
@@ -347,16 +347,23 @@ void MapGenerator::Generate()
 					
 						
 					glm::vec3 pos(randomX + j*16, 0, randomY+i*16);
-					int grassX = rand() % 100 / 100.f;
+					float grassX = rand() % 150 / 1000.f;
+					//if (rand() % 2 == 0)
+						//grassX *=-1.f;
+					float grassY = rand() % 150 / 1000.f;
+					//if (rand() % 2 == 0)
+						//grassY *=-1.f;
+					float grassZ = rand() % 150 / 1000.f;
+					//if (rand() % 2 == 0)
+						//grassZ *=-1.f;
 					if (rand() % 2 == 0)
-						grassX *=-1.f;
-					int grassY = rand() % 100 / 100.f;
-					if (rand() % 2 == 0)
-						grassY *=-1.f;
-					int grassZ = rand() % 100 / 100.f;
-					if (rand() % 2 == 0)
-						grassZ *=-1.f;
-					glm::vec3 scale(0.1 + grassX, 0.2 + grassY, 0.1 + grassZ);
+					{
+						grassX *= -1.0f;
+						grassY *= -1.0f;
+						grassZ *= -1.0f;
+					}
+					std::cout << "X : " << grassX << " Y: " << grassY << " Z: " << grassZ << std::endl;
+					glm::vec3 scale(0.4 + grassX, 0.4 + grassY, 0.4 + grassZ);
 					glm::vec3 rot(0, 0, 0);
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(pos));
