@@ -341,6 +341,10 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->AddComponent<Billboard>();
 	characterContainer->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
 	characterContainer->GetComponent<Character>()->healthBar = characterContainer->GetComponent<Billboard>();
+	
+	characterContainer->AddComponent<HUD>();
+	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
+	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
 
 	renderer->RegisterHUD(characterContainer);
 	renderer->RegisterBillboard(characterContainer);
@@ -354,11 +358,13 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	renderer->RegisterHUD(soulsMeter);
 
+	/*
 	std::shared_ptr<Entity> hpBackhround = m_EntityManager->CreateEntity<Entity>();
 	hpBackhround->AddComponent<HUD>();
 	hpBackhround->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
 
 	renderer->RegisterHUD(hpBackhround);
+	*/
 
 
 	std::shared_ptr<Entity> durabilityMeter = m_EntityManager->CreateEntity<Entity>();
