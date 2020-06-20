@@ -14,7 +14,7 @@ void WeaponOnTheGround::Start()
 		thisEntity->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 3.0f));
 	}
 
-	thisEntity->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	thisEntity->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	std::vector<glm::vec2> colliderShape;
 	colliderShape.push_back({ -8.0f, -5.0f });

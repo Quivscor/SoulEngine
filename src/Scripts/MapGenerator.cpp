@@ -159,8 +159,8 @@ void MapGenerator::Generate()
 					{
 						object->AddComponent<Transform>();
 						object->GetComponent<Transform>()->SetParent(tile->GetComponent<Transform>());
-						object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1], pos[2]));
-						object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0], scale[1], scale[2]));
+						object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1]+0.35f, pos[2]));
+						object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0]*2, scale[1]*2, scale[2]*2));
 
 						object->AddComponent<Material>();
 						object->AddComponent<WeaponOnTheGround>();
@@ -346,7 +346,7 @@ void MapGenerator::Generate()
 					}
 					
 						
-					glm::vec3 pos(randomX + j*16, 0, randomY+i*16);
+					
 					float grassX = rand() % 150 / 1000.f;
 					//if (rand() % 2 == 0)
 						//grassX *=-1.f;
@@ -362,6 +362,7 @@ void MapGenerator::Generate()
 						grassY *= -1.0f;
 						grassZ *= -1.0f;
 					}
+					glm::vec3 pos(randomX + j * 16, grassY, randomY + i * 16);
 					std::cout << "X : " << grassX << " Y: " << grassY << " Z: " << grassZ << std::endl;
 					glm::vec3 scale(0.4 + grassX, 0.4 + grassY, 0.4 + grassZ);
 					glm::vec3 rot(0, 0, 0);
