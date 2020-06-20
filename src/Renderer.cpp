@@ -389,10 +389,10 @@ void Renderer::DrawMeshes() const
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 
-		float renderingRange = 12.0f;
+		float renderingRange = 20.0f;
 		if (m_Entities[i]->layer == Layer::GroundLayer)
 		{
-			renderingRange = 28.0f;
+			renderingRange = 36.0f;
 		}
 		if (m_Entities[i]->layer != Layer::WaterLayer)
 		{

@@ -190,6 +190,17 @@ void MapGenerator::Generate()
 				}
 				if (name == "Tree" || name == "Birch" )
 				{
+					float treeX = rand() % 100 / 1000.0f;
+					float treeY = rand() % 100 / 1000.0f;
+					float treeZ = rand() % 100 / 1000.0f;
+					if (rand() % 100 <= 10)
+					{
+						treeX *= -1.f;
+						treeY *= -1.f;
+						treeZ *= -1.f;
+					}
+
+					object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0] + treeX, scale[1] + treeY, scale[2] + treeZ));
 					object->AddComponent<Collider>();
 					object->GetComponent<Collider>()->SetShape(treeCollider);
 					object->GetComponent<Collider>()->isStatic = true;
@@ -218,12 +229,14 @@ void MapGenerator::Generate()
 				}
 				if (name == "House1")
 				{
+					object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0] + 0.1f, scale[1] + 0.1f, scale[2] + 0.1f));
 					object->AddComponent<Collider>();
 					object->GetComponent<Collider>()->SetShape(house1Collider);
 					object->GetComponent<Collider>()->isStatic = true;
 				}
 				if (name == "House2")
 				{
+					object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0] + 0.1f, scale[1] + 0.1f, scale[2] + 0.1f));
 					object->AddComponent<Collider>();
 					object->GetComponent<Collider>()->SetShape(house2Collider);
 					object->GetComponent<Collider>()->isStatic = true;
@@ -363,7 +376,6 @@ void MapGenerator::Generate()
 						grassZ *= -1.0f;
 					}
 					glm::vec3 pos(randomX + j * 16, grassY, randomY + i * 16);
-					std::cout << "X : " << grassX << " Y: " << grassY << " Z: " << grassZ << std::endl;
 					glm::vec3 scale(0.4 + grassX, 0.4 + grassY, 0.4 + grassZ);
 					glm::vec3 rot(0, 0, 0);
 					glm::mat4 model = glm::mat4(1.0f);
