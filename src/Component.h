@@ -15,7 +15,8 @@ enum ComponentType
 	WaterComponent = 10,
 	TextComponent = 11,
 	BillboardComponent = 12,
-	HUDComponent = 13
+	HUDComponent = 13,
+	ParComponent = 14
 };
 
 class Component

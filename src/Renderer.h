@@ -10,6 +10,7 @@
 #include "InstanceManager.h"
 #include "GUI/Text.h"
 #include <HUD.h>
+#include <Particles.h>
 
 //#include "Scripts/Water.h"
 
@@ -30,11 +31,12 @@ public:
 	void DrawCube(std::shared_ptr<Transform> transform, std::shared_ptr<Material> material);
 	void RegisterBillboard(std::shared_ptr<Entity> billboard);
 	void RegisterHUD(std::shared_ptr<Entity> HUD);
+	void RegisterPar(std::shared_ptr<Entity> Part);
 	static Shader* GetDefualtShader();
 	void RegisterManager(std::shared_ptr<InstanceManager> instanceManager);
 	std::vector <std::shared_ptr <InstanceManager>> instanceManagers;
 	std::vector <int> test;
-
+	void Drawparts() const;
 	SystemType GetSystemType() const override { return SystemType::Renderer; }
 	//Billboard *box, *box2;
 	//Shader* shader;
@@ -83,6 +85,7 @@ private:
 	std::shared_ptr<Transform> cameraTransform;
 	std::vector<std::pair<std::shared_ptr<Billboard>, std::shared_ptr<Transform>>> billboards;
 	std::vector<std::pair<std::shared_ptr<HUD>, std::shared_ptr<Transform>>> HUDs;
+	std::vector<std::pair<std::shared_ptr<Particles>, std::shared_ptr<Transform>>> Parts;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
 
