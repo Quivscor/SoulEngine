@@ -59,6 +59,11 @@ HUD::HUD(float sizeX, float sizeY, float posX, float posY, const char* textureNa
 
 }
 
+void HUD::setTextureColor(bool textureColor)
+{
+	this->textureColor = textureColor;
+}
+
 void HUD::setColor(glm::vec4 color)
 {
 	Color = color;
@@ -169,6 +174,7 @@ void HUD::Drawbar()
 	hudshader->setBool("fill", fill);
 	hudshader->setBool("horizontal", horizontal);
 	hudshader->setVec4("color", Color);
+	hudshader->setBool("textureColor", textureColor);
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, activeTexture);

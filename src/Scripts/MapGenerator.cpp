@@ -453,7 +453,7 @@ void MapGenerator::Generate()
 						aura->AddComponent<Transform>();
 						aura->GetComponent<Transform>()->SetParent(weapon->GetComponent<Transform>());
 						aura->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0.5f, 0));
-						aura->GetComponent<Transform>()->SetLocalScale(glm::vec3(2.0f, 2.0f, 2.0f));
+						aura->GetComponent<Transform>()->SetLocalScale(glm::vec3(4.0f, 2.0f, 4.0f));
 
 						if (tile->GetComponent<Village>()->auras[0]->ToString() == "AuraBonusDamage")
 						{

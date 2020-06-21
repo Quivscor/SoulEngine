@@ -438,8 +438,31 @@ void Player::DisableBerserkerMode()
 
 void Player::CheckWeapon()
 {
+	if (weapon->GetWeapon() != nullptr)
+	{
+		//std::cout << "DURABILITY : " << (float)weapon->GetWeapon()->durability / (float)weapon->GetWeapon()->maxDurability << "\n";
+
+		if ((float)weapon->GetWeapon()->durability / (float)weapon->GetWeapon()->maxDurability >= 0.0f)
+		{
+			HUDDurability->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		}
+		if ((float)weapon->GetWeapon()->durability / (float)weapon->GetWeapon()->maxDurability >= 0.25f)
+		{
+			HUDDurability->setColor(glm::vec4(0.929f, 0.564f, 0.027f, 1.0f));
+		}
+		if ((float)weapon->GetWeapon()->durability / (float)weapon->GetWeapon()->maxDurability >= 0.50f)
+		{
+			HUDDurability->setColor(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+		}
+		if ((float)weapon->GetWeapon()->durability / (float)weapon->GetWeapon()->maxDurability >= 0.75f)
+		{
+			HUDDurability->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		}
+		
+	}
 	if (weapon->GetWeapon() != nullptr && weapon->GetWeapon()->durability <= 0)
 	{
+		HUDDurability->setColor(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 		weapon->SetWeapon(nullptr);
 
 		attackSpeed = 2.0f;

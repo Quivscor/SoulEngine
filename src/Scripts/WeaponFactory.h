@@ -21,6 +21,7 @@ struct WeaponStats
 	float bonusDamage;
 	float bonusSpeed;
 	int durability;
+	int maxDurability;
 };
 
 static class WeaponFactory

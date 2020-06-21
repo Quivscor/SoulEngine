@@ -15,6 +15,7 @@ public:
 
 	std::shared_ptr<Character> playersCharacter;
 	std::shared_ptr<PlayerEnemyCommunicator> pec;
+	std::shared_ptr<HUD> soulsMeter;
 
 	void EnemyKilled();
 
@@ -24,6 +25,8 @@ public:
 protected:
 	virtual void Start() override;
 	virtual void Update() override;
+
+	
 
 	bool axeIsHungry = false;
 

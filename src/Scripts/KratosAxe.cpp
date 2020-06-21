@@ -63,6 +63,7 @@ void KratosAxe::Update()
 		if (currentAxeSoulLevel < 0.0f)
 			currentAxeSoulLevel = 0.0f;
 	}
+	soulsMeter->setLife(currentAxeSoulLevel/100.0f);
 }
 
 void KratosAxe::EnemyKilled()

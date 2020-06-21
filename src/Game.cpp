@@ -316,6 +316,17 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->shader = shadera;
 	character->GetComponent<Player>()->renderer = renderer;
 	character->layer = PlayerLayer;
+
+	std::shared_ptr<Entity> durabilityMeter = m_EntityManager->CreateEntity<Entity>();
+	durabilityMeter->AddComponent<HUD>();
+	durabilityMeter->GetComponent<HUD>()->setFill(false);
+	durabilityMeter->GetComponent<HUD>()->setTextureColor(true);
+	durabilityMeter->GetComponent<HUD>()->setColor(glm::vec4(0.0f, 0, 0, 0.0f));
+	durabilityMeter->GetComponent<HUD>()->SetHud(0.08f, 0.4f, 0.8f, 0.0f, "./res/swordfill.png");
+	character->GetComponent<Player>()->HUDDurability = durabilityMeter->GetComponent<HUD>();
+	renderer->RegisterHUD(durabilityMeter);
+
+
 	std::cout << "\n=== Animations added to player \n";
 
 	gameLogic->RegisterEntity(character);
@@ -326,12 +337,6 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
-
-	std::shared_ptr<Entity> soulsMeter = m_EntityManager->CreateEntity<Entity>();
-	soulsMeter->AddComponent<HUD>();
-	soulsMeter->GetComponent<HUD>()->SetHud(0.5f, 0.08f, -0.8f, -0.9f, "./res/purplebg.png");
-
-	renderer->RegisterHUD(soulsMeter);
 
 	//player character container
 	std::shared_ptr<Entity> characterContainer = m_EntityManager->CreateEntity<Entity>();
@@ -349,6 +354,26 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	
 	characterContainer->AddComponent<Particles>();
 
+	std::shared_ptr<Entity> soulsMeter2 = m_EntityManager->CreateEntity<Entity>();
+	soulsMeter2->AddComponent<HUD>();
+	soulsMeter2->GetComponent<HUD>()->setFill(true);
+	soulsMeter2->GetComponent<HUD>()->setTextureColor(false);
+	soulsMeter2->GetComponent<HUD>()->sethorizontal(true);
+	soulsMeter2->GetComponent<HUD>()->setColor(glm::vec4(0.435f, 0.0f, 0.839f, 1.0f));
+	soulsMeter2->GetComponent<HUD>()->SetHud(0.5f, 0.08f, -0.8f, -0.9f, "./res/purplebg.png");
+	renderer->RegisterHUD(soulsMeter2);
+
+	/*
+	std::shared_ptr<Entity> soulsMeter = m_EntityManager->CreateEntity<Entity>();
+	soulsMeter->AddComponent<HUD>();
+	soulsMeter->AddComponent<HUD>()->setFill(true);
+	soulsMeter->AddComponent<HUD>()->sethorizontal(true);
+	soulsMeter->AddComponent<HUD>()->setColor(glm::vec4(1.0f, 0, 0.0f, 1.0f));
+	soulsMeter->GetComponent<HUD>()->SetHud(0.5f, 0.08f, -0.8f, -0.9f, "./res/purplebg.png");
+	renderer->RegisterHUD(soulsMeter);
+	*/
+	
+
 
 //characterContainer->GetComponent<Particles>()->SetParticles("./res/textures/particle.DDS", true);
 	
@@ -356,30 +381,26 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->AddComponent<HUD>();
 	characterContainer->GetComponent<HUD>()->sethorizontal(false);
 	characterContainer->GetComponent<HUD>()->setFill(true);
-	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
+	characterContainer->GetComponent<HUD>()->SetHud(0.19f, 0.3363f, -0.925f, -0.89f, "./res/hpbg2.png");
 	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
 
 
 //	renderer->RegisterPar(characterContainer);
 	renderer->RegisterHUD(characterContainer);
-	renderer->RegisterBillboard(characterContainer);
+	//renderer->RegisterBillboard(characterContainer);
 	gameLogic->RegisterEntity(characterContainer);
 	physics->RegisterEntity(characterContainer);
 
 	character->GetComponent<Player>()->characterCollider = characterContainer->GetComponent<Collider>();
 
-	/*
+	
 	std::shared_ptr<Entity> hpFrame = m_EntityManager->CreateEntity<Entity>();
 	hpFrame->AddComponent<HUD>();
-	hpFrame->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
+	hpFrame->GetComponent<HUD>()->setFill(false);
+	hpFrame->GetComponent<HUD>()->SetHud(0.26f, 0.4602f, -0.96f, -0.95f, "./res/hpbg.png");
 
-	renderer->RegisterHUD(hpFrame); */
+	renderer->RegisterHUD(hpFrame); 
 
-	std::shared_ptr<Entity> durabilityMeter = m_EntityManager->CreateEntity<Entity>();
-	durabilityMeter->AddComponent<HUD>();
-	durabilityMeter->GetComponent<HUD>()->SetHud(0.08f, 0.4f, 0.8f, 0.0f, "./res/swordfill.png");
-
-	renderer->RegisterHUD(durabilityMeter);
 
 	std::cout << "\n=== Player fully initalized \n";
 
@@ -447,8 +468,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	debugHealthTitle->GetComponent<Text>()->text = "HP:";
 	debugHealthTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	physics->RegisterEntity(debugHealthTitle);
-	renderer->RegisterEntity(debugHealthTitle);
+	//physics->RegisterEntity(debugHealthTitle);
+	//renderer->RegisterEntity(debugHealthTitle);
 
 	std::shared_ptr<Entity> debugHealthValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugHealthValue->AddComponent<Transform>();
@@ -458,34 +479,34 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	debugHealthValue->GetComponent<Text>()->text = "100%";
 	debugHealthValue->GetComponent<Text>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
 
-	physics->RegisterEntity(debugHealthValue);
-	renderer->RegisterEntity(debugHealthValue);
+	//physics->RegisterEntity(debugHealthValue);
+	//renderer->RegisterEntity(debugHealthValue);
 
 	std::shared_ptr<Entity> debugAxeTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugAxeTitle->AddComponent<Transform>();
-	debugAxeTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 100, 0));
+	debugAxeTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(300, 100, 0));
 	debugAxeTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	debugAxeTitle->AddComponent<Text>();
 	debugAxeTitle->GetComponent<Text>()->text = "Axe Fill:";
 	debugAxeTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	physics->RegisterEntity(debugAxeTitle);
-	renderer->RegisterEntity(debugAxeTitle);
+	//physics->RegisterEntity(debugAxeTitle);
+	//renderer->RegisterEntity(debugAxeTitle);
 
 	std::shared_ptr<Entity> debugAxeValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	debugAxeValue->AddComponent<Transform>();
-	debugAxeValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(130, 100, 0));
+	debugAxeValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(415, 100, 0));
 	debugAxeValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	debugAxeValue->AddComponent<Text>();
 	debugAxeValue->GetComponent<Text>()->text = "100%";
 	debugAxeValue->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
 
-	physics->RegisterEntity(debugAxeValue);
-	renderer->RegisterEntity(debugAxeValue);
+	//physics->RegisterEntity(debugAxeValue);
+	//renderer->RegisterEntity(debugAxeValue);
 
 	std::shared_ptr<Entity> soulsTakenTitle = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	soulsTakenTitle->AddComponent<Transform>();
-	soulsTakenTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(15, 150, 0));
+	soulsTakenTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(300, 100, 0));
 	soulsTakenTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	soulsTakenTitle->AddComponent<Text>();
 	soulsTakenTitle->GetComponent<Text>()->text = "Souls taken:";
@@ -496,7 +517,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> soulsTakenValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	soulsTakenValue->AddComponent<Transform>();
-	soulsTakenValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(175, 150, 0));
+	soulsTakenValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(460, 100, 0));
 	soulsTakenValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	soulsTakenValue->AddComponent<Text>();
 	soulsTakenValue->GetComponent<Text>()->text = "100";
@@ -513,6 +534,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	kratosAxe->GetComponent<KratosAxe>()->debugAxeStatus = debugAxeValue->GetComponent<Text>();
 	kratosAxe->GetComponent<KratosAxe>()->debugSoulsTaken = soulsTakenValue->GetComponent<Text>();
+	kratosAxe->GetComponent<KratosAxe>()->soulsMeter = soulsMeter2->GetComponent<HUD>();
 
 	gameLost->isActive = false;
 
@@ -566,110 +588,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	character->GetComponent<Player>()->weapon = weapon->GetComponent<Weapon>();
 
-	//nanosuit 2 
-	/*
-	std::shared_ptr<Entity> character2 = m_EntityManager->CreateEntity<Entity>();
-	character2->AddComponent<Transform>();
-
-	character2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(1.0f, 0.0f, 3.0f));
-	character2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
-
-	character2->AddComponent<Mesh>();
-	character2->AddComponent<Model>();
-
-	character2->GetComponent<Model>()->UseModel(testModel);
-	character2->GetComponent<Mesh>()->SetAll(testModel->GetMeshes()[0]);
-	character2->GetComponent<Mesh>()->material->SetShader(shadera);
-
-	character2->GetComponent<Mesh>()->setupMeshfBones();
-
-	colliderShape.clear();
-	colliderShape.push_back({ -5.0f, -3.0f });
-	colliderShape.push_back({ -3.0f, -5.0f });
-	colliderShape.push_back({ 3.0f, -5.0f });
-	colliderShape.push_back({ 5.0f, -3.0f });
-	colliderShape.push_back({ 5.0f, 3.0f });
-	colliderShape.push_back({ 3.0f,  5.0f });
-	colliderShape.push_back({ -3.0f, 5.0f });
-	colliderShape.push_back({ -5.0f, 3.0f });
-
-	character2->AddComponent<Collider>();
-	character2->GetComponent<Collider>()->SetShape(colliderShape);
-	character2->GetComponent<Collider>()->isTrigger = true;
-	character2->GetComponent<Collider>()->isStatic = true;
-
-	physics->RegisterEntity(character2);
-	renderer->RegisterEntity(character2);
-	*/
-	//nanosuit 3
-	/*
-	std::shared_ptr<Entity> character3 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
-	character3->AddComponent<Transform>();
-
-	character3->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0.5f, 0.0f, 0.5f));
-	character3->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
-
-	character3->AddComponent<Mesh>();
-	character3->AddComponent<Model>();
-
-	character3->GetComponent<Model>()->UseModel(testModel);
-	character3->GetComponent<Mesh>()->SetAll(testModel->GetMeshes()[0]);
-	character3->GetComponent<Mesh>()->material->SetShader(shadera);
-
-	character3->GetComponent<Mesh>()->setupMeshfBones();
-
-	colliderShape.clear();
-	colliderShape.push_back({ -8.0f, -5.0f });
-	colliderShape.push_back({ -5.0f, -8.0f });
-	colliderShape.push_back({ 5.0f, -8.0f });
-	colliderShape.push_back({ 8.0f, -5.0f });
-	colliderShape.push_back({ 8.0f, 5.0f });
-	colliderShape.push_back({ 5.0f,  8.0f });
-	colliderShape.push_back({ -5.0f, 8.0f });
-	colliderShape.push_back({ -8.0f, 5.0f });
-
-	character3->AddComponent<Collider>();
-	character3->GetComponent<Collider>()->SetShape(colliderShape);
-	character3->GetComponent<Collider>()->isStatic = true;
-	character3->AddComponent<Character>();
-
-	//gameLogic->RegisterEntity(character3);
-	physics->RegisterEntity(character3);
-	renderer->RegisterEntity(character3);
-
-	//nanosuit 4
-	std::shared_ptr<Entity> character4 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
-	character4->AddComponent<Transform>();
-	character4->GetComponent<Transform>()->SetLocalPosition(glm::vec3(-0.0f, 0.0f, 3.0f));
-	character4->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.08f, 0.08f, 0.08f));
-
-	character4->AddComponent<Mesh>();
-	character4->AddComponent<Model>();
-
-	character4->GetComponent<Model>()->UseModel(testModel);
-	character4->GetComponent<Mesh>()->SetAll(testModel->GetMeshes()[0]);
-	character4->GetComponent<Mesh>()->material->SetShader(shadera);
-
-	character4->GetComponent<Mesh>()->setupMeshfBones();
-
-	colliderShape.clear();
-	colliderShape.push_back({ -8.0f, -5.0f });
-	colliderShape.push_back({ -5.0f, -8.0f });
-	colliderShape.push_back({ 5.0f, -8.0f });
-	colliderShape.push_back({ 8.0f, -5.0f });
-	colliderShape.push_back({ 8.0f, 5.0f });
-	colliderShape.push_back({ 5.0f,  8.0f });
-	colliderShape.push_back({ -5.0f, 8.0f });
-	colliderShape.push_back({ -8.0f, 5.0f });
-
-	character4->AddComponent<Collider>();
-	character4->GetComponent<Collider>()->SetShape(colliderShape);
-	character4->GetComponent<Collider>()->isStatic = true;
-	character4->AddComponent<Character>();
-
-	physics->RegisterEntity(character4);
-	renderer->RegisterEntity(character4);
-	*/
+	
 	//Object for cube
 	std::shared_ptr<Entity> cube = m_EntityManager->CreateEntity<Entity>();
 	cube->AddComponent<Transform>();
@@ -687,61 +606,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	renderer->SetCamera(camera);
 	//renderer->debugMode = true;
-	/*
-	std::cout << "\n=== Testing weapons \n";
-	//testing weapon 1
-	std::shared_ptr<Entity> weaponOnTheGround1 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
-	weaponOnTheGround1->AddComponent<Transform>();
-	weaponOnTheGround1->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 3.0f));
-	weaponOnTheGround1->AddComponent<Material>();
-	weaponOnTheGround1->GetComponent<Material>()->SetShader(shader);
-	weaponOnTheGround1->AddComponent<WeaponOnTheGround>();
-	weaponOnTheGround1->GetComponent<WeaponOnTheGround>()->Start();
 
-	//gameLogic->RegisterEntity(weaponOnTheGround1);
-	physics->RegisterEntity(weaponOnTheGround1);
-	renderer->RegisterEntity(weaponOnTheGround1);
-	std::cout << "- testing weapon 1 initalized \n";
-
-	//testing weapon 2
-	std::shared_ptr<Entity> weaponOnTheGround2 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
-	weaponOnTheGround2->AddComponent<Transform>();
-	weaponOnTheGround2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 5.0f));
-	weaponOnTheGround2->AddComponent<Material>();
-	weaponOnTheGround2->GetComponent<Material>()->SetShader(shader);
-	weaponOnTheGround2->AddComponent<WeaponOnTheGround>();
-	weaponOnTheGround2->GetComponent<WeaponOnTheGround>()->Start();
-	//gameLogic->RegisterEntity(weaponOnTheGround2);
-	physics->RegisterEntity(weaponOnTheGround2);
-	renderer->RegisterEntity(weaponOnTheGround2);
-	std::cout << "- testing weapon 2 initalized \n";
-
-	//testing weapon 3
-	std::shared_ptr<Entity> weaponOnTheGround3 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
-	weaponOnTheGround3->AddComponent<Transform>();
-	weaponOnTheGround3->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 7.0f));
-	weaponOnTheGround3->AddComponent<Material>();
-	weaponOnTheGround3->GetComponent<Material>()->SetShader(shader);
-	weaponOnTheGround3->AddComponent<WeaponOnTheGround>();
-	weaponOnTheGround3->GetComponent<WeaponOnTheGround>()->Start();
-	//gameLogic->RegisterEntity(weaponOnTheGround3);
-	physics->RegisterEntity(weaponOnTheGround3);
-	renderer->RegisterEntity(weaponOnTheGround3);
-	std::cout << "- testing weapon 3 initalized \n";
-
-	//testing weapon 4
-	std::shared_ptr<Entity> weaponOnTheGround4 = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
-	weaponOnTheGround4->AddComponent<Transform>();
-	weaponOnTheGround4->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 9.0f));
-	weaponOnTheGround4->AddComponent<Material>();
-	weaponOnTheGround4->GetComponent<Material>()->SetShader(shader);
-	weaponOnTheGround4->AddComponent<WeaponOnTheGround>();
-	weaponOnTheGround4->GetComponent<WeaponOnTheGround>()->Start();
-	//gameLogic->RegisterEntity(weaponOnTheGround4);
-	physics->RegisterEntity(weaponOnTheGround4);
-	renderer->RegisterEntity(weaponOnTheGround4);
-	std::cout << "- testing weapon 4 initalized \n";
-		*/
 	camera->GetComponent<Camera>()->SetLookAndUpVectors(character);
 
 	//water

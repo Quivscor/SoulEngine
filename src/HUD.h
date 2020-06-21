@@ -23,6 +23,7 @@ public:
 	void setLife(float Life);
 	bool horizontal = true;
 	bool fill = false;
+	bool textureColor = false;
 	void Draw();
 	void Drawbar();
 	virtual ComponentType GetComponentType() const override { return ComponentType::HUDComponent; }
@@ -32,6 +33,7 @@ public:
 	void setColor(glm::vec4 color);
 	void setFill(bool filler);
 	void sethorizontal(bool horizon);
+	void setTextureColor(bool textureColor);
 
 private:
 	glm::vec4 Color=glm::vec4(0.0f, 0.0f, 0.0f,1.0f);

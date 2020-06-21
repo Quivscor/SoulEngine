@@ -62,7 +62,7 @@ public:
 	std::shared_ptr<PlayerEnemyCommunicator> pec;
 
 	void EnemyKilled();
-
+	std::shared_ptr<HUD> HUDDurability;
 	std::shared_ptr<Collider> characterCollider;
 
 protected:
@@ -80,6 +80,7 @@ private:
 	void CalculateRotation();
 	void ChangeAnimation(AnimationType type);
 
+	
 	std::shared_ptr<WeaponOnTheGround> weaponInRange;
 	float rotatingSpeed = 5.0f;
 	bool isMoving = false;

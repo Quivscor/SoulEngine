@@ -22,6 +22,7 @@ public:
 
 	std::shared_ptr<Billboard> healthBar;
 	std::shared_ptr<HUD> HUDhealthBar;
+	std::shared_ptr<HUD> HUDsoulsBar;
 	//std::shared_ptr<Particles> Parts;
 
 	//debug

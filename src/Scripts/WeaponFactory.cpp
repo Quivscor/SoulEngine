@@ -31,6 +31,7 @@ std::shared_ptr<WeaponStats> WeaponFactory::GetWeapon()
 	newWeapon.bonusDamage = rand() % 25;
 	newWeapon.bonusSpeed = ((rand() % 100) / 100.0f) + 2.0f;
 	newWeapon.durability = rand() % 30 + 30;
+	newWeapon.maxDurability = newWeapon.durability;
 
 	return std::make_shared<WeaponStats>(newWeapon);
 }
