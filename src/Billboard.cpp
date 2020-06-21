@@ -73,7 +73,7 @@ shaderbil = new Shader("./res/shaders/Billboard.vert", "./res/shaders/Billboard.
 //	this->type;
 
 
-this->LifeLevel = 100.0f;
+this->LifeLevel = 1.0f;
 Texture=NULL;
 billboard_vertex_buffer=NULL;
 vao = NULL;
@@ -83,8 +83,8 @@ vao = NULL;
 
 void Billboard::setLife(float life)
 {
-	//std::cout << life<< std::endl;
-	this->LifeLevel = life/1.f;
+	std::cout << life<< std::endl;
+	this->LifeLevel = life/1.0f;
 	
 }
 void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size )
@@ -96,8 +96,7 @@ void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::
 	//std::cout << this->LifeLevel << std::endl;
 	int w = 1920, h = 1080; //fix later
 	//	glm::vec2 size = glm::vec2(1.f, 0.125f);
-float level = this->LifeLevel / 100.0f;
-//std::cout << level << std::endl;
+
 	// Vertex shader
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.01f, 10000.0f);
 	///glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
@@ -136,7 +135,7 @@ float level = this->LifeLevel / 100.0f;
 
 	//this->LifeLevel = 0.2f;
 
-	glUniform1f(LifeLevelID, level);
+	glUniform1f(LifeLevelID, this->LifeLevel);
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
