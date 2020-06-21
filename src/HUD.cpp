@@ -64,6 +64,11 @@ void HUD::setColor(glm::vec4 color)
 	Color = color;
 }
 
+void HUD::setFill(bool filler)
+{
+	fill = filler;
+}
+
 void HUD::sethorizontal(bool horizon)
 {
 	horizontal = horizon;
@@ -161,6 +166,7 @@ void HUD::Drawbar()
 	float hp = this->health;
 	GLuint LifeLevelID = glGetUniformLocation(hudshader->ID, "LifeLevel");
 	glUniform1f(LifeLevelID, hp);
+	hudshader->setBool("fill", fill);
 	hudshader->setBool("horizontal", horizontal);
 	hudshader->setVec4("color", Color);
 	glBindVertexArray(vao);
