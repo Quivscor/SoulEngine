@@ -1,6 +1,7 @@
 #version 330 core
 out vec4 FragColor;
 
+in vec3 Color;
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 normal;
@@ -128,6 +129,6 @@ void main()
 	vec4 calc_color = vec4( result, transparency);
 	calc_color *= material.transparency;
 	
-	FragColor = calc_color;
+	FragColor = calc_color * vec4(Color, 1.0f);
 
 }

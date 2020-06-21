@@ -24,6 +24,10 @@ void MapGenerator::Generate()
 	LoadMapModels();
 
 	Model* grassLeaf = assetManager->LoadModel("./res/models/tiles/Grass/GrassFromGalapagos.obj");
+	Model* auraRing = assetManager->LoadModel("./res/models/auraring.obj");
+	Model* auraRingRed = assetManager->LoadModel("./res/models/Auras/AuraRingRed.obj");
+	Model* auraRingBlue = assetManager->LoadModel("./res/models/Auras/AuraRingBlue.obj");
+	Model* auraRingYellow = assetManager->LoadModel("./res/models/Auras/AuraRingYellow.obj");
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
 	
@@ -83,6 +87,7 @@ void MapGenerator::Generate()
 	}
 	// spawning tiles and grass
 	std::ifstream file;
+	int auraType = 0;
 	for (int i = 0; i < mapSizeX; i++)
 	{
 		for (int j = 0; j < mapSizeY; j++)
@@ -147,7 +152,7 @@ void MapGenerator::Generate()
 				tile->AddComponent<Village>();
 				gameLogic->RegisterEntity(tile);
 
-				int auraType = rand() % 3; 
+				auraType = rand() % 3; 
 
 				if (auraType == 0)
 					tile->GetComponent<Village>()->auras.push_back(new AuraBonusDamage());
@@ -158,7 +163,7 @@ void MapGenerator::Generate()
 
 				int bonusAuraChance = rand() % 10;
 
-				if (bonusAuraChance == 0)
+				if (bonusAuraChance >= 0)
 				{
 					int oldAuraType = auraType;
 
@@ -178,7 +183,6 @@ void MapGenerator::Generate()
 			{
 				std::shared_ptr<Entity> object = m_EntityManager->CreateEntity<Entity>();
 
-				
 				if (name == "Weapon")
 				{
 					if (rand() % 100 >= 50)
@@ -213,6 +217,7 @@ void MapGenerator::Generate()
 				if (name == "Grass")
 				{
 					object->layer = Layer::GroundLayer;
+					
 				}
 				if (name == "Tree" || name == "Birch" )
 				{
@@ -250,6 +255,124 @@ void MapGenerator::Generate()
 						object->AddComponent<Collider>();
 						object->GetComponent<Collider>()->SetShape(rockCollider);
 						object->GetComponent<Collider>()->isStatic = true;
+						if (generatedMap[i][j] == "Village")
+						{
+							if (tile->GetComponent<Village>()->auras.size() == 1)
+							{
+								std::shared_ptr<Entity> aura = m_EntityManager->CreateEntity<Entity>();
+								aura->AddComponent<Transform>();
+								aura->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
+								aura->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0.1f, 0));
+								aura->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.7f, 0.3f, 0.7f));
+								
+								if (tile->GetComponent<Village>()->auras[0]->ToString() == "AuraBonusDamage")
+								{
+									aura->AddComponent<Mesh>();
+									aura->GetComponent<Mesh>()->indices = auraRingRed->GetMeshes()[0].indices;
+									aura->GetComponent<Mesh>()->vertices = auraRingRed->GetMeshes()[0].vertices;
+									aura->GetComponent<Mesh>()->material = auraRingRed->GetMeshes()[0].material;
+									aura->GetComponent<Mesh>()->setupMesh();
+								}
+									
+								if (tile->GetComponent<Village>()->auras[0]->ToString() == "AuraBonusHealth")
+								{
+									aura->AddComponent<Mesh>();
+									aura->GetComponent<Mesh>()->indices = auraRingBlue->GetMeshes()[0].indices;
+									aura->GetComponent<Mesh>()->vertices = auraRingBlue->GetMeshes()[0].vertices;
+									aura->GetComponent<Mesh>()->material = auraRingBlue->GetMeshes()[0].material;
+									aura->GetComponent<Mesh>()->setupMesh();
+								}
+									
+								if (tile->GetComponent<Village>()->auras[0]->ToString() == "AuraRunningSpeed")
+								{
+									aura->AddComponent<Mesh>();
+									aura->GetComponent<Mesh>()->indices = auraRingYellow->GetMeshes()[0].indices;
+									aura->GetComponent<Mesh>()->vertices = auraRingYellow->GetMeshes()[0].vertices;
+									aura->GetComponent<Mesh>()->material = auraRingYellow->GetMeshes()[0].material;
+									aura->GetComponent<Mesh>()->setupMesh();
+								}
+									
+								renderer->RegisterEntity(aura);
+								physics->RegisterEntity(aura);
+							}
+							if (tile->GetComponent<Village>()->auras.size() == 2)
+							{
+								
+								std::shared_ptr<Entity> aura = m_EntityManager->CreateEntity<Entity>();
+								aura->AddComponent<Transform>();
+								aura->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
+								aura->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0.0f, 0));
+								aura->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.7f, 0.3f, 0.7f));
+
+								if (tile->GetComponent<Village>()->auras[0]->ToString() == "AuraBonusDamage")
+								{
+									aura->AddComponent<Mesh>();
+									aura->GetComponent<Mesh>()->indices = auraRingRed->GetMeshes()[0].indices;
+									aura->GetComponent<Mesh>()->vertices = auraRingRed->GetMeshes()[0].vertices;
+									aura->GetComponent<Mesh>()->material = auraRingRed->GetMeshes()[0].material;
+									aura->GetComponent<Mesh>()->setupMesh();
+								}
+
+								if (tile->GetComponent<Village>()->auras[0]->ToString() == "AuraBonusHealth")
+								{
+									aura->AddComponent<Mesh>();
+									aura->GetComponent<Mesh>()->indices = auraRingBlue->GetMeshes()[0].indices;
+									aura->GetComponent<Mesh>()->vertices = auraRingBlue->GetMeshes()[0].vertices;
+									aura->GetComponent<Mesh>()->material = auraRingBlue->GetMeshes()[0].material;
+									aura->GetComponent<Mesh>()->setupMesh();
+								}
+
+								if (tile->GetComponent<Village>()->auras[0]->ToString() == "AuraRunningSpeed")
+								{
+									aura->AddComponent<Mesh>();
+									aura->GetComponent<Mesh>()->indices = auraRingYellow->GetMeshes()[0].indices;
+									aura->GetComponent<Mesh>()->vertices = auraRingYellow->GetMeshes()[0].vertices;
+									aura->GetComponent<Mesh>()->material = auraRingYellow->GetMeshes()[0].material;
+									aura->GetComponent<Mesh>()->setupMesh();
+								}
+						
+								renderer->RegisterEntity(aura);
+								physics->RegisterEntity(aura); 
+
+
+								std::shared_ptr<Entity> aura2 = m_EntityManager->CreateEntity<Entity>();
+								aura2->AddComponent<Transform>();
+								aura2->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
+								aura2->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0.3f, 0));
+								aura2->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.7f, 0.3f, 0.7f));
+
+								if (tile->GetComponent<Village>()->auras[1]->ToString() == "AuraBonusDamage")
+								{
+									aura2->AddComponent<Mesh>();
+									aura2->GetComponent<Mesh>()->indices = auraRingRed->GetMeshes()[0].indices;
+									aura2->GetComponent<Mesh>()->vertices = auraRingRed->GetMeshes()[0].vertices;
+									aura2->GetComponent<Mesh>()->material = auraRingRed->GetMeshes()[0].material;
+									aura2->GetComponent<Mesh>()->setupMesh();
+								}
+
+								if (tile->GetComponent<Village>()->auras[1]->ToString() == "AuraBonusHealth")
+								{
+									aura2->AddComponent<Mesh>();
+									aura2->GetComponent<Mesh>()->indices = auraRingBlue->GetMeshes()[0].indices;
+									aura2->GetComponent<Mesh>()->vertices = auraRingBlue->GetMeshes()[0].vertices;
+									aura2->GetComponent<Mesh>()->material = auraRingBlue->GetMeshes()[0].material;
+									aura2->GetComponent<Mesh>()->setupMesh();
+								}
+
+								if (tile->GetComponent<Village>()->auras[1]->ToString() == "AuraRunningSpeed")
+								{
+									aura2->AddComponent<Mesh>();
+									aura2->GetComponent<Mesh>()->indices = auraRingYellow->GetMeshes()[0].indices;
+									aura2->GetComponent<Mesh>()->vertices = auraRingYellow->GetMeshes()[0].vertices;
+									aura2->GetComponent<Mesh>()->material = auraRingYellow->GetMeshes()[0].material;
+									aura2->GetComponent<Mesh>()->setupMesh();
+								}
+								renderer->RegisterEntity(aura2);
+								physics->RegisterEntity(aura2);
+							}
+							
+						}
+
 					}
 					
 				}

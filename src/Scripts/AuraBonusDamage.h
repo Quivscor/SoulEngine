@@ -8,6 +8,7 @@ public:
 	~AuraBonusDamage() {};
 
 	virtual void LoadAura(std::shared_ptr<Enemy> enemyScr, std::shared_ptr<Character> enemyCharacter) override;
+	virtual std::string ToString() override;
 
 private:
 	float bonusDamage = 10.0f;

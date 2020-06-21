@@ -4,3 +4,8 @@ void AuraRunningSpeed::LoadAura(std::shared_ptr<Enemy> enemyScr, std::shared_ptr
 {
 	enemyScr->runningSpeed += bonusRunningSpeed;
 }
+
+std::string AuraRunningSpeed::ToString()
+{
+	return "AuraRunningSpeed";
+}

@@ -501,7 +501,7 @@ void Renderer::DrawMeshes() const
 			glUniform1f(glGetUniformLocation(shader->ID, "waveTime"), (float)TimeCustom::GetTime() * 0.1f);
 
 			unsigned int colorLoc = glGetUniformLocation(shader->ID, "color");
-			glUniform3fv(colorLoc, 1, &(mesh->material->GetColor())[0]);
+			glUniform3fv(colorLoc, 1, glm::value_ptr(mesh->material->GetColor()));
 			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "M_matrix"), 1, GL_FALSE, &(trns->GetGlobalMatrix())[0][0]);
 			glm::mat4 matr_normals_cube = glm::mat4(glm::transpose(glm::inverse(trns->GetGlobalMatrix())));
 			glUniformMatrix4fv(glGetUniformLocation(shader->ID, "normals_matrix"), 1, GL_FALSE, &matr_normals_cube[0][0]);

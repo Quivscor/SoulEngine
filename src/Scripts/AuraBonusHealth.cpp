@@ -4,3 +4,8 @@ void AuraBonusHealth::LoadAura(std::shared_ptr<Enemy> enemyScr, std::shared_ptr<
 {
 	enemyCharacter->AddHealth(bonusHealth);
 }
+
+std::string AuraBonusHealth::ToString()
+{
+	return "AuraBonusHealth";
+}

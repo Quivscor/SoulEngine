@@ -11,6 +11,7 @@ public:
 	~Aura() {};
 
 	virtual void LoadAura(std::shared_ptr<Enemy> enemyScr, std::shared_ptr<Character> enemyCharacter) {};
+	virtual std::string ToString() { return ""; };
 
 private:
 
