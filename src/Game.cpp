@@ -327,6 +327,11 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	physics->RegisterEntity(character);
 	renderer->RegisterEntity(character);
 
+	std::shared_ptr<Entity> soulsMeter = m_EntityManager->CreateEntity<Entity>();
+	soulsMeter->AddComponent<HUD>();
+	soulsMeter->GetComponent<HUD>()->SetHud(0.5f, 0.08f, -0.8f, -0.9f, "./res/purplebg.png");
+
+	renderer->RegisterHUD(soulsMeter);
 
 	//player character container
 	std::shared_ptr<Entity> characterContainer = m_EntityManager->CreateEntity<Entity>();
@@ -350,8 +355,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	std::cout << 12345 << std::endl;
 	//characterContainer->GetComponent<Character>()->Parts = characterContainer->GetComponent<Particles>();
 	characterContainer->AddComponent<HUD>();
-	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
+	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg2.png");
 	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
+
 
 //	renderer->RegisterPar(characterContainer);
 	renderer->RegisterHUD(characterContainer);
@@ -361,25 +367,16 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	character->GetComponent<Player>()->characterCollider = characterContainer->GetComponent<Collider>();
 
-
-	std::shared_ptr<Entity> soulsMeter = m_EntityManager->CreateEntity<Entity>();
-	soulsMeter->AddComponent<HUD>();
-	soulsMeter->GetComponent<HUD>()->SetHud(0.5f, 0.08f, -0.8f, -0.9f, "./res/purplebg.png");
-
-	renderer->RegisterHUD(soulsMeter);
-
 	/*
-	std::shared_ptr<Entity> hpBackhround = m_EntityManager->CreateEntity<Entity>();
-	hpBackhround->AddComponent<HUD>();
-	hpBackhround->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
+	std::shared_ptr<Entity> hpFrame = m_EntityManager->CreateEntity<Entity>();
+	hpFrame->AddComponent<HUD>();
+	hpFrame->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
 
-	renderer->RegisterHUD(hpBackhround);
-	*/
-
+	renderer->RegisterHUD(hpFrame); */
 
 	std::shared_ptr<Entity> durabilityMeter = m_EntityManager->CreateEntity<Entity>();
 	durabilityMeter->AddComponent<HUD>();
-	durabilityMeter->GetComponent<HUD>()->SetHud(0.08f, 0.35f, 0.8f, 0.0f, "./res/swordbg.png");
+	durabilityMeter->GetComponent<HUD>()->SetHud(0.08f, 0.4f, 0.8f, 0.0f, "./res/swordfill.png");
 
 	renderer->RegisterHUD(durabilityMeter);
 
