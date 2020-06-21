@@ -34,7 +34,11 @@
 #include <chrono>
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL definitions
 #include <thread>
+#include <stdio.h>
+#include <stdlib.h>
 
+#include <vector>
+#include <algorithm>
 // OpenGL math
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>

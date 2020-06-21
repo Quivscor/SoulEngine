@@ -2,7 +2,8 @@
 
 Character::Character()
 {
-
+	 maxHealth = 100.0f;
+	
 }
 
 Character::~Character()
@@ -27,11 +28,11 @@ void Character::GetHit(float damage)
 	}
 
 	CheckDeathCondition();
-
+	std::cout << health/maxHealth <<std::endl;
 	//thisEntity->GetComponent<Billboard>()->setLife(health);
-	healthBar->setLife(health);
+	healthBar->setLife(health/ maxHealth);
 	if(HUDhealthBar!=nullptr)
-	HUDhealthBar->setLife(health);
+	HUDhealthBar->setLife(health / maxHealth);
 }
 
 void Character::CheckDeathCondition()
@@ -63,14 +64,14 @@ float Character::GetHealth()
 void Character::AddHealth(float value)
 {
 	health += value;
-
+	this->maxHealth += value;
 	if (thisEntity->layer == PlayerLayer)
 	{
 		healthDebugValue->text = std::to_string((int)glm::floor(health)) + "%";
 	}
 
 	//thisEntity->GetComponent<Billboard>()->setLife(health);
-	healthBar->setLife(health);
+	/*healthBar->setLife(health/ maxHealth);
 	if (HUDhealthBar != nullptr)
-		HUDhealthBar->setLife(health);
+		HUDhealthBar->setLife(health / maxHealth);*/
 }

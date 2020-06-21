@@ -350,12 +350,12 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->AddComponent<Particles>();
 
 
-
-	//characterContainer->GetComponent<Particles>()->SetParticles("./res/textures/particle.DDS", true);
-	std::cout << 12345 << std::endl;
+//characterContainer->GetComponent<Particles>()->SetParticles("./res/textures/particle.DDS", true);
+	
 	//characterContainer->GetComponent<Character>()->Parts = characterContainer->GetComponent<Particles>();
 	characterContainer->AddComponent<HUD>();
-	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg2.png");
+	characterContainer->GetComponent<HUD>()->sethorizontal(false);
+	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
 	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
 
 
