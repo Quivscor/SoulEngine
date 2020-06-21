@@ -163,7 +163,7 @@ void MapGenerator::Generate()
 
 				int bonusAuraChance = rand() % 10;
 
-				if (bonusAuraChance >= 0)
+				if (bonusAuraChance <= 1)
 				{
 					int oldAuraType = auraType;
 
