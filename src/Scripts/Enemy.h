@@ -31,6 +31,8 @@ public:
 
 	std::shared_ptr<Entity> weapon;
 
+	float runningSpeed = 1.0f;
+
 protected:
 	virtual void Start() override;
 	virtual void Update() override;

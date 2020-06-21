@@ -59,3 +59,18 @@ float Character::GetHealth()
 {
 	return health;
 }
+
+void Character::AddHealth(float value)
+{
+	health += value;
+
+	if (thisEntity->layer == PlayerLayer)
+	{
+		healthDebugValue->text = std::to_string((int)glm::floor(health)) + "%";
+	}
+
+	//thisEntity->GetComponent<Billboard>()->setLife(health);
+	healthBar->setLife(health);
+	if (HUDhealthBar != nullptr)
+		HUDhealthBar->setLife(health);
+}

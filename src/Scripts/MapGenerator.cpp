@@ -146,6 +146,32 @@ void MapGenerator::Generate()
 			{
 				tile->AddComponent<Village>();
 				gameLogic->RegisterEntity(tile);
+
+				int auraType = rand() % 3; 
+
+				if (auraType == 0)
+					tile->GetComponent<Village>()->auras.push_back(new AuraBonusDamage());
+				else if (auraType == 1)
+					tile->GetComponent<Village>()->auras.push_back(new AuraBonusHealth());
+				else if (auraType == 2)
+					tile->GetComponent<Village>()->auras.push_back(new AuraRunningSpeed());
+
+				int bonusAuraChance = rand() % 10;
+
+				if (bonusAuraChance == 0)
+				{
+					int oldAuraType = auraType;
+
+					while (oldAuraType == auraType)
+						auraType = rand() % 3;
+
+					if (auraType == 0)
+						tile->GetComponent<Village>()->auras.push_back(new AuraBonusDamage());
+					else if (auraType == 1)
+						tile->GetComponent<Village>()->auras.push_back(new AuraBonusHealth());
+					else if (auraType == 2)
+						tile->GetComponent<Village>()->auras.push_back(new AuraRunningSpeed());
+				}
 			}
 
 			while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])

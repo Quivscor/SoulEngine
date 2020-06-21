@@ -19,7 +19,9 @@ public:
 
 	std::shared_ptr<Entity> player;
 
-	void DealDmg(std::shared_ptr<Entity> target);
+	void DealDmg(std::shared_ptr<Entity> target); 
+
+	void AddBasicDmg(float value);
 
 private:
 	//[SerializeField] F [*]

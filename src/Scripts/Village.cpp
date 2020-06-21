@@ -29,6 +29,23 @@ void Village::Start()
 	thisEntity->GetComponent<Collider>()->isStatic = true;
 }
 
+void Village::Update()
+{
+	if (aurasLoaded == false)
+	{
+		for (int i = 0; i < auras.size(); i++)
+		{
+			for (int j = 0; j < enemiesInVillage.size(); j++)
+			{
+				auras[i]->LoadAura(enemiesInVillage[j], EntityManager::GetInstance()->GetEntity(EntityManager::GetInstance()->GetEntity(enemiesInVillage[j]->GetOwnerID())->GetComponent<Transform>()->GetParent()->GetOwnerID())->GetComponent<Character>());
+			}
+		}
+
+		std::cout << "Auras applied on enemies!" << std::endl;
+		aurasLoaded = true;
+	}
+}
+
 void Village::OnTriggerEnter(std::shared_ptr<Collider> other)
 {
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->layer == PlayerLayer)

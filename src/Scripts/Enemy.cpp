@@ -29,7 +29,7 @@ void Enemy::Update()
 		}
 	}
 
-	if (isTriggered)
+	if (isTriggered && !isAttacking)
 	{
 		float distance = glm::sqrt(glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().x - playerPosition->GetGlobalPosition().x, 2) + glm::pow(thisEntity->GetComponent<Transform>()->GetGlobalPosition().z - playerPosition->GetGlobalPosition().z, 2));
 
@@ -59,7 +59,7 @@ void Enemy::Move()
 {
 	ChangeAnimation(EnemyAnimationRun);
 
-	thisEntity->GetComponent<Transform>()->GetParent()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 22.0f);
+	thisEntity->GetComponent<Transform>()->GetParent()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 22.0f * runningSpeed);
 }
 
 void Enemy::CalculateRotation()

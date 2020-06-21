@@ -53,8 +53,13 @@ void EnemyWeapon::DealDmg(std::shared_ptr<Entity> target)
 		return;
 
 	target->GetComponent<Character>()->GetHit(damage);
-	std::cout << "Player has been hit!" << std::endl;
+	std::cout << "Player has been hit for " << damage << " damage!" << std::endl;
 
 	player = nullptr;
+}
+
+void EnemyWeapon::AddBasicDmg(float value)
+{
+	damage += value;
 }
 

@@ -13,6 +13,9 @@
 #include "Village.h"
 #include "Scripts/EnemyWeapon.h"
 #include "Scripts/WeaponOnTheGround.h"
+#include "Scripts/AuraBonusDamage.h"
+#include "Scripts/AuraBonusHealth.h"
+#include "Scripts/AuraRunningSpeed.h"
 
 class MapGenerator
 {

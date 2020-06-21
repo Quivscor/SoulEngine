@@ -26,6 +26,8 @@ public:
 	//debug
 	std::shared_ptr<Text> healthDebugValue;
 
+	void AddHealth(float value);
+
 protected:
 	//virtual void Start();
 
