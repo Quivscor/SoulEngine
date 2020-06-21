@@ -9,12 +9,14 @@ uniform sampler2D texture1;
 uniform float LifeLevel;
 uniform vec4 color;
 uniform bool horizontal;
+uniform bool fill;
 void main()
 {
 	//FragColor = texture(texture1, TexCoord);
 	FragColor = texture( texture1, TexCoord );
-	
-if(horizontal==true)
+	if(fill==true)
+	{
+	if(horizontal==true)
 	{
 	if(color.r==0&&color.g==0&&color.b==0)
 	{	// Hardcoded life level, should be in a separate texture.
@@ -68,6 +70,8 @@ if (TexCoord.x <0.9  && TexCoord.y > 0.01 && TexCoord.y < LifeLevel&& TexCoord.x
 	}
 	}
 	}
+	}
+
 	
 	
 

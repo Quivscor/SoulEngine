@@ -355,6 +355,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	//characterContainer->GetComponent<Character>()->Parts = characterContainer->GetComponent<Particles>();
 	characterContainer->AddComponent<HUD>();
 	characterContainer->GetComponent<HUD>()->sethorizontal(false);
+	characterContainer->GetComponent<HUD>()->setFill(true);
 	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
 	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
 
