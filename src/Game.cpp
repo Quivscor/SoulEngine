@@ -342,10 +342,18 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	characterContainer->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
 	characterContainer->GetComponent<Character>()->healthBar = characterContainer->GetComponent<Billboard>();
 	
+	characterContainer->AddComponent<Particles>();
+
+
+
+	//characterContainer->GetComponent<Particles>()->SetParticles("./res/textures/particle.DDS", true);
+	std::cout << 12345 << std::endl;
+	//characterContainer->GetComponent<Character>()->Parts = characterContainer->GetComponent<Particles>();
 	characterContainer->AddComponent<HUD>();
 	characterContainer->GetComponent<HUD>()->SetHud(0.25f, 0.44f, -0.96f, -0.95f, "./res/hpbg.png");
 	characterContainer->GetComponent<Character>()->HUDhealthBar = characterContainer->GetComponent<HUD>();
 
+//	renderer->RegisterPar(characterContainer);
 	renderer->RegisterHUD(characterContainer);
 	renderer->RegisterBillboard(characterContainer);
 	gameLogic->RegisterEntity(characterContainer);

@@ -239,6 +239,7 @@ void Renderer::Update() const
 	//box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	//box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
 	DrawHPbar();
+	 //Drawparts();
 	//hud->Draw();
 
 	if (berserkerModeActive == true)
@@ -325,7 +326,7 @@ void Renderer::DrawShadows() const
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
-
+	
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
 		if (mesh != nullptr)
 		{
@@ -623,6 +624,16 @@ void Renderer::RegisterManager(std::shared_ptr<InstanceManager> instanceManager)
 {
 	instanceManagers.push_back(instanceManager);
 }
+
+void Renderer::Drawparts() const
+{
+	for (int i = 0; i < Parts.size(); i++)
+	{
+		if (EntityManager::GetInstance()->GetEntity(Parts[i].first->GetOwnerID())->isActive == true)
+			Parts[i].first->Draw(mainCamera, glm::vec3(Parts[i].second->GetGlobalPosition().x, Parts[i].second->GetGlobalPosition().y + 1.5f, Parts[i].second->GetGlobalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
+	}
+}
+
 void Renderer::DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const
 {
 	Shader* shader = defaultShader;
@@ -852,4 +863,9 @@ void Renderer::RegisterBillboard(std::shared_ptr<Entity> billboard)
 void Renderer::RegisterHUD(std::shared_ptr<Entity> hut)
 {
 	HUDs.push_back(std::make_pair(hut->GetComponent<HUD>(), hut->GetComponent<Transform>()));
+}
+
+void Renderer::RegisterPar(std::shared_ptr<Entity> Part)
+{
+	Parts.push_back(std::make_pair(Part->GetComponent<Particles>(), Part->GetComponent<Transform>()));
 }
