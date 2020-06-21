@@ -250,7 +250,7 @@ void Player::Swap()
 
 	if (weaponInRange->weapon != nullptr)
 	{
-		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage : 25, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
+		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage + 25 : 25, weaponInRange->weapon->bonusDamage + 25, weaponComparator->oldDamage, weaponComparator->newDamage);
 		weaponComparator->UpdateStats(2, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusSpeed - 2 : 0, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
 		weaponComparator->UpdateStats(-1, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->durability : 0, weaponInRange->weapon->durability, weaponComparator->oldDurability, weaponComparator->newDurability);
 	}
@@ -263,7 +263,7 @@ void Player::OnTriggerEnter(std::shared_ptr<Collider> other)
 		weaponInRange = EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<WeaponOnTheGround>();
 		weaponComparator->Show(true);
 
-		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage : 25, weaponInRange->weapon->bonusDamage, weaponComparator->oldDamage, weaponComparator->newDamage);
+		weaponComparator->UpdateStats(25, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusDamage + 25 : 25, weaponInRange->weapon->bonusDamage + 25, weaponComparator->oldDamage, weaponComparator->newDamage);
 		weaponComparator->UpdateStats(2, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->bonusSpeed - 2 : 0, weaponInRange->weapon->bonusSpeed - 2, weaponComparator->oldASpeed, weaponComparator->newASpeed);
 		weaponComparator->UpdateStats(-1, this->weapon->GetWeapon() != nullptr ? this->weapon->GetWeapon()->durability : 0, weaponInRange->weapon->durability, weaponComparator->oldDurability, weaponComparator->newDurability);
 	}
