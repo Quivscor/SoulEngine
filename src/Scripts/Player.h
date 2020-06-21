@@ -63,6 +63,8 @@ public:
 
 	void EnemyKilled();
 
+	std::shared_ptr<Collider> characterCollider;
+
 protected:
 	virtual void Start();
 	virtual void Update();

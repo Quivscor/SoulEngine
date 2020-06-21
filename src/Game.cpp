@@ -351,6 +351,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	gameLogic->RegisterEntity(characterContainer);
 	physics->RegisterEntity(characterContainer);
 
+	character->GetComponent<Player>()->characterCollider = characterContainer->GetComponent<Collider>();
+
 
 	std::shared_ptr<Entity> soulsMeter = m_EntityManager->CreateEntity<Entity>();
 	soulsMeter->AddComponent<HUD>();

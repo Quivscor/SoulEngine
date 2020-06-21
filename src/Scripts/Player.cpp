@@ -53,6 +53,7 @@ void Player::Update()
 		if (currentRollTime >= rollTime)
 		{
 			isRolling = false;
+			characterCollider->enabled = true;
 			canRoll = true;
 		}
 	}
@@ -74,6 +75,7 @@ void Player::Update()
 
 	if (berserkerModeActive)
 	{
+		characterCollider->enabled = false;
 		//std::cout << "BerserkerCounterActive" << std::endl;
 
 		berserkerCurrentTime += TimeCustom::GetDeltaTime();
@@ -81,6 +83,7 @@ void Player::Update()
 		if (berserkerCurrentTime >= berserkerModeDuration)
 		{
 			berserkerModeActive = false;
+			characterCollider->enabled = true;
 			DisableBerserkerMode();
 		}
 	}
@@ -120,6 +123,7 @@ void Player::Update()
 			{
 				isRolling = true;
 				currentRollTime = 0.0f;
+				characterCollider->enabled = false;
 				ChangeAnimation(PlayerAnimationRoll);
 			}
 
