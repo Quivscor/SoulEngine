@@ -26,7 +26,7 @@ public:
 	Model * FindModelByName(Model* [], std::string name);
 private:
 	bool debug = true;
-
+	bool timing = false;
 	void InitializeWeapons(AssetManager* assetManager);
 	void InitializeBasicGUI(Renderer* renderer, Physics* physics);
 	void InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared_ptr<Entity> player, GameLogic* gameLogic);
