@@ -63,6 +63,7 @@ public:
 
 	void EnemyKilled();
 	std::shared_ptr<HUD> HUDDurability;
+	std::shared_ptr<HUD> HUDBerserker;
 	std::shared_ptr<Collider> characterCollider;
 
 protected:

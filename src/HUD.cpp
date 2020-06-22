@@ -175,21 +175,22 @@ void HUD::Drawbar()
 {
 	if (active)
 	{
-	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-	glDisable(GL_DEPTH_TEST);
-	// Use our shader
-	hudshader->use();
-	float hp = this->health;
-	GLuint LifeLevelID = glGetUniformLocation(hudshader->ID, "LifeLevel");
-	glUniform1f(LifeLevelID, hp);
-	hudshader->setBool("fill", fill);
-	hudshader->setBool("horizontal", horizontal);
-	hudshader->setVec4("color", Color);
-	hudshader->setBool("textureColor", textureColor);
-	glBindVertexArray(vao);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, activeTexture);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+		glDisable(GL_DEPTH_TEST);
+		// Use our shader
+		hudshader->use();
+		float hp = this->health;
+		GLuint LifeLevelID = glGetUniformLocation(hudshader->ID, "LifeLevel");
+		glUniform1f(LifeLevelID, hp);
+		hudshader->setBool("fill", fill);
+		hudshader->setBool("horizontal", horizontal);
+		hudshader->setVec4("color", Color);
+		hudshader->setBool("textureColor", textureColor);
+		glBindVertexArray(vao);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, activeTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
+	
 }
 

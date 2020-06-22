@@ -7,14 +7,14 @@
 #include "stb_image.h"
 // CPU representation of a particle
 const int MaxParticles = 100000;
-struct Particle {
+struct SingleParticle {
 	glm::vec3 pos, speed;
 	unsigned char r, g, b, a; // Color
 	float size, angle, weight;
 	float life; // Remaining life of the particle. if <0 : dead and unused.
 	float cameradistance; // *Squared* distance to the camera. if dead : -1.0f
 
-	bool operator<(const Particle& that) const {
+	bool operator<(const SingleParticle& that) const {
 		// Sort in reverse order : far particles drawn first.
 		return this->cameradistance > that.cameradistance;
 	}
@@ -24,9 +24,10 @@ class Particles : public Component
 {
 public:
 	bool Active=false;
-	Particle ParticlesContainer[MaxParticles];
+	SingleParticle ParticlesContainer[MaxParticles];
 	int LastUsedParticle = 0;
 	Particles();
+	void Init();
 	~Particles();
 	void SortParticles();
 	int FindUnusedParticle();

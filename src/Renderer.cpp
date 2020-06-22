@@ -278,6 +278,12 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawGUI() const
 {
+	for (int i = 0; i < HUDs.size(); i++)
+	{
+		if (EntityManager::GetInstance()->GetEntity(HUDs[i].first->GetOwnerID())->isActive == true)
+			HUDs[i].first->Drawbar();
+	}
+
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f);
 
 	for (int i = 0; i < m_Entities.size(); i++)
@@ -293,11 +299,7 @@ void Renderer::DrawGUI() const
 		}
 	
 	}
-	for (int i = 0; i < HUDs.size(); i++)
-	{
-		if (EntityManager::GetInstance()->GetEntity(HUDs[i].first->GetOwnerID())->isActive == true)
-			HUDs[i].first->Drawbar();
-	}
+
 }
 
 void Renderer::DrawHPbar() const
