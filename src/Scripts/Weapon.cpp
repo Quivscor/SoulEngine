@@ -30,6 +30,8 @@ void Weapon::OnTriggerStay(std::shared_ptr<Collider> other)
 
 	if (EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>() != nullptr && EntityManager::GetInstance()->GetEntity(other->GetOwnerID()) != characterContainer)
 	{
+		source.Play(audioMaster->GenBuffer("./res/sound/EnemyHit.wav"));
+		source.SetVolume(0.1f);
 		hitObjects.push_back(EntityManager::GetInstance()->GetEntity(other->GetOwnerID()));
 
 		EntityManager::GetInstance()->GetEntity(other->GetOwnerID())->GetComponent<Character>()->GetHit(damage + (equipedWeapon == nullptr || equipedWeapon->durability <= 0 ? 0 : equipedWeapon->bonusDamage));

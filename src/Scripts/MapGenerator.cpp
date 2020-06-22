@@ -428,7 +428,7 @@ void MapGenerator::Generate()
 					object->AddComponent<Character>();
 					object->GetComponent<Character>()->playerReference = player;
 					object->AddComponent<Billboard>();
-					object->GetComponent<Billboard>()->SetBillboard("./res/textures/ExampleBillboard.DDS", true);
+					object->GetComponent<Billboard>()->SetBillboard("./res/hpbartlo.png", false);
 					object->GetComponent<Character>()->healthBar = object->GetComponent<Billboard>();
 
 					renderer->RegisterBillboard(object);

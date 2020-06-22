@@ -2,6 +2,8 @@
 #include "ScriptableObject.h"
 #include "WeaponOnTheGround.h"
 #include "Enemy.h"
+#include "AudioMaster.h"
+#include "Source.h"
 
 class Weapon : public ScriptableObject
 {
@@ -17,6 +19,8 @@ public:
 
 	std::shared_ptr<WeaponStats> GetWeapon();
 	void SetWeapon(std::shared_ptr<WeaponStats> newWeapon);
+	AudioMaster *audioMaster;
+	Source source;
 
 protected:
 	virtual void Start() override;

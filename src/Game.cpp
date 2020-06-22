@@ -595,6 +595,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	weapon->GetComponent<Collider>()->isTrigger = true;
 	weapon->AddComponent<Weapon>();
 	weapon->GetComponent<Weapon>()->characterContainer = characterContainer;
+	weapon->GetComponent<Weapon>()->audioMaster = audioMaster;
 
 	renderer->RegisterEntity(weapon);
 	gameLogic->RegisterEntity(weapon);

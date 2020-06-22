@@ -15,7 +15,7 @@ void main(){
 	color = texture( myTextureSampler, UV );
 	
 	// Hardcoded life level, should be in a separate texture.
-	if (UV.x <LifeLevel && UV.y > 0.3 && UV.y < 0.7 && UV.x > 0.01 )
+	if (UV.x < LifeLevel - 0.05 && UV.y > 0.3 && UV.y < 0.7 && UV.x > 0.05 )
 	{
 		color = vec4(0.9, 0.1, 0.2, 1.0);
 	}

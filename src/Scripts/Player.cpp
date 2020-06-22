@@ -146,8 +146,8 @@ void Player::Update()
 			if (!isAttacking && !isRolling)
 			{
 
-				source.Play(audioMaster->GenBuffer("./res/sound/Ugh2.wav"));
-				source.SetVolume(4.0f);
+				source.Play(audioMaster->GenBuffer("./res/sound/Attack.wav"));
+				source.SetVolume(0.3f);
 				currentAttackTime = 0.0f;
 				isAttacking = true;
 				canMove = false;
@@ -157,7 +157,7 @@ void Player::Update()
 		}
 
 		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_E))
-		{
+		{	
 			Swap();
 		}
 	}
@@ -230,7 +230,8 @@ void Player::Swap()
 {
 	if (weaponInRange == nullptr)
 		return;
-
+	source.Play(audioMaster->GenBuffer("./res/sound/SwapWeapon.wav"));
+	source.SetVolume(0.1f);
 	std::shared_ptr<WeaponStats> weaponTmp = weapon->GetWeapon();
 	weapon->SetWeapon(weaponInRange->weapon);
 	weaponInRange->weapon = weaponTmp;

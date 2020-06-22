@@ -11,5 +11,5 @@ public:
 	virtual std::string ToString() override;
 
 private:
-	float bonusRunningSpeed = 1.5f;
+	float bonusRunningSpeed = 0.5f;
 };
