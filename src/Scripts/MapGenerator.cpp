@@ -358,41 +358,41 @@ void MapGenerator::Generate()
 							}
 							if (tile->GetComponent<Village>()->auras.size() > 2)
 							{
-								std::shared_ptr<Entity> aura = m_EntityManager->CreateEntity<Entity>();
-								aura->AddComponent<Transform>();
-								aura->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
-								aura->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0.5f, 0));
-								aura->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.7f, 0.3f, 0.7f));
+								std::shared_ptr<Entity> aura3 = m_EntityManager->CreateEntity<Entity>();
+								aura3->AddComponent<Transform>();
+								aura3->GetComponent<Transform>()->SetParent(object->GetComponent<Transform>());
+								aura3->GetComponent<Transform>()->SetLocalPosition(glm::vec3(0, 0.5f, 0));
+								aura3->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.7f, 0.3f, 0.7f));
 
 								if (tile->GetComponent<Village>()->auras[2]->ToString() == "AuraBonusDamage")
 								{
-									aura->AddComponent<Mesh>();
-									aura->GetComponent<Mesh>()->indices = auraRingRed->GetMeshes()[0].indices;
-									aura->GetComponent<Mesh>()->vertices = auraRingRed->GetMeshes()[0].vertices;
-									aura->GetComponent<Mesh>()->material = auraRingRed->GetMeshes()[0].material;
-									aura->GetComponent<Mesh>()->setupMesh();
+									aura3->AddComponent<Mesh>();
+									aura3->GetComponent<Mesh>()->indices = auraRingRed->GetMeshes()[0].indices;
+									aura3->GetComponent<Mesh>()->vertices = auraRingRed->GetMeshes()[0].vertices;
+									aura3->GetComponent<Mesh>()->material = auraRingRed->GetMeshes()[0].material;
+									aura3->GetComponent<Mesh>()->setupMesh();
 								}
 
 								if (tile->GetComponent<Village>()->auras[2]->ToString() == "AuraBonusHealth")
 								{
-									aura->AddComponent<Mesh>();
-									aura->GetComponent<Mesh>()->indices = auraRingBlue->GetMeshes()[0].indices;
-									aura->GetComponent<Mesh>()->vertices = auraRingBlue->GetMeshes()[0].vertices;
-									aura->GetComponent<Mesh>()->material = auraRingBlue->GetMeshes()[0].material;
-									aura->GetComponent<Mesh>()->setupMesh();
+									aura3->AddComponent<Mesh>();
+									aura3->GetComponent<Mesh>()->indices = auraRingBlue->GetMeshes()[0].indices;
+									aura3->GetComponent<Mesh>()->vertices = auraRingBlue->GetMeshes()[0].vertices;
+									aura3->GetComponent<Mesh>()->material = auraRingBlue->GetMeshes()[0].material;
+									aura3->GetComponent<Mesh>()->setupMesh();
 								}
 
 								if (tile->GetComponent<Village>()->auras[2]->ToString() == "AuraRunningSpeed")
 								{
-									aura->AddComponent<Mesh>();
-									aura->GetComponent<Mesh>()->indices = auraRingYellow->GetMeshes()[0].indices;
-									aura->GetComponent<Mesh>()->vertices = auraRingYellow->GetMeshes()[0].vertices;
-									aura->GetComponent<Mesh>()->material = auraRingYellow->GetMeshes()[0].material;
-									aura->GetComponent<Mesh>()->setupMesh();
+									aura3->AddComponent<Mesh>();
+									aura3->GetComponent<Mesh>()->indices = auraRingYellow->GetMeshes()[0].indices;
+									aura3->GetComponent<Mesh>()->vertices = auraRingYellow->GetMeshes()[0].vertices;
+									aura3->GetComponent<Mesh>()->material = auraRingYellow->GetMeshes()[0].material;
+									aura3->GetComponent<Mesh>()->setupMesh();
 								}
 
-								renderer->RegisterEntity(aura);
-								physics->RegisterEntity(aura);
+								renderer->RegisterEntity(aura3);
+								physics->RegisterEntity(aura3);
 							}
 							
 						}
@@ -508,6 +508,8 @@ void MapGenerator::Generate()
 
 						renderer->RegisterEntity(aura);
 						physics->RegisterEntity(aura);
+
+						object->GetComponent<Character>()->aura1ref = aura;
 					}
 					if (tile->GetComponent<Village>()->auras.size() > 1)
 					{
@@ -546,6 +548,8 @@ void MapGenerator::Generate()
 
 						renderer->RegisterEntity(aura);
 						physics->RegisterEntity(aura);
+
+						object->GetComponent<Character>()->aura2ref = aura;
 					}
 					if (tile->GetComponent<Village>()->auras.size() > 2)
 					{
@@ -584,6 +588,8 @@ void MapGenerator::Generate()
 
 						renderer->RegisterEntity(aura);
 						physics->RegisterEntity(aura);
+
+						object->GetComponent<Character>()->aura3ref = aura;
 					}
 					gameLogic->RegisterEntity(enemy);
 					physics->RegisterEntity(enemy);
