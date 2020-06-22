@@ -64,13 +64,13 @@ private:
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
 	static Shader* screenShader;
-	const static unsigned int SHADOW_WIDTH = 1024 ;
-	const static unsigned int SHADOW_HEIGHT = 1024;
+	const static unsigned int SHADOW_WIDTH = 1920 ;
+	const static unsigned int SHADOW_HEIGHT = 1920;
 	unsigned   int depthMapFBO = 0;
 	
 	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
-	const  float far_plane = 100.5f;
+	const  float far_plane = 20.0f;
 	HUD* hud;
 	unsigned int frameBuffer = 0;
 	unsigned int textureColorBuffer = 0;
@@ -88,7 +88,8 @@ private:
 	std::vector<std::pair<std::shared_ptr<Particles>, std::shared_ptr<Transform>>> Parts;
 	//glm::mat4 camProjection;
 	//glm::mat4 camView;
-
+	glm::mat4 lightProjection , lightView ;
+	glm::mat4 lightSpaceMatrix ;
 	void SortEntities();
 };
 
