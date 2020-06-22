@@ -27,28 +27,34 @@ void Particles::SortParticles() {
 
 Particles::Particles()
 {
-	shaderpar = new Shader("./res/shaders/Particle.vert", "./res/shaders/Particle.frag");
+	
+}
+
+void Particles::Init()
+{
+	shaderpar = new Shader("./res/shaders/SingleParticle.vert", "./res/shaders/SingleParticle.frag");
 
 	//	this->type;
 
 
 	particles_color_buffer = NULL;
- particles_position_buffer = NULL;
+	particles_position_buffer = NULL;
 	Texture = NULL;
 	billboard_vertex_buffer = NULL;
 	vao = NULL;
 }
+
 Particles::~Particles()
 {
 	
 
 	// Cleanup VBO and shader
-	glDeleteBuffers(1, &particles_color_buffer);
+	/*glDeleteBuffers(1, &particles_color_buffer);
 	glDeleteBuffers(1, &particles_position_buffer);
 	glDeleteBuffers(1, &billboard_vertex_buffer);
 	glDeleteProgram(shaderpar->ID);
 	glDeleteTextures(1, &Texture);
-	glDeleteVertexArrays(1, &vao);
+	glDeleteVertexArrays(1, &vao);*/
 }
 void Particles::SetParticles(char* imagepath, bool x)
 {
@@ -194,7 +200,7 @@ void Particles::Draw(std::shared_ptr<Entity>  camera, glm::vec3 position, glm::v
 	int ParticlesCount = 0;
 	for (int i = 0; i < MaxParticles; i++) {
 
-		Particle& p = ParticlesContainer[i]; // shortcut
+		SingleParticle& p = ParticlesContainer[i]; // shortcut
 
 		if (p.life > 0.0f) {
 
