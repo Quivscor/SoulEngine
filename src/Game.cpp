@@ -278,6 +278,13 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 		colliderShape.push_back({ 30.0f * glm::cos(fTheta * i), 30.0f * glm::sin(fTheta * i) });
 	}*/
 
+	std::shared_ptr<Entity> berskerMode = m_EntityManager->CreateEntity<Entity>();
+	berskerMode->AddComponent<HUD>();
+	berskerMode->GetComponent<HUD>()->setFill(false);
+	berskerMode->GetComponent<HUD>()->active = false;
+	berskerMode->GetComponent<HUD>()->SetHud(2.0f, 2.0f, -1.f, -1.0f, "./res/textures/BerserkerMode2.png");
+	renderer->RegisterHUD(berskerMode);
+
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
@@ -324,6 +331,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	durabilityMeter->GetComponent<HUD>()->setColor(glm::vec4(0.0f, 0, 0, 0.0f));
 	durabilityMeter->GetComponent<HUD>()->SetHud(0.08f, 0.4f, 0.8f, 0.0f, "./res/swordfill.png");
 	character->GetComponent<Player>()->HUDDurability = durabilityMeter->GetComponent<HUD>();
+	character->GetComponent<Player>()->HUDBerserker = berskerMode->GetComponent<HUD>();
 	renderer->RegisterHUD(durabilityMeter);
 
 

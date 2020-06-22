@@ -424,15 +424,17 @@ void Player::EnemyKilled()
 
 void Player::RunBerserkerMode()
 {
-	renderer->berserkerModeActive = true;
+	//renderer->berserkerModeActive = true;
 	berserkerModeActive = true;
 	berserkerModeText->isActive = true;
+	HUDBerserker->active = true;
 	berserkerCurrentTime = 0.0f;
 }
 
 void Player::DisableBerserkerMode()
 {
 	renderer->berserkerModeActive = false;
+	HUDBerserker->active = false;
 	berserkerModeText->isActive = false;
 }
 
