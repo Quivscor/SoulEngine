@@ -145,9 +145,8 @@ void Player::Update()
 		{
 			if (!isAttacking && !isRolling)
 			{
-
-				source.Play(audioMaster->GenBuffer("./res/sound/Attack.wav"));
-				source.SetVolume(0.3f);
+				source2.Play(audioMaster->GenBuffer("./res/sound/Attack.wav"));
+				source2.SetVolume(0.3f);
 				currentAttackTime = 0.0f;
 				isAttacking = true;
 				canMove = false;

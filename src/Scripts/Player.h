@@ -71,6 +71,7 @@ public:
 	std::shared_ptr<Collider> characterCollider;
 	AudioMaster *audioMaster;
 	Source source;
+	Source source2;
 	
 
 protected:
