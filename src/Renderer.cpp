@@ -9,7 +9,7 @@ Shader* Renderer::screenShader = nullptr;
 Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader* refractorShader, Model* crystal)
 {
 	lightPos = glm::vec3(50.0f,30.0f, 60.f);
-	this->lightProjection = glm::mat4(glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane));
+	this->lightProjection = glm::mat4(glm::ortho(-60.0f, 60.0f, -60.0f, 60.0f, near_plane, far_plane));
 	
 	//this->lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
 	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 40.0f), glm::vec3(.0, -1.0,-1.0));

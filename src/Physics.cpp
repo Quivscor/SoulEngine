@@ -140,13 +140,13 @@ void Physics::Update() const
 				{
 					if (colliders[i]->enabled && colliders[j]->enabled)
 					{
-						if (EntityManager::GetInstance()->GetEntity(colliders[i]->GetOwnerID())->layer != EnemyLayer || EntityManager::GetInstance()->GetEntity(colliders[j]->GetOwnerID())->layer != EnemyLayer)
-						{
-							wyw++;
-							CheckCollisions(colliders[i], colliders[j], collidersTransforms[i], collidersTransforms[j]);
-						}
-							
+						CheckCollisions(colliders[i], colliders[j], collidersTransforms[i], collidersTransforms[j]);
+						//if (EntityManager::GetInstance()->GetEntity(colliders[i]->GetOwnerID())->layer != EnemyLayer || EntityManager::GetInstance()->GetEntity(colliders[j]->GetOwnerID())->layer != EnemyLayer)
+						//{
+						//	wyw++;
+						//	CheckCollisions(colliders[i], colliders[j], collidersTransforms[i], collidersTransforms[j]);
 
+						//}
 					}
 						
 				}

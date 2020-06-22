@@ -68,7 +68,7 @@ private:
 	const static unsigned int SHADOW_HEIGHT = 5000;
 	unsigned   int depthMapFBO = 0;
 	
-	GLuint depthMap=0;
+	GLuint depthMap = 0;
 	const  float near_plane = 1.0f;
 	const  float far_plane =100.0f;
 	HUD* hud;

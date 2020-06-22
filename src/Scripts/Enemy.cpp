@@ -18,6 +18,7 @@ void Enemy::Update()
 		if (currentAttackTime >= attackTime)
 		{
 			isAttacking = false;
+			//thisEntity->GetComponent<Collider>()->isStatic = false;
 			weapon->GetComponent<EnemyWeapon>()->TurnOffCollider();
 
 			std::shared_ptr<Entity> playerRef = weapon->GetComponent<EnemyWeapon>()->player;
@@ -51,6 +52,7 @@ void Enemy::Attack()
 	{
 		isAttacking = true;
 		currentAttackTime = 0.0f;
+		
 		weapon->GetComponent<EnemyWeapon>()->Use();
 	}
 }

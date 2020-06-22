@@ -179,26 +179,28 @@ void MapGenerator::Generate()
 						tile->GetComponent<Village>()->auras.push_back(new AuraBonusHealth());
 					else if (auraType == 2)
 						tile->GetComponent<Village>()->auras.push_back(new AuraRunningSpeed());
-				}
-				bonusAuraChance = rand() % 100;
-				// third aura
-				if (bonusAuraChance < 20)
-				{
-					/*
-					int oldAuraType = auraType;
-					if (auraType == 2)
-						while (auraType == 2)
-							auraType = rand() % 3;
-					else */
+
+					bonusAuraChance = rand() % 100;
+					// third aura
+					if (bonusAuraChance < 20)
+					{
+						/*
+						int oldAuraType = auraType;
+						if (auraType == 2)
+							while (auraType == 2)
+								auraType = rand() % 3;
+						else */
 						auraType = rand() % 3;
 
-					if (auraType == 0)
-						tile->GetComponent<Village>()->auras.push_back(new AuraBonusDamage());
-					else if (auraType == 1)
-						tile->GetComponent<Village>()->auras.push_back(new AuraBonusHealth());
-					else if (auraType == 2)
-						tile->GetComponent<Village>()->auras.push_back(new AuraRunningSpeed());
+						if (auraType == 0)
+							tile->GetComponent<Village>()->auras.push_back(new AuraBonusDamage());
+						else if (auraType == 1)
+							tile->GetComponent<Village>()->auras.push_back(new AuraBonusHealth());
+						else if (auraType == 2)
+							tile->GetComponent<Village>()->auras.push_back(new AuraRunningSpeed());
+					}
 				}
+				
 			}
 
 			while (file >> name >> pos[0] >> pos[1] >> pos[2] >> scale[0] >> scale[1] >> scale[2])
@@ -802,6 +804,15 @@ void MapGenerator::PrepareColliders()
 	characterCollider.push_back({ 5.0f,  8.0f });
 	characterCollider.push_back({ -5.0f, 8.0f });
 	characterCollider.push_back({ -8.0f, 5.0f });
+
+	enemyCollider.push_back({ -4.8f, -3.0f });
+	enemyCollider.push_back({ -3.0f, -4.8f });
+	enemyCollider.push_back({ 3.0f, -4.8f });
+	enemyCollider.push_back({ 4.8f, -3.0f });
+	enemyCollider.push_back({ 4.8f, 3.0f });
+	enemyCollider.push_back({ 3.0f,  4.8f });
+	enemyCollider.push_back({ -3.0f, 4.8f });
+	enemyCollider.push_back({ -4.8f, 3.0f });
 
 	house1Collider.push_back({-4.0f, -6.0f});
 	house1Collider.push_back({-4.0f, 10.0f});

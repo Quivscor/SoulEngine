@@ -6,6 +6,9 @@
 #include "WeaponComparator.h"
 #include "PlayerEnemyCommunicator.h"
 
+#include "Source.h"
+#include "AudioMaster.h"
+
 enum AnimationType
 {
 	PlayerAnimationIdle,
@@ -65,6 +68,9 @@ public:
 	std::shared_ptr<HUD> HUDDurability;
 	std::shared_ptr<HUD> HUDBerserker;
 	std::shared_ptr<Collider> characterCollider;
+	AudioMaster *audioMaster;
+	Source source;
+	
 
 protected:
 	virtual void Start();

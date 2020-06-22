@@ -50,6 +50,7 @@ private:
 	std::vector<glm::vec2> characterCollider;
 	std::vector<glm::vec2> house1Collider;
 	std::vector<glm::vec2> house2Collider;
+	std::vector<glm::vec2> enemyCollider;
 	
 	// functions
 	Model * FindModelByName(Model * array[], std::string name);

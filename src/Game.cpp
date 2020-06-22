@@ -7,7 +7,7 @@
 #include "TimeCustom.h"
 #include "InputHandler.h"
 #include "Collider.h"
-#include "AudioMaster.h"
+
 #include "Listener.h"
 #include "Source.h"
 #include "MapLoader.h"
@@ -85,7 +85,7 @@ void Game::Run()
 	std::cout << "- GameLogic created\n";
 	MapGenerator* mapGenerator = NULL;
 	std::cout << "- MapGenerator created\n";
-	AudioMaster audioMaster;
+	AudioMaster *audioMaster = new AudioMaster();
 	std::cout << "- AudioMaster created\n";
 	Source source;
 
@@ -98,7 +98,7 @@ void Game::Run()
 
 	inputSystem->RegisterEntity(inputHandler);
 	std::cout << "- inputSystem registered\n";
-	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler, mapGenerator);
+	EntitiesInit(assetManager, renderer, physics, gameLogic, inputHandler, mapGenerator, audioMaster);
 
 	InitializeBasicGUI(renderer, physics);
 
@@ -108,7 +108,7 @@ void Game::Run()
 	std::cout << "\n=== BasicGUI initalized\n";
 	gameLogic->Start();
 	source.SetLooping(true);
-	source.Play(audioMaster.GenBuffer("./res/sound/VikingMusic.wav"));
+	source.Play(audioMaster->GenBuffer("./res/sound/VikingMusic.wav"));
 	source.SetVolume(0.1f);
 	//---------------------------------------------------------------------------------
 
@@ -189,7 +189,7 @@ void Game::Run()
 	ImGui::DestroyContext();
 }
 
-void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem, MapGenerator* mapGenerator)
+void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem, MapGenerator* mapGenerator, AudioMaster* audioMaster)
 {
 	InitializeWeapons(assetManager);
 	std::cout << "- Weapons initalized\n";
@@ -322,6 +322,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->animationDeath = playerDeath;
 	character->GetComponent<Player>()->shader = shadera;
 	character->GetComponent<Player>()->renderer = renderer;
+	character->GetComponent<Player>()->audioMaster = audioMaster;
 	character->layer = PlayerLayer;
 
 	std::shared_ptr<Entity> durabilityMeter = m_EntityManager->CreateEntity<Entity>();

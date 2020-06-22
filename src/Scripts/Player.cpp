@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-
+	source.SetLooping(false);
 }
 
 Player::~Player()
@@ -136,6 +136,9 @@ void Player::Update()
 	{
 		if (!isAttacking && !isRolling)
 		{
+			
+			source.Play(audioMaster->GenBuffer("./res/sound/Ugh2.wav"));
+			source.SetVolume(4.0f);
 			currentAttackTime = 0.0f;
 			isAttacking = true;
 			canMove = false;
@@ -166,7 +169,7 @@ void Player::Move()
 	if (currentAnimation != animationSwordRun && currentAnimation != animationAxeRun && currentAnimation != animationMaceRun && !isRolling)
 		ChangeAnimation(PlayerAnimationRun);
 
-	thisEntity->GetComponent<Transform>()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 25.0f * (isRolling == true ? 1.5f : 1.0f));
+	thisEntity->GetComponent<Transform>()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 25.0f * (isRolling == true ? 1.6f : 1.5f));
 }
 
 void Player::CalculateRotation()

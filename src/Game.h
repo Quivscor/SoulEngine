@@ -12,6 +12,7 @@
 #include "Model.h"
 #include "Scripts/MapGenerator.h"
 #include<Billboard.h>
+#include "AudioMaster.h"
 
 class Game
 {
@@ -21,7 +22,7 @@ public:
 
 	void Init();
 	void Run();
-	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem, MapGenerator* mapGenerator);
+	void EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics* physics, GameLogic* gameLogic, std::shared_ptr<Entity> inputSystem, MapGenerator* mapGenerator, AudioMaster* audioMaster);
 	Model * FindModelByName(Model* [], std::string name);
 private:
 	bool debug = true;
@@ -35,4 +36,5 @@ private:
 	std::shared_ptr<EntityManager> m_EntityManager;
 	std::shared_ptr<ComponentManager> m_ComponentManager;
 	SystemManager m_SystemManager;
+	
 };
