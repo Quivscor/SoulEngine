@@ -132,6 +132,11 @@ void HUD::SetHud(float sizeX, float sizeY, float posX, float posY, const char* t
 
 }
 
+void HUD::setActive(bool act)
+{
+	active = act;
+}
+
 void HUD::setLife(float Life)
 {
 	
@@ -150,16 +155,20 @@ HUD::~HUD()
 void HUD::Draw()
 {
 
-	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-	glDisable(GL_DEPTH_TEST);
-	// Use our shader
-	hudshader->use();
+	if (active)
+	{
+		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+		glDisable(GL_DEPTH_TEST);
+		// Use our shader
+		hudshader->use();
 
-	
-	glBindVertexArray(vao);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, activeTexture);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		glBindVertexArray(vao);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, activeTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
 }
 
 void HUD::Drawbar()

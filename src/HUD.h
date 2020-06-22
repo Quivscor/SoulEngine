@@ -19,7 +19,8 @@ public:
 	HUD();
 	~HUD();
 	void SetHud(float sizeX, float sizeY, float posX, float posY, const char* textureIdle);
-
+	bool active = true;
+	void setActive(bool act);
 	void setLife(float Life);
 	bool horizontal = true;
 	bool fill = false;
