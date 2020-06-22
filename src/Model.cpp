@@ -79,6 +79,19 @@ void Model::ChangeBonePositions()
 
 }
 
+void Model::ChangeShadowBonesPositions()
+{
+	std::vector<aiMatrix4x4> transforms;
+
+	boneTransform(time, transforms);
+
+	for (uint i = 0; i < transforms.size(); i++) // move all matrices for actual model position to shader
+	{
+
+		glUniformMatrix4fv(m_bone_location[i], 1, GL_TRUE, (const GLfloat*)&transforms[i]);
+	}
+}
+
 
 
 uint Model::findRotation(float p_animation_time, const aiNodeAnim* p_node_anim)

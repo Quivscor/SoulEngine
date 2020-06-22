@@ -24,7 +24,8 @@ public:
 	void setMeshes(std::vector<Mesh> meshes);
 	GLuint m_bone_location[MAX_BONES];
 	float ticks_per_second = 0.0f;
-	void Model::ChangeBonePositions();
+	void ChangeBonePositions();
+	void ChangeShadowBonesPositions();
 	glm::mat4 aiToGlm(aiMatrix4x4 ai_matr);
 	aiQuaternion nlerp(aiQuaternion a, aiQuaternion b, float blend); // super super n lerp =)
 	void initShaders(Shader *shader_program);

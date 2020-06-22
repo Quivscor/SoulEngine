@@ -8,11 +8,11 @@ Shader* Renderer::screenShader = nullptr;
 
 Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader* refractorShader, Model* crystal)
 {
-	lightPos = glm::vec3(50.0f,3.0f, 50.f);
+	lightPos = glm::vec3(50.0f,30.0f, 100.f);
 	this->lightProjection = glm::mat4(glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane));
 	
 	//this->lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 40.0f), glm::vec3(.0, -1.0,-1.0));
+	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 40.0f), glm::vec3(.0, -1.0,1.0));
 
 	this->lightSpaceMatrix = lightProjection * lightView;
 	defaultShader = shader;
@@ -327,12 +327,12 @@ void Renderer::DrawShadows() const
 	//glBindTexture(GL_TEXTURE_2D, cubemapTexture);
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
-		/*if (!m_Entities[i]->isActive)
-			continue;*/
+		if (!m_Entities[i]->isActive)
+			continue;
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
-	
+
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
 		//simpleDepthShader->setMat4("model", trns->GetLocalMatrix());
 		if (mesh != nullptr)
@@ -342,7 +342,7 @@ void Renderer::DrawShadows() const
 			if (modelComponent != nullptr)
 			{
 				modelComponent->initShaders(simpleDepthShader);
-				modelComponent->ChangeBonePositions();
+				modelComponent->ChangeShadowBonesPositions();
 
 				simpleDepthShader->setBool("anim", true);
 
