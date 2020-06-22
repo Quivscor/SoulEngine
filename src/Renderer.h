@@ -64,13 +64,13 @@ private:
 	void DrawColliders(std::shared_ptr<Collider> col, std::shared_ptr<Transform> trns) const;
 	static Shader* defaultShader;
 	static Shader* screenShader;
-	const static unsigned int SHADOW_WIDTH = 1920 ;
-	const static unsigned int SHADOW_HEIGHT = 1920;
+	const static unsigned int SHADOW_WIDTH = 10000 ;
+	const static unsigned int SHADOW_HEIGHT = 10000;
 	unsigned   int depthMapFBO = 0;
 	
 	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
-	const  float far_plane =200.0f;
+	const  float far_plane =100.0f;
 	HUD* hud;
 	unsigned int frameBuffer = 0;
 	unsigned int textureColorBuffer = 0;

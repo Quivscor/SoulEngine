@@ -8,11 +8,11 @@ Shader* Renderer::screenShader = nullptr;
 
 Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader* refractorShader, Model* crystal)
 {
-	lightPos = glm::vec3(50.0f,30.0f, 100.f);
-	this->lightProjection = glm::mat4(glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane));
+	lightPos = glm::vec3(50.0f,30.0f, 60.f);
+	this->lightProjection = glm::mat4(glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, near_plane, far_plane));
 	
 	//this->lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 40.0f), glm::vec3(.0, -1.0,1.0));
+	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 40.0f), glm::vec3(.0, -1.0,-1.0));
 
 	this->lightSpaceMatrix = lightProjection * lightView;
 	defaultShader = shader;
@@ -244,11 +244,10 @@ void Renderer::Update() const
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 	glDepthFunc(GL_LESS); // set depth function back to default
-	//box->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 1.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
-	//box2->Draw(mainCamera, glm::vec3(trns->GetLocalPosition().x, trns->GetLocalPosition().y + 2.5f, trns->GetLocalPosition().z - 0.f), glm::vec2(1.0f, 0.125f));
+
 	DrawHPbar();
 	 //Drawparts();
-	//hud->Draw();
+	
 
 	if (berserkerModeActive == true)
 	{
@@ -334,6 +333,16 @@ void Renderer::DrawShadows() const
 
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
+		float renderingRange = 20.0f;
+		if (m_Entities[i]->layer == Layer::GroundLayer)
+		{
+			renderingRange = 36.0f;
+		}
+		if (m_Entities[i]->layer != Layer::WaterLayer)
+		{
+			if (cameraComponent->DistanceFromCameraTarget(trns) > renderingRange)
+				continue;
+		}
 
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
 		//simpleDepthShader->setMat4("model", trns->GetLocalMatrix());
@@ -368,13 +377,13 @@ void Renderer::DrawShadows() const
 		}
 
 	}
-	simpleDepthShader->setMat4("model", *instanceManagers[0]->instanceModels);
+	//simpleDepthShader->setMat4("model", *instanceManagers[0]->instanceModels);
 
 
 
-	glBindVertexArray(instanceManagers[0]->m_model->meshes[0].GetVAO());
-	glDrawElementsInstanced(GL_TRIANGLES, instanceManagers[0]->m_model->meshes[0].indices.size(), GL_UNSIGNED_INT, 0, instanceManagers[0]->amount);
-	//glBindVertexArray(0);
+	//glBindVertexArray(instanceManagers[0]->m_model->meshes[0].GetVAO());
+	//glDrawElementsInstanced(GL_TRIANGLES, instanceManagers[0]->m_model->meshes[0].indices.size(), GL_UNSIGNED_INT, 0, instanceManagers[0]->amount);
+	////glBindVertexArray(0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// reset viewport
