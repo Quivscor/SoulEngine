@@ -50,6 +50,13 @@ void Character::CheckDeathCondition()
 		{
 			thisEntity->isActive = false;
 
+			if (aura1ref != nullptr)
+				aura1ref->isActive = false;
+			if (aura2ref != nullptr)
+				aura2ref->isActive = false;
+			if (aura3ref != nullptr)
+				aura3ref->isActive = false;
+
 			if (playerReference->GetComponent<PlayerEnemyCommunicator>() != nullptr)
 				playerReference->GetComponent<PlayerEnemyCommunicator>()->EnemyDied();
 		}

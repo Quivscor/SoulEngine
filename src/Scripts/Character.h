@@ -25,6 +25,10 @@ public:
 	std::shared_ptr<HUD> HUDsoulsBar;
 	//std::shared_ptr<Particles> Parts;
 
+	std::shared_ptr<Entity> aura1ref;
+	std::shared_ptr<Entity> aura2ref;
+	std::shared_ptr<Entity> aura3ref;
+
 	//debug
 	std::shared_ptr<Text> healthDebugValue;
 
