@@ -31,7 +31,7 @@ public:
 	std::shared_ptr<Weapon> weapon;
 
 	Shader* shader;
-
+	bool startscreen = true;
 	//sword
 	Model* animationSwordIdle;
 	Model* animationSwordRun;
@@ -67,6 +67,7 @@ public:
 	void EnemyKilled();
 	std::shared_ptr<HUD> HUDDurability;
 	std::shared_ptr<HUD> HUDBerserker;
+	std::shared_ptr<HUD> StartScreen;
 	std::shared_ptr<Collider> characterCollider;
 	AudioMaster *audioMaster;
 	Source source;

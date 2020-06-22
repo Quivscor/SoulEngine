@@ -23,7 +23,7 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	/*box = new Billboard("./res/textures/ExampleBillboard.DDS", true);
 	box2 = new Billboard("./res/textures/stone.jpg", false);*/
 	simpleDepthShader = new Shader("./res/shaders/shadow_mapping_depth.vs", "./res/shaders/shadow_mapping_depth.fs");
-	//hud = new HUD(0.3f, 0.1f, 0.55f, 0.9f, "./res/textures/skybox/top.jpg");
+	//hud = new HUD(2.f,2.f, -1.f,- 1.f, "./res/textures/unknown1.jpg");
 	glGenFramebuffers(1, &depthMapFBO);
 	glGenTextures(1, &depthMap);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -151,6 +151,7 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	cubemapTexture = loadCubemap(faces);
 	skyBoxShader->use();
 	skyBoxShader->setInt("skybox", 0);
+
 }
 
 Renderer::~Renderer()
@@ -175,11 +176,12 @@ void Renderer::Update() const
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+
 	DrawShadows();
 	DrawMeshes();
 	
 	DrawGrass();
-	
+
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	/*glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(text_matrix_2D, glm::vec3(20.0f, 65.0f, .0f));
@@ -266,8 +268,10 @@ void Renderer::Update() const
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 	DrawGUI();
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+//hud->Drawbar();
 }
 
 void Renderer::LateUpdate() const
@@ -277,11 +281,7 @@ void Renderer::LateUpdate() const
 
 void Renderer::DrawGUI() const
 {
-	for (int i = 0; i < HUDs.size(); i++)
-	{
-		if (EntityManager::GetInstance()->GetEntity(HUDs[i].first->GetOwnerID())->isActive == true)
-			HUDs[i].first->Drawbar();
-	}
+	
 
 	glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f);
 
@@ -297,6 +297,11 @@ void Renderer::DrawGUI() const
 			TextRendering::Instance()->draw(text->text, text->color, text_matrix_2D * EntityManager::GetInstance()->GetEntity(text->GetOwnerID())->GetComponent<Transform>()->GetGlobalMatrix());
 		}
 	
+	}
+	for (int i = 0; i < HUDs.size(); i++)
+	{
+		if (EntityManager::GetInstance()->GetEntity(HUDs[i].first->GetOwnerID())->isActive == true)
+			HUDs[i].first->Drawbar();
 	}
 
 }

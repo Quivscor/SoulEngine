@@ -22,134 +22,144 @@ void Player::Update()
 	if (inputHandler == nullptr)
 		return;
 
-	CheckWeapon();
-
-	if (pec->killedEnemiesCounter > lastEnemyCounter)
+	if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_SPACE))
 	{
-		for (int i = 0; i < pec->killedEnemiesCounter - lastEnemyCounter; i++)
-			EnemyKilled();
 
-		lastEnemyCounter = pec->killedEnemiesCounter;
+		StartScreen->active = false;
+		startscreen = false;
+
 	}
-
-	//-----------------------TIMERS---------------
-
-	if (isAttacking)
+	if (startscreen==false)
 	{
-		currentAttackTime += TimeCustom::GetDeltaTime();
+		CheckWeapon();
 
-		if (currentAttackTime >= attackTime)
+		if (pec->killedEnemiesCounter > lastEnemyCounter)
 		{
-			weapon->TurnOffCollider();
-			isAttacking = false;
-			canMove = true;
-		}
-	}
+			for (int i = 0; i < pec->killedEnemiesCounter - lastEnemyCounter; i++)
+				EnemyKilled();
 
-	if (isRolling)
-	{
-		currentRollTime += TimeCustom::GetDeltaTime();
-
-		if (currentRollTime >= rollTime)
-		{
-			isRolling = false;
-			characterCollider->enabled = true;
-			canRoll = true;
-		}
-	}
-
-	if (killstreakCounterActive)
-	{
-		//std::cout << "KillstreakCounterActive" << std::endl;
-
-		killstreakCurrentTime += TimeCustom::GetDeltaTime();
-
-		if (killstreakCurrentTime >= killstreakTimer)
-		{
-			std::cout << "KillstreakCounter Time END" << std::endl;
-			
-			killstreakCounterActive = false;
-			killstreakCurrentTime = 0.0f;
-		}
-	}
-
-	if (berserkerModeActive)
-	{
-		characterCollider->enabled = false;
-		//std::cout << "BerserkerCounterActive" << std::endl;
-
-		berserkerCurrentTime += TimeCustom::GetDeltaTime();
-
-		if (berserkerCurrentTime >= berserkerModeDuration)
-		{
-			berserkerModeActive = false;
-			characterCollider->enabled = true;
-			DisableBerserkerMode();
-		}
-	}
-
-	//-----------------------MOVEMENT-------------
-
-	isMoving = false;
-	movingFB = 0;
-	movingLR = 0;
-
-	if (canMove)
-	{
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
-		{
-			isMoving = true;
-			movingFB = 1;
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
-		{
-			isMoving = true;
-			movingFB = -1;
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_A))
-		{
-			isMoving = true;
-			movingLR = -1;
-		}
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
-		{
-			isMoving = true;
-			movingLR = 1;
+			lastEnemyCounter = pec->killedEnemiesCounter;
 		}
 
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_K))
+		//-----------------------TIMERS---------------
+
+		if (isAttacking)
 		{
-			if (canRoll && !isAttacking)
+			currentAttackTime += TimeCustom::GetDeltaTime();
+
+			if (currentAttackTime >= attackTime)
 			{
-				isRolling = true;
-				currentRollTime = 0.0f;
-				characterCollider->enabled = false;
-				ChangeAnimation(PlayerAnimationRoll);
+				weapon->TurnOffCollider();
+				isAttacking = false;
+				canMove = true;
+			}
+		}
+
+		if (isRolling)
+		{
+			currentRollTime += TimeCustom::GetDeltaTime();
+
+			if (currentRollTime >= rollTime)
+			{
+				isRolling = false;
+				characterCollider->enabled = true;
+				canRoll = true;
+			}
+		}
+
+		if (killstreakCounterActive)
+		{
+			//std::cout << "KillstreakCounterActive" << std::endl;
+
+			killstreakCurrentTime += TimeCustom::GetDeltaTime();
+
+			if (killstreakCurrentTime >= killstreakTimer)
+			{
+				std::cout << "KillstreakCounter Time END" << std::endl;
+
+				killstreakCounterActive = false;
+				killstreakCurrentTime = 0.0f;
+			}
+		}
+
+		if (berserkerModeActive)
+		{
+			characterCollider->enabled = false;
+			//std::cout << "BerserkerCounterActive" << std::endl;
+
+			berserkerCurrentTime += TimeCustom::GetDeltaTime();
+
+			if (berserkerCurrentTime >= berserkerModeDuration)
+			{
+				berserkerModeActive = false;
+				characterCollider->enabled = true;
+				DisableBerserkerMode();
+			}
+		}
+
+		//-----------------------MOVEMENT-------------
+
+		isMoving = false;
+		movingFB = 0;
+		movingLR = 0;
+
+		if (canMove)
+		{
+			if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_W))
+			{
+				isMoving = true;
+				movingFB = 1;
+			}
+			if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_S))
+			{
+				isMoving = true;
+				movingFB = -1;
+			}
+			if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_A))
+			{
+				isMoving = true;
+				movingLR = -1;
+			}
+			if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_D))
+			{
+				isMoving = true;
+				movingLR = 1;
 			}
 
+			if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_K))
+			{
+				if (canRoll && !isAttacking)
+				{
+					isRolling = true;
+					currentRollTime = 0.0f;
+					characterCollider->enabled = false;
+					ChangeAnimation(PlayerAnimationRoll);
+				}
+
+			}
 		}
-	}
 
-	Move();
+		Move();
 
-	if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_J))
-	{
-		if (!isAttacking && !isRolling)
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_J))
 		{
-			
-			source.Play(audioMaster->GenBuffer("./res/sound/Ugh2.wav"));
-			source.SetVolume(4.0f);
-			currentAttackTime = 0.0f;
-			isAttacking = true;
-			canMove = false;
-			weapon->Use();
-			ChangeAnimation(PlayerAnimationAttack);
-		}
-	}
+			if (!isAttacking && !isRolling)
+			{
 
-	if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_E))
-	{
-		Swap();
+				source.Play(audioMaster->GenBuffer("./res/sound/Ugh2.wav"));
+				source.SetVolume(4.0f);
+				currentAttackTime = 0.0f;
+				isAttacking = true;
+				canMove = false;
+				weapon->Use();
+				ChangeAnimation(PlayerAnimationAttack);
+			}
+		}
+
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyDown(GLFW_KEY_E))
+		{
+			Swap();
+		}
 	}
 }
 

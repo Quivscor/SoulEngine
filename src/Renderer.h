@@ -53,7 +53,7 @@ public:
 	//std::vector<Mesh> meshes;
 
 	bool berserkerModeActive = false;
-	
+	//std::shared_ptr<Entity> inputHandler;
 private:
 	//list of meshes?
 	void DrawMeshes() const;
@@ -68,6 +68,7 @@ private:
 	const static unsigned int SHADOW_HEIGHT = 5000;
 	unsigned   int depthMapFBO = 0;
 	
+	bool startscreen = true;
 	GLuint depthMap = 0;
 	const  float near_plane = 1.0f;
 	const  float far_plane =100.0f;

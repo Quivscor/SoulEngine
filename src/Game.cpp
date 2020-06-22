@@ -137,9 +137,14 @@ void Game::Run()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_SPACE))
+		{
 
+			TimeCustom::RunTimer();
+
+		}
 		//physics->FixedUpdate();
-		TimeCustom::RunTimer();
+	
 		//double start = glfwGetTime();
 		glfwPollEvents();
 		//input must be early to read from it
@@ -285,6 +290,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	berskerMode->GetComponent<HUD>()->SetHud(2.0f, 2.0f, -1.f, -1.0f, "./res/textures/BerserkerMode2.png");
 	renderer->RegisterHUD(berskerMode);
 
+
 	//Object with model
 	std::shared_ptr<Entity> character = m_EntityManager->CreateEntity<Entity>();
 	character->AddComponent<Transform>();
@@ -324,7 +330,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	character->GetComponent<Player>()->renderer = renderer;
 	character->GetComponent<Player>()->audioMaster = audioMaster;
 	character->layer = PlayerLayer;
-
+	
 	std::shared_ptr<Entity> durabilityMeter = m_EntityManager->CreateEntity<Entity>();
 	durabilityMeter->AddComponent<HUD>();
 	durabilityMeter->GetComponent<HUD>()->setFill(false);
@@ -333,7 +339,9 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	durabilityMeter->GetComponent<HUD>()->SetHud(0.08f, 0.4f, 0.8f, 0.0f, "./res/swordfill.png");
 	character->GetComponent<Player>()->HUDDurability = durabilityMeter->GetComponent<HUD>();
 	character->GetComponent<Player>()->HUDBerserker = berskerMode->GetComponent<HUD>();
+	std::shared_ptr<Entity> Start = m_EntityManager->CreateEntity<Entity>();
 	renderer->RegisterHUD(durabilityMeter);
+
 
 
 	std::cout << "\n=== Animations added to player \n";
@@ -409,7 +417,13 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	hpFrame->GetComponent<HUD>()->SetHud(0.26f, 0.4602f, -0.96f, -0.95f, "./res/hpbg.png");
 
 	renderer->RegisterHUD(hpFrame); 
-
+	Start->AddComponent<HUD>();
+	Start->GetComponent<HUD>()->setFill(false);
+	Start->GetComponent<HUD>()->active = true;
+	Start->GetComponent<HUD>()->SetHud(2.f, 2.f, -1.f, -1.f, "./res/IntroKomix.png");
+	renderer->RegisterHUD(Start);
+	character->GetComponent<Player>()->StartScreen = Start->GetComponent<HUD>();
+	//character->GetComponent<Character>()->StartScreen = Start->GetComponent<HUD>();
 
 	std::cout << "\n=== Player fully initalized \n";
 
