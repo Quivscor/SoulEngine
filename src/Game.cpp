@@ -359,7 +359,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	soulsMeter2->GetComponent<HUD>()->setFill(true);
 	soulsMeter2->GetComponent<HUD>()->setTextureColor(false);
 	soulsMeter2->GetComponent<HUD>()->sethorizontal(true);
-	soulsMeter2->GetComponent<HUD>()->setColor(glm::vec4(0.435f, 0.0f, 0.839f, 1.0f));
+	soulsMeter2->GetComponent<HUD>()->setColor(glm::vec4(0.42750f, 0.196f, 0.6588f, 1.0f));
 	soulsMeter2->GetComponent<HUD>()->SetHud(0.5f, 0.08f, -0.8f, -0.9f, "./res/purplebg.png");
 	renderer->RegisterHUD(soulsMeter2);
 
@@ -509,7 +509,7 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	soulsTakenTitle->GetComponent<Transform>()->SetLocalPosition(glm::vec3(300, 100, 0));
 	soulsTakenTitle->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	soulsTakenTitle->AddComponent<Text>();
-	soulsTakenTitle->GetComponent<Text>()->text = "Souls taken:";
+	soulsTakenTitle->GetComponent<Text>()->text = "Souls:";
 	soulsTakenTitle->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	physics->RegisterEntity(soulsTakenTitle);
@@ -517,11 +517,11 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 
 	std::shared_ptr<Entity> soulsTakenValue = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	soulsTakenValue->AddComponent<Transform>();
-	soulsTakenValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(460, 100, 0));
+	soulsTakenValue->GetComponent<Transform>()->SetLocalPosition(glm::vec3(380, 100, 0));
 	soulsTakenValue->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.75f, 0.75f, 0.75f));
 	soulsTakenValue->AddComponent<Text>();
 	soulsTakenValue->GetComponent<Text>()->text = "100";
-	soulsTakenValue->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
+	soulsTakenValue->GetComponent<Text>()->color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	physics->RegisterEntity(soulsTakenValue);
 	renderer->RegisterEntity(soulsTakenValue);

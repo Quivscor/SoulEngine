@@ -25,10 +25,8 @@ void main()
 				{
 					if (TexCoord.x <LifeLevel && TexCoord.y > 0.01 && TexCoord.y < 0.99 && TexCoord.x > 0.01 )
 					{
-						if(LifeLevel<0.3)
-							FragColor = vec4(0.9, 0.1, 0.2, 1.0);
-						else
-							FragColor = vec4(0.2, 0.8, 0.2, 1.0); // Opaque green
+						
+						FragColor = vec4(0.9, 0.1, 0.2, 1.0);
 					}
 				}
 			}
@@ -51,10 +49,7 @@ void main()
 				{
 					if (TexCoord.x < 0.98  && TexCoord.y > 0.02 && TexCoord.y < LifeLevel && TexCoord.x > 0.02)
 					{
-						if(LifeLevel < 0.3)
-							FragColor = vec4(0.9, 0.1, 0.2, 1.0);
-						else
-							FragColor = vec4(0.2, 0.8, 0.2, 1.0); // Opaque green
+						FragColor = vec4(0.631, 0.094, 0.1647, 1.0);
 					}
 				}
 			}
