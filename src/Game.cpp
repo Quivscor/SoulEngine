@@ -374,8 +374,8 @@ void Game::EntitiesInit(AssetManager* assetManager, Renderer* renderer, Physics*
 	*/
 	
 
-	characterContainer->GetComponent<Particles>()->Init();
-	characterContainer->GetComponent<Particles>()->SetParticles("./res/textures/particle.DDS", true);
+	//characterContainer->GetComponent<Particles>()->Init();
+	//characterContainer->GetComponent<Particles>()->SetParticles("./res/textures/particle.DDS", true);
 	
 	//characterContainer->GetComponent<Character>()->Parts = characterContainer->GetComponent<Particles>();
 	characterContainer->AddComponent<HUD>();
