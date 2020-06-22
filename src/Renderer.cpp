@@ -8,6 +8,13 @@ Shader* Renderer::screenShader = nullptr;
 
 Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader* refractorShader, Model* crystal)
 {
+	lightPos = glm::vec3(50.0f,3.0f, 50.f);
+	this->lightProjection = glm::mat4(glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane));
+	
+	//this->lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
+	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 40.0f), glm::vec3(.0, -1.0,-1.0));
+
+	this->lightSpaceMatrix = lightProjection * lightView;
 	defaultShader = shader;
 	this->screenShader = screenShader;
 	this->skyBoxShader = skyBoxShader;
@@ -34,7 +41,7 @@ Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, S
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	lightPos = glm::vec3(25.0f, 1.0f, 25.f);
+
 
 	//framebuffer configuration
 	glGenFramebuffers(1, &frameBuffer);
@@ -167,11 +174,12 @@ void Renderer::Update() const
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//DrawShadows();
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+	DrawShadows();
 	DrawMeshes();
+	
 	DrawGrass();
-
+	
 	//DrawFrustum(mainCamera->GetComponent<Camera>()->m_Frustum);
 	/*glm::mat4 text_matrix_2D = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f);
 	glm::mat4 translate_2d_text = glm::translate(text_matrix_2D, glm::vec3(20.0f, 65.0f, .0f));
@@ -304,21 +312,19 @@ void Renderer::DrawHPbar() const
 
 void Renderer::DrawShadows() const
 {
-	glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
-	glm::mat4 lightSpaceMatrix = glm::mat4();
+	
 	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
-	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
 
-	lightSpaceMatrix = lightProjection * lightView;
 
 
 	simpleDepthShader->use();
 	simpleDepthShader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);	
+	//glActiveTexture(GL_TEXTURE0);
+	////glBindTexture(GL_TEXTURE_2D, instanceManagers[0]->m_mesh->material->GetTextures()[0].id);
+	//glBindTexture(GL_TEXTURE_2D, cubemapTexture);
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		/*if (!m_Entities[i]->isActive)
@@ -328,9 +334,24 @@ void Renderer::DrawShadows() const
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 	
 		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
+		//simpleDepthShader->setMat4("model", trns->GetLocalMatrix());
 		if (mesh != nullptr)
 		{
+			std::shared_ptr<Model> modelComponent = m_Entities[i]->GetComponent<Model>();
 
+			if (modelComponent != nullptr)
+			{
+				modelComponent->initShaders(simpleDepthShader);
+				modelComponent->ChangeBonePositions();
+
+				simpleDepthShader->setBool("anim", true);
+
+				//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
+			}
+			else
+			{
+				simpleDepthShader->setBool("anim", false);
+			}
 			glBindVertexArray(mesh->GetVAO());
 
 			if (mesh->hasEBO)
@@ -362,14 +383,14 @@ void Renderer::DrawShadows() const
 
 void Renderer::DrawMeshes() const
 {
-	glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
-	glm::mat4 lightSpaceMatrix = glm::mat4();
-	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
-	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
+	//glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
+	//glm::mat4 lightSpaceMatrix = glm::mat4();
+	////lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	//lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+	////lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
+	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
 
-	lightSpaceMatrix = lightProjection * lightView;
+	//lightSpaceMatrix = lightProjection * lightView;
 
 	int modelsDrawnCount = 0;
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -440,7 +461,7 @@ void Renderer::DrawMeshes() const
 					glm::vec3 playerPosition = mainCamera->GetComponent<Camera>()->cameraTarget->GetGlobalPosition();
 
 			shader->use();
-			shader->setVec3("dir_light.direction", lightPos);
+			shader->setVec3("dir_light.direction", glm::vec3(.0, -1.0, -1.0));
 			shader->setInt("material.shadowMap", 2);
 			shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 			shader->setVec3("playerPosition", playerPosition);
@@ -460,21 +481,21 @@ void Renderer::DrawMeshes() const
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.45f, 0.45f, 0.45f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
 			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
-			// Point Light 1
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
+			//// Point Light 1
+			//glUniform3f(glGetUniformLocation(shader->ID, "point_light.position"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
 
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"),  -0.2f, -1.0f, -0.3f);
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 0.4f, 0.4f, 0.4f);
-			glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 0.5f, 0.5f, 0.5f);
+			//glUniform3f(glGetUniformLocation(shader->ID, "point_light.ambient"),  -0.2f, -1.0f, -0.3f);
+			//glUniform3f(glGetUniformLocation(shader->ID, "point_light.diffuse"), 0.4f, 0.4f, 0.4f);
+			//glUniform3f(glGetUniformLocation(shader->ID, "point_light.specular"), 0.5f, 0.5f, 0.5f);
 
-			glUniform1f(glGetUniformLocation(shader->ID, "point_light.constant"), 1.0f);
-			glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
-			glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
+			//glUniform1f(glGetUniformLocation(shader->ID, "point_light.constant"), 1.0f);
+			//glUniform1f(glGetUniformLocation(shader->ID, "point_light.linear"), 0.007);
+			//glUniform1f(glGetUniformLocation(shader->ID, "point_light.quadratic"), 0.0002);
 	
-			//glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
-			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.55f, 0.55f, 0.55f);
-			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
-			glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
+			////glUniform3f(glGetUniformLocation(shader->ID, "dir_light.direction"), -0.2f, -1.0f, -50.3f);
+			//glUniform3f(glGetUniformLocation(shader->ID, "dir_light.ambient"), 0.55f, 0.55f, 0.55f);
+			//glUniform3f(glGetUniformLocation(shader->ID, "dir_light.diffuse"), 0.15f, 0.15f, 0.15f);
+			//glUniform3f(glGetUniformLocation(shader->ID, "dir_light.specular"), 0.1f, 0.1f, 0.1f);
 
 			//player position
 			//glUniform3f(glGetUniformLocation(shader->ID, "playerPosition"), playerPosition.x, playerPosition.y, playerPosition.z);
@@ -570,16 +591,16 @@ void Renderer::DrawGrass() const
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//glm::mat4 view = camera.GetViewMatrix();
-	glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
-	glm::mat4 lightSpaceMatrix = glm::mat4();
-	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
-	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
+	//glm::mat4 lightProjection = glm::mat4(), lightView = glm::mat4();
+	//glm::mat4 lightSpaceMatrix = glm::mat4();
+	////lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	//lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+	////lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
+	//lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, -1.0, 0.0));
 
-	lightSpaceMatrix = lightProjection * lightView;
+	//lightSpaceMatrix = lightProjection * lightView;
 	instanceManagers[0]->m_shader->use();
-	instanceManagers[0]->m_shader->setVec3("dir_light.direction", lightPos);
+	instanceManagers[0]->m_shader->setVec3("dir_light.direction", glm::vec3(.0, -1.0, -1.0));
 	glUniform3f(glGetUniformLocation(instanceManagers[0]->m_shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
 	glUniform1f(glGetUniformLocation(instanceManagers[0]->m_shader->ID, "material.shininess"), 0.5f);
 	glUniform1f(glGetUniformLocation(instanceManagers[0]->m_shader->ID, "material.transparency"), 1.0f);

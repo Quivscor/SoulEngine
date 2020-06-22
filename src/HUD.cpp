@@ -173,6 +173,8 @@ void HUD::Draw()
 
 void HUD::Drawbar()
 {
+	if (active)
+	{
 	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 	glDisable(GL_DEPTH_TEST);
 	// Use our shader
@@ -188,5 +190,6 @@ void HUD::Drawbar()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, activeTexture);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
 }
 
