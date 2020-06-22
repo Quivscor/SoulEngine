@@ -9,10 +9,10 @@ Shader* Renderer::screenShader = nullptr;
 Renderer::Renderer(Shader* shader, Shader* screenShader, Shader* skyBoxShader, Shader* refractorShader, Model* crystal)
 {
 	lightPos = glm::vec3(50.0f,3.0f, 50.f);
-	this->lightProjection = glm::mat4(glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, near_plane, far_plane));
+	this->lightProjection = glm::mat4(glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane));
 	
 	//this->lightView = glm::lookAt(lightPos, glm::vec3(0.0f), mainCamera->GetComponent<Camera>()->upVector);
-	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 50.0f), glm::vec3(.0, -1.0, 0.0));
+	this->lightView = glm::lookAt(lightPos, glm::vec3(50.0f, 0.0f, 40.0f), glm::vec3(.0, -1.0,-1.0));
 
 	this->lightSpaceMatrix = lightProjection * lightView;
 	defaultShader = shader;
@@ -333,11 +333,25 @@ void Renderer::DrawShadows() const
 		std::shared_ptr<Transform> trns = m_Entities[i]->GetComponent<Transform>();
 		std::shared_ptr<Mesh> mesh = m_Entities[i]->GetComponent<Mesh>();
 	
-		//simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
-		simpleDepthShader->setMat4("model", trns->GetLocalMatrix());
+		simpleDepthShader->setMat4("model", trns->GetGlobalMatrix());
+		//simpleDepthShader->setMat4("model", trns->GetLocalMatrix());
 		if (mesh != nullptr)
 		{
-			
+			std::shared_ptr<Model> modelComponent = m_Entities[i]->GetComponent<Model>();
+
+			if (modelComponent != nullptr)
+			{
+				modelComponent->initShaders(simpleDepthShader);
+				modelComponent->ChangeBonePositions();
+
+				simpleDepthShader->setBool("anim", true);
+
+				//m_Entities[i]->GetComponent<Mesh>()->material->SetShader(defaultShader);
+			}
+			else
+			{
+				simpleDepthShader->setBool("anim", false);
+			}
 			glBindVertexArray(mesh->GetVAO());
 
 			if (mesh->hasEBO)
@@ -447,7 +461,7 @@ void Renderer::DrawMeshes() const
 					glm::vec3 playerPosition = mainCamera->GetComponent<Camera>()->cameraTarget->GetGlobalPosition();
 
 			shader->use();
-			shader->setVec3("dir_light.direction", lightPos);
+			shader->setVec3("dir_light.direction", glm::vec3(.0, -1.0, -1.0));
 			shader->setInt("material.shadowMap", 2);
 			shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 			shader->setVec3("playerPosition", playerPosition);
@@ -586,7 +600,7 @@ void Renderer::DrawGrass() const
 
 	//lightSpaceMatrix = lightProjection * lightView;
 	instanceManagers[0]->m_shader->use();
-	instanceManagers[0]->m_shader->setVec3("dir_light.direction", lightPos);
+	instanceManagers[0]->m_shader->setVec3("dir_light.direction", glm::vec3(.0, -1.0, -1.0));
 	glUniform3f(glGetUniformLocation(instanceManagers[0]->m_shader->ID, "view_pos"), mainCamera->GetComponent<Transform>()->GetGlobalPosition().x, mainCamera->GetComponent<Transform>()->GetGlobalPosition().y, mainCamera->GetComponent<Transform>()->GetGlobalPosition().z);
 	glUniform1f(glGetUniformLocation(instanceManagers[0]->m_shader->ID, "material.shininess"), 0.5f);
 	glUniform1f(glGetUniformLocation(instanceManagers[0]->m_shader->ID, "material.transparency"), 1.0f);

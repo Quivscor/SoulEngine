@@ -70,7 +70,7 @@ private:
 	
 	GLuint depthMap=0;
 	const  float near_plane = 1.0f;
-	const  float far_plane = 20.0f;
+	const  float far_plane =10.0f;
 	HUD* hud;
 	unsigned int frameBuffer = 0;
 	unsigned int textureColorBuffer = 0;
