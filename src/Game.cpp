@@ -137,11 +137,17 @@ void Game::Run()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_SPACE))
+		//TimeCustom::RunTimer();
+		if (inputHandler->GetComponent<InputHandler>()->GetKeyRepeat(GLFW_KEY_SPACE)&& timing ==false)
 		{
 
-			TimeCustom::RunTimer();
+			
+			timing = true;
 
+		}
+		if (timing==true)
+		{
+			TimeCustom::RunTimer();
 		}
 		//physics->FixedUpdate();
 	
