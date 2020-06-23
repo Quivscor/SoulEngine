@@ -27,3 +27,13 @@ void PlayerEnemyCommunicator::EnemySpawned()
 	spawnedEnemies++;
 }
 
+void PlayerEnemyCommunicator::TotemSpawned()
+{
+	spawnedTotems++;
+}
+
+void PlayerEnemyCommunicator::TotemDied()
+{
+	destroyedTotemCounter++;
+}
+

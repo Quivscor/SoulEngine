@@ -28,17 +28,24 @@ void Character::GetHit(float damage)
 	}
 
 	CheckDeathCondition();
+
 	std::cout << health/maxHealth <<std::endl;
 	//thisEntity->GetComponent<Billboard>()->setLife(health);
-	healthBar->setLife(health/ maxHealth);
+	if (healthBar != nullptr)
+		healthBar->setLife(health/ maxHealth);
 	if(HUDhealthBar!=nullptr)
-	HUDhealthBar->setLife(health / maxHealth);
+		HUDhealthBar->setLife(health / maxHealth);
 }
 
 void Character::CheckDeathCondition()
 {
 	if (health <= 0)
 	{
+		if (isDead)
+			return;
+
+		isDead = true;
+
 		if (thisEntity->layer == PlayerLayer)
 		{
 			gameLostText->isActive = true;
@@ -46,7 +53,7 @@ void Character::CheckDeathCondition()
 			EntityManager::GetInstance()->GetEntity(thisEntity->GetComponent<Transform>()->GetParent()->GetOwnerID())->isActive = false;
 			thisEntity->isActive = false;
 		}
-		else
+		else if(thisEntity->layer == EnemyLayer)
 		{
 			thisEntity->isActive = false;
 
@@ -59,6 +66,18 @@ void Character::CheckDeathCondition()
 
 			if (playerReference->GetComponent<PlayerEnemyCommunicator>() != nullptr)
 				playerReference->GetComponent<PlayerEnemyCommunicator>()->EnemyDied();
+		}
+		else if (thisEntity->layer == TotemLayer)
+		{
+			//thisEntity->isActive = false;
+			
+			thisEntity->GetComponent<Mesh>()->indices = usedTotem->GetMeshes()[0].indices;
+			thisEntity->GetComponent<Mesh>()->vertices = usedTotem->GetMeshes()[0].vertices;
+			thisEntity->GetComponent<Mesh>()->material = usedTotem->GetMeshes()[0].material;
+			thisEntity->GetComponent<Mesh>()->setupMesh();
+
+			if (playerReference->GetComponent<PlayerEnemyCommunicator>() != nullptr)
+				playerReference->GetComponent<PlayerEnemyCommunicator>()->TotemDied();
 		}
 	}
 }

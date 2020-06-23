@@ -28,6 +28,41 @@ void MapGenerator::Generate()
 	Model* auraRingRed = assetManager->LoadModel("./res/models/Auras/AuraRingRed.obj");
 	Model* auraRingBlue = assetManager->LoadModel("./res/models/Auras/AuraRingBlue.obj");
 	Model* auraRingYellow = assetManager->LoadModel("./res/models/Auras/AuraRingYellow.obj");
+	Model* totem_filled = assetManager->LoadModel("./res/models/totem/totem_filled.obj");
+	Model* totem_used = assetManager->LoadModel("./res/models/totem/totem_used.obj");
+
+	//=================================================================================================================================BATON BYCZKU TUTAJ DAJ FIXA PLZ 
+	std::shared_ptr<Entity> testingTotem = m_EntityManager->CreateEntity<Entity>();
+	testingTotem->AddComponent<Transform>();
+	testingTotem->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, -0.2f, 2.0));
+	testingTotem->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.7f, 0.7f, 0.7f));
+
+	testingTotem->AddComponent<Mesh>();
+	testingTotem->GetComponent<Mesh>()->indices = totem_filled->GetMeshes()[0].indices;
+	testingTotem->GetComponent<Mesh>()->vertices = totem_filled->GetMeshes()[0].vertices;
+	testingTotem->GetComponent<Mesh>()->material = totem_filled->GetMeshes()[0].material;
+	testingTotem->GetComponent<Mesh>()->setupMesh();
+
+	testingTotem->AddComponent<Collider>();
+	testingTotem->GetComponent<Collider>()->SetShape(treeCollider);
+
+	testingTotem->AddComponent<Character>();
+	testingTotem->GetComponent<Character>()->health = 10;
+	testingTotem->GetComponent<Character>()->playerReference = player;
+	testingTotem->GetComponent<Character>()->usedTotem = totem_used;
+
+	player->GetComponent<PlayerEnemyCommunicator>()->TotemSpawned();
+
+	testingTotem->layer = TotemLayer;
+
+	physics->RegisterEntity(testingTotem);
+	renderer->RegisterEntity(testingTotem);
+	gameLogic->RegisterEntity(testingTotem);
+
+
+
+	//================================================================================================================================================================
+
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
 	

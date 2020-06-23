@@ -7,7 +7,8 @@ enum Layer
 	PlayerLayer,
 	EnemyLayer,
 	GroundLayer,
-	WaterLayer
+	WaterLayer,
+	TotemLayer
 };
 
 class Entity

@@ -15,12 +15,17 @@ public:
 	~PlayerEnemyCommunicator();
 	
 	void EnemyDied();
+	void TotemDied();
 
 	int killedEnemiesCounter = 0;
+	int destroyedTotemCounter = 0;
 
 	int spawnedEnemies = 0;
+	int spawnedTotems = 0;
+
 
 	void EnemySpawned();
+	void TotemSpawned();
 
 	std::shared_ptr<Entity> gameWon;
 	std::shared_ptr<Entity> gameWon2;

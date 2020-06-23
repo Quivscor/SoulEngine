@@ -3,6 +3,7 @@
 #include "PlayerEnemyCommunicator.h"
 #include "Billboard.h"
 #include "TextRendering.h"
+#include "Model.h"
 
 class Character : public ScriptableObject
 {
@@ -34,14 +35,19 @@ public:
 
 	void AddHealth(float value);
 
+	float maxHealth = 100.0f;
+	float health = 100.0f;
+
+	//for totem
+	Model* usedTotem;
+
 protected:
 	//virtual void Start();
 
 
 	void CheckDeathCondition();
-	
 
-	float maxHealth = 100.0f;
-	float health = 100.0f;
+	bool isDead = false;
+	
 
 };

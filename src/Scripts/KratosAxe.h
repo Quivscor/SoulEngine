@@ -41,6 +41,9 @@ protected:
 
 	int enemiesOnMap = -500;
 	int currentEnemiesOnMap = -500;
+
+	int totemsOnMap = -500;
+	int currentTotemsOnMap = -500;
 };
 
 #endif

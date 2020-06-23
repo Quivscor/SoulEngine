@@ -18,11 +18,14 @@ void KratosAxe::Start()
 void KratosAxe::Update()
 {
 	enemiesOnMap = pec->spawnedEnemies - pec->killedEnemiesCounter;
-
+	totemsOnMap = pec->spawnedTotems - pec->destroyedTotemCounter;
 	//std::cout << currentEnemiesOnMap << " : " << enemiesOnMap << std::endl;
 
 	if (currentEnemiesOnMap == -500)
 		currentEnemiesOnMap = enemiesOnMap;
+
+	if (currentTotemsOnMap == -500)
+		currentTotemsOnMap = totemsOnMap;
 
 	if (currentEnemiesOnMap != enemiesOnMap)
 	{
@@ -30,6 +33,14 @@ void KratosAxe::Update()
 			EnemyKilled();
 
 		currentEnemiesOnMap = enemiesOnMap;
+	}
+
+	if (currentTotemsOnMap != totemsOnMap)
+	{
+		for (int i = 0; i < currentTotemsOnMap - totemsOnMap; i++)
+			EnemyKilled();
+
+		currentTotemsOnMap = totemsOnMap;
 	}
 
 	//std::cout << currentAxeSoulLevel << std::endl;
