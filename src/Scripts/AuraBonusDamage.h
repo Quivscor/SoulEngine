@@ -11,5 +11,5 @@ public:
 	virtual std::string ToString() override;
 
 private:
-	float bonusDamage = 10.0f;
+	float bonusDamage = 5.0f;
 };

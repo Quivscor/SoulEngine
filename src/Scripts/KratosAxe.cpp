@@ -38,8 +38,11 @@ void KratosAxe::Update()
 	if (currentTotemsOnMap != totemsOnMap)
 	{
 		for (int i = 0; i < currentTotemsOnMap - totemsOnMap; i++)
-			EnemyKilled();
-
+		{
+			TotemKilled();
+		}
+			
+		playersCharacter->HealUp(50.0f);
 		currentTotemsOnMap = totemsOnMap;
 	}
 
@@ -85,4 +88,16 @@ void KratosAxe::EnemyKilled()
 		currentAxeSoulLevel = 100.0f;
 
 	std::cout << currentAxeSoulLevel << std::endl;
+}
+
+
+void KratosAxe::TotemKilled()
+{
+	currentAxeSoulLevel += 100.0f;
+
+	if (currentAxeSoulLevel > 100.0f)
+		currentAxeSoulLevel = 100.0f;
+
+
+
 }

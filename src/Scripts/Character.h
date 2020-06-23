@@ -12,7 +12,7 @@ public:
 	~Character();
 
 	void GetHit(float damage);
-
+	void HealUp(float heal);
 	virtual ComponentType GetComponentType() const override { return ComponentType::CharacterComponent; }
 
 	std::shared_ptr<Entity> playerReference = nullptr;

@@ -43,7 +43,7 @@ private:
 	int villagesCount = startVillagesCount;
 	std::string mapTiles[4] = { "GrassLand","Forest1","Forest2","Mountains" };
 	std::string **generatedMap;
-	Model* tileModels[13];
+	Model* tileModels[14];
 	std::vector<glm::vec2> treeCollider;
 	std::vector<glm::vec2> waterCollider;
 	std::vector<glm::vec2> rockCollider;

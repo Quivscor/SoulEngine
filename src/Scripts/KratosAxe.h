@@ -19,6 +19,8 @@ public:
 
 	void EnemyKilled();
 
+	void TotemKilled();
+
 	std::shared_ptr<Text> debugSoulsTaken;
 	std::shared_ptr<Text> debugAxeStatus;
 

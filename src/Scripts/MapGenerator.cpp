@@ -28,51 +28,19 @@ void MapGenerator::Generate()
 	Model* auraRingRed = assetManager->LoadModel("./res/models/Auras/AuraRingRed.obj");
 	Model* auraRingBlue = assetManager->LoadModel("./res/models/Auras/AuraRingBlue.obj");
 	Model* auraRingYellow = assetManager->LoadModel("./res/models/Auras/AuraRingYellow.obj");
-	Model* totem_filled = assetManager->LoadModel("./res/models/totem/totem_filled.obj");
+	//Model* totem_filled = assetManager->LoadModel("./res/models/totem/totem_filled.obj");
 	Model* totem_used = assetManager->LoadModel("./res/models/totem/totem_used.obj");
-
-	//=================================================================================================================================BATON BYCZKU TUTAJ DAJ FIXA PLZ 
-	std::shared_ptr<Entity> testingTotem = m_EntityManager->CreateEntity<Entity>();
-	testingTotem->AddComponent<Transform>();
-	testingTotem->GetComponent<Transform>()->SetLocalPosition(glm::vec3(2.0f, -0.2f, 2.0));
-	testingTotem->GetComponent<Transform>()->SetLocalScale(glm::vec3(0.7f, 0.7f, 0.7f));
-
-	testingTotem->AddComponent<Mesh>();
-	testingTotem->GetComponent<Mesh>()->indices = totem_filled->GetMeshes()[0].indices;
-	testingTotem->GetComponent<Mesh>()->vertices = totem_filled->GetMeshes()[0].vertices;
-	testingTotem->GetComponent<Mesh>()->material = totem_filled->GetMeshes()[0].material;
-	testingTotem->GetComponent<Mesh>()->setupMesh();
-
-	testingTotem->AddComponent<Collider>();
-	testingTotem->GetComponent<Collider>()->SetShape(treeCollider);
-
-	testingTotem->AddComponent<Character>();
-	testingTotem->GetComponent<Character>()->health = 10;
-	testingTotem->GetComponent<Character>()->playerReference = player;
-	testingTotem->GetComponent<Character>()->usedTotem = totem_used;
-
-	player->GetComponent<PlayerEnemyCommunicator>()->TotemSpawned();
-
-	testingTotem->layer = TotemLayer;
-
-	physics->RegisterEntity(testingTotem);
-	renderer->RegisterEntity(testingTotem);
-	gameLogic->RegisterEntity(testingTotem);
-
-
-
-	//================================================================================================================================================================
 
 	InstanceManager* grassM = new InstanceManager(grassLeaf);
 	std::shared_ptr <InstanceManager> grassManager(grassM);
 	
 	srand(time(NULL));
 
-	mapSizeX = GenerateRandomNumber(7, 12);
-	mapSizeY = GenerateRandomNumber(7, 12);
+	mapSizeX = GenerateRandomNumber(5, 7);
+	mapSizeY = GenerateRandomNumber(5, 7);
 
-	mapSizeX = 6;
-	mapSizeY = 6;
+	//mapSizeX = 6;
+	//mapSizeY = 6;
 	std::cout << "\n=== Map size";
 	std::cout << "X: " << mapSizeX << " Y: " << mapSizeY << std::endl;
 
@@ -91,7 +59,7 @@ void MapGenerator::Generate()
 	ShowVillagesMap();
 	GenerateRandomTiles();
 	ShowMapTiles();
-	int grassNumberOnTile = 150;
+	int grassNumberOnTile = 200;
 	grassManager->instanceModels = new glm::mat4[tilesNumber * grassNumberOnTile];
 	grassManager->amount = tilesNumber * grassNumberOnTile;
 	int numberOfGrass = grassManager->amount;
@@ -200,12 +168,6 @@ void MapGenerator::Generate()
 				// second aura
 				if (bonusAuraChance < 25)
 				{
-					/*
-					int oldAuraType = auraType;
-					if(auraType == 2)
-						while (auraType == 2)
-							auraType = rand() % 3;
-					else */
 						auraType = rand() % 3;
 
 					if (auraType == 0)
@@ -219,12 +181,6 @@ void MapGenerator::Generate()
 					// third aura
 					if (bonusAuraChance < 20)
 					{
-						/*
-						int oldAuraType = auraType;
-						if (auraType == 2)
-							while (auraType == 2)
-								auraType = rand() % 3;
-						else */
 						auraType = rand() % 3;
 
 						if (auraType == 0)
@@ -289,7 +245,7 @@ void MapGenerator::Generate()
 						treeY *= -1.f;
 						treeZ *= -1.f;
 					}
-
+					if(name == "Birch") object->GetComponent<Transform>()->SetLocalPosition(glm::vec3(pos[0], pos[1]+0.5f, pos[2]));
 					object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0] + treeX, scale[1] + treeY, scale[2] + treeZ));
 					object->AddComponent<Collider>();
 					object->GetComponent<Collider>()->SetShape(treeCollider);
@@ -435,6 +391,30 @@ void MapGenerator::Generate()
 					}
 					
 				}
+				if (name == "Totem")
+				{
+					object->AddComponent<Collider>();
+					object->GetComponent<Collider>()->SetShape(treeCollider);
+					object->GetComponent<Collider>()->isStatic = true;
+
+					object->AddComponent<Character>();
+					object->GetComponent<Character>()->health = 200;
+					object->GetComponent<Character>()->maxHealth = 200;
+					object->GetComponent<Character>()->playerReference = player;
+					object->GetComponent<Character>()->usedTotem = totem_used;
+
+					object->AddComponent<Billboard>();
+					object->GetComponent<Billboard>()->SetBillboard("./res/hpbartlo.png", false);
+					object->GetComponent<Character>()->healthBar = object->GetComponent<Billboard>();
+
+					renderer->RegisterBillboard(object);
+
+					player->GetComponent<PlayerEnemyCommunicator>()->TotemSpawned();
+
+						object->layer = TotemLayer;
+						gameLogic->RegisterEntity(object);
+					
+				}
 				if (name == "House1")
 				{
 					object->GetComponent<Transform>()->SetLocalScale(glm::vec3(scale[0] + 0.1f, scale[1] + 0.1f, scale[2] + 0.1f));
@@ -452,7 +432,6 @@ void MapGenerator::Generate()
 				if (name == "Enemy")
 				{
 					object->AddComponent<Model>();
-
 					object->GetComponent<Model>()->UseModel((FindModelByName(tileModels, name)));
 					object->GetComponent<Mesh>()->SetAll((FindModelByName(tileModels, name))->GetMeshes()[0]);
 					object->GetComponent<Mesh>()->material->SetShader(animShader);
@@ -465,7 +444,6 @@ void MapGenerator::Generate()
 					object->AddComponent<Billboard>();
 					object->GetComponent<Billboard>()->SetBillboard("./res/hpbartlo.png", false);
 					object->GetComponent<Character>()->healthBar = object->GetComponent<Billboard>();
-
 					renderer->RegisterBillboard(object);
 
 					player->GetComponent<PlayerEnemyCommunicator>()->EnemySpawned();
@@ -644,7 +622,7 @@ void MapGenerator::Generate()
 			file.close();
 			if (generatedMap[i][j]!= "Water")
 			{
-				name = "GrassLeaf";
+				//name = "GrassLeaf";
 				for (int k = 0; k < grassNumberOnTile; k++)
 				{
 					float randomX = 0;
@@ -685,8 +663,6 @@ void MapGenerator::Generate()
 							randomY *= -1;
 					}
 					
-						
-					
 					float grassX = rand() % 150 / 1000.f;
 					//if (rand() % 2 == 0)
 						//grassX *=-1.f;
@@ -702,7 +678,7 @@ void MapGenerator::Generate()
 						grassY *= -1.0f;
 						grassZ *= -1.0f;
 					}
-					glm::vec3 pos(randomX + j * 16, grassY, randomY + i * 16);
+					glm::vec3 pos(randomX + j * 16, -0.1f + grassY, randomY + i * 16);
 					glm::vec3 scale(0.4 + grassX, 0.4 + grassY, 0.4 + grassZ);
 					glm::vec3 rot(0, 0, 0);
 					glm::mat4 model = glm::mat4(1.0f);
@@ -778,7 +754,7 @@ Model* MapGenerator::FindModelByName(Model* array[], std::string name)
 		return array[11];
 	else if (name == "EnemyDeath")
 		return array[12];
-	else if (name == "GrassLeaf")
+	else if (name == "Totem")
 		return array[13];
 	else return 0;
 }
@@ -811,6 +787,8 @@ void MapGenerator::LoadMapModels()
 	std::cout << "- player_attack.dae loaded \n";
 	tileModels[12] = assetManager->LoadModel("./res/models/player/player_death.dae");
 	std::cout << "- player_death.dae loaded \n";
+	tileModels[13] = assetManager->LoadModel("./res/models/totem/totem_filled.obj");
+	std::cout << "- totem_filled.obj loaded \n";
 }
 void MapGenerator::PrepareColliders()
 {

@@ -90,8 +90,6 @@ void Billboard::setLife(float life)
 void Billboard::Draw( std::shared_ptr<Entity>  camera, glm::vec3 position, glm::vec2 size )
 {
 
-	
-	
 	glDisable(GL_DEPTH_TEST);	glDepthFunc(GL_ALWAYS);
 	//std::cout << this->LifeLevel << std::endl;
 	int w = 1920, h = 1080; //fix later

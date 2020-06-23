@@ -37,6 +37,16 @@ void Character::GetHit(float damage)
 		HUDhealthBar->setLife(health / maxHealth);
 }
 
+void Character::HealUp(float heal)
+{
+	health += heal;
+	if (health > maxHealth)
+		health = maxHealth;
+
+	if (HUDhealthBar != nullptr)
+		HUDhealthBar->setLife(health / maxHealth);
+}
+
 void Character::CheckDeathCondition()
 {
 	if (health <= 0)
