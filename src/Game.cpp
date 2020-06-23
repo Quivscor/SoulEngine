@@ -898,8 +898,8 @@ void Game::InitializePlayerGUI(Renderer* renderer, Physics* physics, std::shared
 
 	std::shared_ptr<Entity> berserkerMode = m_EntityManager->CreateEntity<Entity>(&m_ComponentManager);
 	berserkerMode->AddComponent<Transform>();
-	berserkerMode->GetComponent<Transform>()->SetLocalPosition(glm::vec3(750, 900, 0));
-	berserkerMode->GetComponent<Transform>()->SetLocalScale(glm::vec3(3.f, 3.f, 3.f));
+	berserkerMode->GetComponent<Transform>()->SetLocalPosition(glm::vec3(825, 900, 0));
+	berserkerMode->GetComponent<Transform>()->SetLocalScale(glm::vec3(1.5f, 1.5f, 1.5f));
 	berserkerMode->AddComponent<Text>();
 	berserkerMode->GetComponent<Text>()->text = "BERSERKER!";
 	berserkerMode->GetComponent<Text>()->color = glm::vec3(0.6f, 0.2f, 1.0f);
