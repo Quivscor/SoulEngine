@@ -178,7 +178,7 @@ void Player::Move()
 	if (currentAnimation != animationSwordRun && currentAnimation != animationAxeRun && currentAnimation != animationMaceRun && !isRolling)
 		ChangeAnimation(PlayerAnimationRun);
 
-	thisEntity->GetComponent<Transform>()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 25.0f * (isRolling == true ? 1.6f : 1.5f));
+	thisEntity->GetComponent<Transform>()->Move(Transform::Forward() * (float)TimeCustom::GetDeltaTime() * 25.0f * (isRolling == true ? 2.1f : 2.0f));
 }
 
 void Player::CalculateRotation()
